@@ -32,21 +32,22 @@ const LoanProposerDetails=()=>{
         <div >
         <h3 className='text-center'> Loan Proposer Details   </h3>
 
-        <div style={{height:"100vh", paddingLeft:"100px",paddingTop:"10px",  backgroundColor:"gray" }} >
+        <div style={{height:"100vh", paddingLeft:"20px",paddingTop:"10px"  }} >
             <Form onSubmit={handleSubmit}> 
 
                  <Form.Group controlId="LoanProposeName">
                  <div className='d-flex flex-row align-items-center' >
-                       <div>
-                          <Form.Label className="fs-2"  >Loan Proposer Name : </Form.Label>
+                       <div style={{ width:"420px"}}>
+                          <Form.Label className="fs-3" >Loan Proposer Name </Form.Label>
                         </div>
-                        <div>
+                        <div >
                           <Form.Control  
                            type='text'
                            name="loanProposerName"
                            value={formData.loanProposerName }
                            onChange={handleChange}
-                           style={{ width:"300px", height: "40px", marginLeft: "140px",   borderColor: "black", fontSize:"20px" }}
+                           style={{ width:"300px", height: "40px" ,   borderColor: "black", fontSize:"20px" }}
+                           required
                           />
                        </div> 
                  </div>
@@ -54,16 +55,16 @@ const LoanProposerDetails=()=>{
 
                  <Form.Group controlId="LoanProposeRelationType">
                     <div className='d-flex flex-row align-items-center' >
-                       <div>
-                          <Form.Label className="fs-2"  >Loan Proposer Relation Type : </Form.Label>
+                       <div style={{ width:"420px"}}>
+                          <Form.Label className="fs-3"  >Loan Proposer Relation Type </Form.Label>
                         </div>
-                        <div>
+                        <div  >
                         <Form.Select aria-label="Default select example" 
                            
                            name="loanProposerRelationType"
                            value={formData.loanProposerRelationType }
                            onChange={handleChange}
-                           style={{ width:"300px", height: "40px", marginLeft: "34px",   borderColor: "black", fontSize:"20px" }}
+                           style={{ width:"300px", height: "40px",   borderColor: "black", fontSize:"20px" }}
                            >
                             <option>Select </option>
                             <option value="S/O">S/O</option>
@@ -79,8 +80,8 @@ const LoanProposerDetails=()=>{
 
                  <Form.Group controlId="LoanProposeRelativeName">
                  <div className='d-flex flex-row align-items-center' >
-                       <div>
-                          <Form.Label className="fs-2"  >Loan Proposer Relative Name : </Form.Label>
+                       <div style={{ width:"420px"}}>
+                          <Form.Label className="fs-3"  >Loan Proposer Relative Name</Form.Label>
                         </div>
                         <div>
                           <Form.Control 
@@ -88,7 +89,7 @@ const LoanProposerDetails=()=>{
                            name="loanProposerRelativeName"
                            value={formData.loanProposerRelativeName}
                            onChange={handleChange}
-                           style={{ width:"300px", height: "40px", marginLeft: "20px",   borderColor: "black", fontSize:"20px" }}
+                           style={{ width:"300px", height: "40px" ,   borderColor: "black", fontSize:"20px" }}
                           />
                        </div> 
                  </div>
@@ -96,8 +97,8 @@ const LoanProposerDetails=()=>{
 
                  <Form.Group controlId="LoanProposeResidenceType">
                  <div className='d-flex flex-row align-items-center' >
-                       <div>
-                          <Form.Label className="fs-2"  >Loan Proposer Residence Type : </Form.Label>
+                       <div style={{ width:"420px"}}>
+                          <Form.Label className="fs-3"  >Loan Proposer Residence Type</Form.Label>
                         </div>
                         <div>
                         <Form.Select as="select" aria-label="Default select example"
@@ -105,7 +106,7 @@ const LoanProposerDetails=()=>{
                            name="loanProposerResidenceType"
                            value={formData.loanProposerResidenceType }
                            onChange={handleChange}
-                           style={{ width:"300px", height: "40px", marginLeft: "10px",   borderColor: "black", fontSize:"20px" }}
+                           style={{ width:"300px", height: "40px" ,   borderColor: "black", fontSize:"20px" }}
                            >
                             <option>Select </option>
                             <option value="Flat">Flat</option>
@@ -118,8 +119,8 @@ const LoanProposerDetails=()=>{
 
                  <Form.Group controlId="LoanProposerDoorNumber">
                  <div className='d-flex flex-row align-items-center' >
-                       <div>
-                          <Form.Label className="fs-2"  >Loan Proposer Door Number : </Form.Label>
+                       <div style={{ width:"420px"}}>
+                          <Form.Label className="fs-3"  >Loan Proposer Door Number</Form.Label>
                         </div>
                         <div>
                           <Form.Control 
@@ -127,7 +128,7 @@ const LoanProposerDetails=()=>{
                            name="loanProposerDoorNumber"
                            value={formData.loanProposerDoorNumber}
                            onChange={handleChange}
-                           style={{ width:"300px", height: "40px", marginLeft: "30px",   borderColor: "black", fontSize:"20px" }}
+                           style={{ width:"300px", height: "40px" ,   borderColor: "black", fontSize:"20px" }}
                           />
                        </div> 
                  </div>
@@ -135,8 +136,8 @@ const LoanProposerDetails=()=>{
 
                  <Form.Group controlId="LoanProposeStreetName">
                  <div className='d-flex flex-row align-items-center' >
-                       <div>
-                          <Form.Label className="fs-2"  >Loan Proposer Street Name : </Form.Label>
+                       <div style={{ width:"420px"}}>
+                          <Form.Label className="fs-3"  >Loan Proposer Street Name</Form.Label>
                         </div>
                         <div>
                           <Form.Control 
@@ -144,7 +145,7 @@ const LoanProposerDetails=()=>{
                            name="loanProposerStreetName"
                            value={formData.loanProposerStreetName}
                            onChange={handleChange}
-                           style={{ width:"300px", height: "40px", marginLeft: "50px",   borderColor: "black", fontSize:"20px" }}
+                           style={{ width:"300px", height: "40px" ,   borderColor: "black", fontSize:"20px" }}
                           />
                        </div> 
                  </div>
@@ -152,8 +153,8 @@ const LoanProposerDetails=()=>{
 
                  <Form.Group controlId="LoanProposeCityName">
                  <div className='d-flex flex-row align-items-center' >
-                       <div>
-                          <Form.Label className="fs-2"  >Loan Proposer City  Name : </Form.Label>
+                       <div style={{ width:"420px"}}>
+                          <Form.Label className="fs-3"  >Loan Proposer City  Name</Form.Label>
                         </div>
                         <div>
                           <Form.Control 
@@ -161,7 +162,7 @@ const LoanProposerDetails=()=>{
                            name="loanProposerCityName"
                            value={formData.loanProposerCityName}
                            onChange={handleChange}
-                           style={{ width:"300px", height: "40px", marginLeft: "78px",   borderColor: "black", fontSize:"20px" }}
+                           style={{ width:"300px", height: "40px" ,   borderColor: "black", fontSize:"20px" }}
                           />
                        </div> 
                  </div>
@@ -170,8 +171,8 @@ const LoanProposerDetails=()=>{
 
                  <Form.Group controlId="LoanProposeMandalName">
                  <div className='d-flex flex-row align-items-center' >
-                       <div>
-                          <Form.Label className="fs-2"  >Loan Proposer Mandal Name : </Form.Label>
+                       <div style={{width:'420px'}}>
+                          <Form.Label className="fs-3"  >Loan Proposer Mandal Name</Form.Label>
                         </div>
                         <div>
                           <Form.Control 
@@ -179,7 +180,7 @@ const LoanProposerDetails=()=>{
                            name="loanProposerMandalName"
                            value={formData.loanProposerMandalName}
                            onChange={handleChange}
-                           style={{ width:"300px", height: "40px", marginLeft: "24px",   borderColor: "black",fontSize:"20px" }}
+                           style={{ width:"300px", height: "40px" ,   borderColor: "black",fontSize:"20px" }}
                           />
                        </div> 
                  </div>
@@ -188,8 +189,8 @@ const LoanProposerDetails=()=>{
 
                  <Form.Group controlId="LoanProposeDistrictName">
                  <div className='d-flex flex-row align-items-center' >
-                       <div>
-                          <Form.Label className="fs-2"  >Loan Proposer District Name : </Form.Label>
+                       <div style={{ width:"420px"}}>
+                          <Form.Label className="fs-3"  >Loan Proposer District Name</Form.Label>
                         </div>
                         <div>
                           <Form.Control 
@@ -197,7 +198,7 @@ const LoanProposerDetails=()=>{
                            name="loanProposerDistrictName"
                            value={formData.loanProposerDistrictName}
                            onChange={handleChange}
-                           style={{ width:"300px", height: "40px", marginLeft: "28px",   borderColor: "black" , fontSize:"20px"}}
+                           style={{ width:"300px", height: "40px",     borderColor: "black" , fontSize:"20px"}}
                           />
                        </div> 
                  </div>
@@ -205,8 +206,8 @@ const LoanProposerDetails=()=>{
               
                  <Form.Group controlId="LoanProposePincode">
                  <div className='d-flex flex-row align-items-center' >
-                       <div>
-                          <Form.Label className="fs-2"  >Loan Proposer Pincode : </Form.Label>
+                       <div style={{width:'420px'}}>
+                          <Form.Label className="fs-3"  >Loan Proposer Pincode</Form.Label>
                         </div>
                         <div>
                           <Form.Control 
@@ -214,14 +215,14 @@ const LoanProposerDetails=()=>{
                            name="loanProposerPincode"
                            value={formData.loanProposerPincode}
                            onChange={handleChange}
-                           style={{ width:"300px", height: "40px", marginLeft: "108px",   borderColor: "black" , fontSize:"20px"}}
+                           style={{ width:"300px", height: "40px",     borderColor: "black" , fontSize:"20px"}}
                           />
                        </div> 
                  </div>
                  </Form.Group>
 
            
-            <div style={{  marginLeft:"28rem"  }} >
+            <div  className='d-flex justify-content-center' >
                 <Button type="submit">Submit</Button>
             </div>
             </Form>

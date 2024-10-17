@@ -5,7 +5,7 @@ const   Login =()=>{
 
     return(
         <div>
-            <h1>iam a   Login page </h1>
+            <h1> iam a login page</h1>
         </div>
     )
 }

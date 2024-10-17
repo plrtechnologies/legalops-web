@@ -8,6 +8,7 @@ import LoanProposerDetails from "./pagecomponents/LoanProposerDetails";
 import Home from './pagecomponents/Home';
 import About from './pagecomponents/About';
 import Login from './pagecomponents/Login';
+import CreateDocument from './pagecomponents/CreateDocument';
 function App() {
   return (
     <div>
@@ -17,7 +18,8 @@ function App() {
                 <Route path="/" element={<Home/>} />
                 <Route path="/About" element={<About/>} />
                 <Route path="/Login" element={<Login/>} />
-                <Route path="/LoanProposerDetails" element={<LoanProposerDetails/>}/>   
+                {/* <Route path="/LoanProposerDetails" element={<LoanProposerDetails/>}/>  */}
+                <Route path="/CreateDocument"  element={<CreateDocument/>} />
             </Routes>
           </Layout>
         </Router>
