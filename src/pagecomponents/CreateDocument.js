@@ -16,11 +16,13 @@ const createDocument = () =>{
                 
                 <Button className="w-100 m-1 fs-5"> Loan Proposer Details</Button> 
 
+                <Button className="w-100 m-1 fs-5"> Loan Proposer Details</Button> 
+
                 </div>
 
                 <div className="px-3 text-white" style={{backgroundColor:"#354257",width:"80vw" }}>  
 
-                    <LoanPoposerDetails/>  {/*  page component used in this create document component  */}
+                    <LoanPoposerDetails/>   page component used in this create document component 
                 </div>
              
             </div> 

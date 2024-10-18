@@ -2,6 +2,8 @@ import React, {useState} from 'react';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
  
+ 
+
 const LoanProposerDetails=()=>{
     const [formData, setFormData] = useState({
         loanProposerName:"",
@@ -37,6 +39,8 @@ const LoanProposerDetails=()=>{
 
                  <Form.Group controlId="LoanProposeName">
                  <div className='d-flex flex-row align-items-center' >
+
+                 
                        <div style={{ width:"420px"}}>
                           <Form.Label className="fs-3" >Loan Proposer Name </Form.Label>
                         </div>
@@ -50,8 +54,11 @@ const LoanProposerDetails=()=>{
                            required
                           />
                        </div> 
+                       
                  </div>
                  </Form.Group>
+
+                 
 
                  <Form.Group controlId="LoanProposeRelationType">
                     <div className='d-flex flex-row align-items-center' >
@@ -223,7 +230,7 @@ const LoanProposerDetails=()=>{
 
            
             <div  className='d-flex justify-content-center' >
-                <Button type="submit">Submit</Button>
+                 <Button type="submit">Next</Button>{/* made changes here */}
             </div>
             </Form>
         </div>
