@@ -4,7 +4,7 @@ import './App.css';
 import Layout from './designcomponents/Layout';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
  
-import LoanProposerDetails from "./pagecomponents/LoanProposerDetails";
+//import LoanProposerDetails from "./pagecomponents/LoanProposerDetails";
 import Home from './pagecomponents/Home';
 import About from './pagecomponents/About';
 import Login from './pagecomponents/Login';
