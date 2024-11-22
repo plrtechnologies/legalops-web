@@ -87,7 +87,7 @@ import Form from 'react-bootstrap/Form';
             <Form onSubmit={formik.handleSubmit}> 
 
                  <Form.Group controlId="LoanProposeName">
-                 <div className='d-flex flex-column flex-md-row flex-lg-row align-items-center' >
+                 <div className='d-flex flex-column flex-md-row flex-lg-row align-items-center'>
                        <div className='col-12 ' style={{ width:"420px"}}>
                           <Form.Label className="fs-3" >Loan Proposer Name </Form.Label>
                         </div>

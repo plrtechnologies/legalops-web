@@ -3,6 +3,8 @@ import './App.css';
 //import Header from './designcomponents/Header';
 import Layout from './designcomponents/Layout';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import MostRecentDocuments from './pagecomponents/MostRecentDocuments';
+
  
 //import LoanProposerDetails from "./pagecomponents/LoanProposerDetails";
 import Home from './pagecomponents/Home';
@@ -12,6 +14,7 @@ import CreateDocument from './pagecomponents/CreateDocument';
 function App() {
   return (
     <div>
+      {/* <MostRecentDocuments /> */}
         <Router>
           <Layout>
             <Routes>
@@ -20,6 +23,8 @@ function App() {
                 <Route path="/Login" element={<Login/>} />
                 {/* <Route path="/LoanProposerDetails" element={<LoanProposerDetails/>}/>  */}
                 <Route path="/CreateDocument"  element={<CreateDocument/>} />
+                {/*  */}
+                <Route path="/MostRecentDocuments" element={<MostRecentDocuments/>} />
             </Routes>
           </Layout>
         </Router>
