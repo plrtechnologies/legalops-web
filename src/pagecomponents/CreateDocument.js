@@ -3,10 +3,11 @@ import Button from 'react-bootstrap/Button';
 import LoanProposerDetails from '../pagecomponents/LoanProposerDetails'; 
 import LoanProposerAndTitleHolder from '../pagecomponents/LoanProposerAndTitleHolder';
 import MostRecentDocuments from "../pagecomponents/MostRecentDocuments";
+import PropertyBoundaries from "../pagecomponents/PropertyBoundaries";  // Assuming this is your next component
 
 const CreateDocument = () => {
     const [currentPage, setCurrentPage] = useState("LoanProposerDetails");
-    
+
     const renderComponent = () => {
         switch (currentPage) {
             case 'LoanProposerDetails':
@@ -20,9 +21,11 @@ const CreateDocument = () => {
                     />
                 );
             case "MostRecentDocuments":
-                return <MostRecentDocuments />;
+                return <MostRecentDocuments onNext={() => setCurrentPage('PropertyBoundaries')} />;
+            case "PropertyBoundaries":
+                return <PropertyBoundaries />;
             case "SomeOtherPage":
-                return <div>Some other page content</div>; 
+                return <div>Some other page content</div>;
             default:
                 return <LoanProposerDetails onNext={() => setCurrentPage('LoanProposerAndTitleHolder')} />;
         }
@@ -37,12 +40,12 @@ const CreateDocument = () => {
                     <Button className="w-100 m-1 fs-5" onClick={() => setCurrentPage('LoanProposerAndTitleHolder')}>Loan And Title Holder</Button>
                     <Button className="w-100 m-1 fs-5" onClick={() => setCurrentPage('MostRecentDocuments')}>Most Recent Documents</Button>
                     <Button className="w-100 m-1 fs-5" onClick={() => setCurrentPage('SomeOtherPage')}>Some Other Page</Button>
-                    <Button className="w-100 m-1 fs-5">  dummy page Details</Button> 
-                    <Button className="w-100 m-1 fs-5">  dummy page Details</Button> 
-                    <Button className="w-100 m-1 fs-5">  dummy page Details</Button> 
-                    <Button className="w-100 m-1 fs-5">  dummy page Details</Button> 
-                    <Button className="w-100 m-1 fs-5">  dummy page Details</Button> 
-                    <Button className="w-100 m-1 fs-5">  dummy page Details</Button> 
+                    <Button className="w-100 m-1 fs-5">dummy page Details</Button> 
+                    <Button className="w-100 m-1 fs-5">dummy page Details</Button> 
+                    <Button className="w-100 m-1 fs-5">dummy page Details</Button> 
+                    <Button className="w-100 m-1 fs-5">dummy page Details</Button> 
+                    <Button className="w-100 m-1 fs-5">dummy page Details</Button> 
+                    <Button className="w-100 m-1 fs-5">dummy page Details</Button> 
                 </div>
                 <div className="text-white d-flex flex-column w-100" style={{ backgroundColor: "#354257", flexGrow: 1 }}>
                     {renderComponent()}
@@ -53,7 +56,3 @@ const CreateDocument = () => {
 };
 
 export default CreateDocument;
-
-
-
-
