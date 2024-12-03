@@ -69,7 +69,7 @@ const PropertyBoundaries = ({ onNext }) => {
     });
 
     return (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", paddingTop: "50px", paddingBottom: "50px" }}>
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", paddingBottom: "50px" }}>
             <div style={{ width: "100%", maxWidth: "800px", padding: "20px", overflowY: "auto" }}>
                 <h3 className="text-center">Property Boundaries</h3>
                 <Form onSubmit={formik.handleSubmit}>

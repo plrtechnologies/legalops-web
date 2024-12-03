@@ -11,6 +11,7 @@ import Home from './pagecomponents/Home';
 import About from './pagecomponents/About';
 import Login from './pagecomponents/Login';
 import CreateDocument from './pagecomponents/CreateDocument';
+import TitleHolderDetails from './pagecomponents/TitleHolderDetails';
 function App() {
   return (
     <div>
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/Login" element={<Login/>} />
                 {/* <Route path="/LoanProposerDetails" element={<LoanProposerDetails/>}/>  */}
                 <Route path="/CreateDocument"  element={<CreateDocument/>} />
+                <Route path="/TitleHolderDetails"  element={<TitleHolderDetails/>} />
                 {/*  */}
                 <Route path="/MostRecentDocuments" element={<MostRecentDocuments/>} />
             </Routes>
