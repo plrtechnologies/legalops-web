@@ -4,14 +4,13 @@ import './App.css';
 import Layout from './designcomponents/Layout';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MostRecentDocuments from './pagecomponents/MostRecentDocuments';
-
- 
 //import LoanProposerDetails from "./pagecomponents/LoanProposerDetails";
 import Home from './pagecomponents/Home';
 import About from './pagecomponents/About';
 import Login from './pagecomponents/Login';
 import CreateDocument from './pagecomponents/CreateDocument';
 import TitleHolderDetails from './pagecomponents/TitleHolderDetails';
+import Signup from './pagecomponents/Signup';
 function App() {
   return (
     <div>
@@ -22,10 +21,12 @@ function App() {
                 <Route path="/" element={<Home/>} />
                 <Route path="/About" element={<About/>} />
                 <Route path="/Login" element={<Login/>} />
+                <Route path="/Signup" element={<Signup/>} />
+
                 {/* <Route path="/LoanProposerDetails" element={<LoanProposerDetails/>}/>  */}
                 <Route path="/CreateDocument"  element={<CreateDocument/>} />
                 <Route path="/TitleHolderDetails"  element={<TitleHolderDetails/>} />
-                {/*  */}
+                 
                 <Route path="/MostRecentDocuments" element={<MostRecentDocuments/>} />
             </Routes>
           </Layout>

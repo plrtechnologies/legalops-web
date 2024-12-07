@@ -28,7 +28,6 @@ import Form from 'react-bootstrap/Form';
             filteredValues[key] = values[key];
          }
       }
-
           console.log('formsubmit', values)
           onNext();
    },
