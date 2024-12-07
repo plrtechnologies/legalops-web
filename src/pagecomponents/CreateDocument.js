@@ -64,6 +64,7 @@ import LoanProposerAndTitleHolder from '../pagecomponents/LoanProposerAndTitleHo
 import MostRecentDocuments from "../pagecomponents/MostRecentDocuments";
 import PropertyBoundaries from "../pagecomponents/PropertyBoundaries";
 import TitleHolderDetails from "../pagecomponents/TitleHolderDetails";  // Assuming this is your next component
+import PropertyDetails from "../pagecomponents/PropertyDetails";
 
 const CreateDocument = () => {
     const [currentPage, setCurrentPage] = useState("LoanProposerDetails");
@@ -92,7 +93,11 @@ const CreateDocument = () => {
                     <TitleHolderDetails onNext={() => setCurrentPage('MostRecentDocuments')} />
                 );
             case "MostRecentDocuments":
-                return <MostRecentDocuments onNext={() => setCurrentPage('PropertyBoundaries')} />;
+                return <MostRecentDocuments onNext={() => setCurrentPage('PropertyDetails')} />;
+            // created propert details pages 
+            case "PropertyDetails":
+                return <PropertyDetails onNext={()=> setCurrentPage("PropertyBoundaries")}/> 
+
             case "PropertyBoundaries":
                 return <PropertyBoundaries />;
             default:
@@ -108,6 +113,7 @@ const CreateDocument = () => {
                     <Button className="w-100 m-1 fs-5" onClick={() => setCurrentPage('LoanProposerDetails')}>Loan Proposer Details</Button>
                     <Button className="w-100 m-1 fs-5" onClick={() => setCurrentPage('LoanProposerAndTitleHolder')}>Loan And Title Holder</Button>
                     <Button className="w-100 m-1 fs-5" onClick={() => setCurrentPage('MostRecentDocuments')}>Most Recent Documents</Button>
+                    <Button className="w-100 m-1 fs-5" onClick={() => setCurrentPage('PropertyDetails')} >PropertyDetails</Button>
                     <Button className="w-100 m-1 fs-5" onClick={() => setCurrentPage('SomeOtherPage')}>Some Other Page</Button>
                     {/* Remove or replace dummy buttons with real content */}
                     <Button className="w-100 m-1 fs-5">dummy page Details</Button>
