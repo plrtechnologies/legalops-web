@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import Form from 'react-bootstrap/Form';
 import { Button } from "react-bootstrap";
+import { Mostrecentdocuments_api } from "../apiUrls";
 const MostRecentDocument =({onNext})=>{
+    const [loading, setLoading] = useState(false);
      const formik = useFormik({
          initialValues:{
              selectDeedType:"",
@@ -14,11 +16,43 @@ const MostRecentDocument =({onNext})=>{
             subregistrarOfficeDistrict:"",
             subregistrarOfficeLocalAuthority:"" 
        },
-       onSubmit:(values)=>{
-        console.log("formik",values)
-        onNext();
-       },
-
+    //    onSubmit:(values)=>{
+    //     console.log("formik",values)
+    //     onNext();
+    //    },
+    onSubmit: async (values) => {
+        console.log('Form Submitted:', values);
+  
+        setLoading(true);  // Start loading state
+  
+        const apiUrl = Mostrecentdocuments_api;  // Replace with actual API endpoint
+  
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values),
+            });
+  
+            if (response.ok) {
+                const data = await response.json();
+                console.log("API response:", data);
+  
+                // After a successful API call, call onNext
+                onNext();
+            } else {
+                console.error("API Error:", response.statusText);
+                // Optionally handle the error (show a message to the user)
+            }
+        } catch (error) {
+            console.error("Error during API call:", error);
+            // Optionally handle the error (show a message to the user)
+        } finally {
+            setLoading(false);  // End loading state
+        }
+    },
        validate:(values)=>{
           let errors ={};     //{initially no errrors}
           if(values.selectDeedType===""){
@@ -209,9 +243,16 @@ const MostRecentDocument =({onNext})=>{
                     
                   
                   
-                <div className='d-flex justify-content-center pt-5' >
-                 <Button type="submit">Next</Button> {/* made changes here */}
-                </div>
+                <div className="text-center">
+                                        <Button
+                                            type="submit"
+                                            variant="primary"
+                                            className="mt-3"
+                                            disabled={loading}
+                                        >
+                                            {loading ? "Loading..." : "Next"}
+                                        </Button>
+                                    </div>
                     </Form>
                    
             </div>

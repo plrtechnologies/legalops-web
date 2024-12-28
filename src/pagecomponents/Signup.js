@@ -1,10 +1,11 @@
 import { useFormik } from "formik";
-import React from "react";
- 
+import React, { useState } from "react";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/esm/Button';
+import { signup_api } from "../apiUrls";
 
-const  Signup =()=>{
+const  Signup =({ onNext })=>{
+  const [loading, setLoading] = useState(false);
    const  formik = useFormik({
       initialValues:{
         name:"",
@@ -12,9 +13,46 @@ const  Signup =()=>{
         password:"",
         confirmPassword:""
       },
-      onSubmit:(values)=>{
-        console.log("form submit", formik.values)
-      },
+      // onSubmit:(values)=>{
+      //   console.log("form submit", formik.values)
+      // },
+      onSubmit: async (values) => {
+        console.log('Form Submitted:', values);
+
+        // Set loading state to true
+        setLoading(true);
+
+        // Replace with your actual API endpoint
+        const apiUrl = signup_api;
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("API response:", data);
+
+                // After a successful API call, call onNext
+                onNext();
+            } else {
+                // Handle API error
+                console.error("API Error:", response.statusText);
+                // Optionally show an error message to the user
+            }
+        } catch (error) {
+            console.error("Error during API call:", error);
+            // Optionally show an error message to the user
+        } finally {
+            // Set loading state to false
+            setLoading(false);
+        }
+    },
       validate:(values)=>{
          let errors ={};     
          
@@ -101,7 +139,17 @@ const  Signup =()=>{
                     </Form.Group>
                     
                      {/* <p> If you have an account   <Link to="/Login">Login</Link> here</p>   */}
-                    <Button type="submit"> Signup</Button>
+                    {/* <Button type="submit"> Signup</Button> */}
+                    <div className="text-center">
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            className="mt-3"
+                            disabled={loading}
+                        >
+                            {loading ? "Loading..." : "Next"}
+                        </Button>
+                    </div>
                 </Form>  
                    
               </div>
