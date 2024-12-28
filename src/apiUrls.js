@@ -1,0 +1,7 @@
+export const LoanProposerDetails_api ="https://example.com/api/submit-boundaries"
+export const Login_api ="https://example.com/api/submit-boundaries"
+export const Mostrecentdocuments_api ="https://example.com/api/submit-boundaries"
+export const Propertyboundaries_api ="https://example.com/api/submit-boundaries"
+export const Propertydetails_api ="https://example.com/api/submit-boundaries"
+export const signup_api ="https://example.com/api/submit-boundaries"
+export const TitleHolderDetails_api ="https://example.com/api/submit-boundaries"

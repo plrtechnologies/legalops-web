@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from 'formik';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
+import { TitleHolderDetails_api } from "../apiUrls";
 
 const TitleHolderDetails = ({ onNext }) => {
+    const [loading, setLoading] = useState(false);
     const formik = useFormik({
         initialValues: {
             TitleHolderName: "",
@@ -17,11 +19,47 @@ const TitleHolderDetails = ({ onNext }) => {
             TitleHolderDistrictName: "",
             TitleHolderPincode: ""
         },
-        onSubmit: (values) => {
-            console.log('formsubmit', values)
-            onNext();
-        },
+        // onSubmit: (values) => {
+        //     console.log('formsubmit', values)
+        //     onNext();
+        // },
+        onSubmit: async (values) => {
+            console.log('Form Submitted:', values);
 
+            // Set loading state to true
+            setLoading(true);
+
+            // Replace with your actual API endpoint
+            const apiUrl = TitleHolderDetails_api;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(values),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("API response:", data);
+
+                    // After a successful API call, call onNext
+                    onNext();
+                } else {
+                    // Handle API error
+                    console.error("API Error:", response.statusText);
+                    // Optionally show an error message to the user
+                }
+            } catch (error) {
+                console.error("Error during API call:", error);
+                // Optionally show an error message to the user
+            } finally {
+                // Set loading state to false
+                setLoading(false);
+            }
+        },
         validate: (values) => {
             let errors = {};
             if (!values.TitleHolderName) {
@@ -242,8 +280,18 @@ const TitleHolderDetails = ({ onNext }) => {
                     
                     </div>
 
-                    <div className="text-center">
+                    {/* <div className="text-center">
                         <Button type="submit" variant="primary" className="mt-3">Next</Button>
+                    </div> */}
+                    <div className="text-center">
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            className="mt-3"
+                            disabled={loading}
+                        >
+                            {loading ? "Loading..." : "Next"}
+                        </Button>
                     </div>
                 </Form>
             </div>

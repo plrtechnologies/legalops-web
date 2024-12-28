@@ -2,9 +2,10 @@ import { useFormik } from 'formik';
 //import React, {useState} from 'react';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
-
-
+import React, { useState } from "react";
+import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
  const LoanProposerDetails=({ onNext })=>{
+    const [loading, setLoading] = useState(false);
     const  formik = useFormik({
         initialValues:{
         loanProposerName:"",
@@ -18,19 +19,53 @@ import Form from 'react-bootstrap/Form';
         loanProposerDistrictName:"",
         loanProposerPincode:""
        },
-       onSubmit:(values)=>{
-      //filtering the value where exceptional 
-      const filteredValues = {};
-      const exceptions = ["loanProposerStreetName"]; // Define your exception fields here
+   //     onSubmit:(values)=>{
+   //    //filtering the value where exceptional 
+   //    const filteredValues = {};
+   //    const exceptions = ["loanProposerStreetName"]; // Define your exception fields here
       
-      for (const key in values) {
-         if (!exceptions.includes(key) || values[key].trim() !== "") {
-            filteredValues[key] = values[key];
-         }
+   //    for (const key in values) {
+   //       if (!exceptions.includes(key) || values[key].trim() !== "") {
+   //          filteredValues[key] = values[key];
+   //       }
+   //    }
+   //        console.log('formsubmit', values)
+   //        onNext();
+   // },
+   onSubmit: async (values) => {
+      console.log('Form Submitted:', values);
+
+      setLoading(true);  // Start loading state
+
+      const apiUrl = LoanProposerDetails_api;  // Replace with actual API endpoint
+
+      try {
+          const response = await fetch(apiUrl, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify( ),
+          });
+
+          if (response.ok) {
+              const data = await response.json();
+              console.log("API response:", data);
+
+              // After a successful API call, call onNext
+              onNext();
+          } else {
+              console.error("API Error:", response.statusText);
+              // Optionally handle the error (show a message to the user)
+          }
+      } catch (error) {
+          console.error("Error during API call:", error);
+          // Optionally handle the error (show a message to the user)
+      } finally {
+          setLoading(false);  // End loading state
       }
-          console.log('formsubmit', values)
-          onNext();
-   },
+  },
+
        validate:(values)=>{
         let errors ={};
         if(!values.loanProposerName){
@@ -295,9 +330,17 @@ import Form from 'react-bootstrap/Form';
                  </Form.Group>
 
            
-            <div className='d-flex justify-content-center pt-5' >
-                 <Button type="submit"  >Next</Button> {/* made changes here */}
-            </div>
+                 <div className="text-center">
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            className="mt-3"
+                            disabled={loading}
+                        >
+                            {loading ? "Loading..." : "Next"}
+                        </Button>
+                    </div>
+
             </Form>
         </div>
         </div>

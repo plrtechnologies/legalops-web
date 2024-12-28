@@ -1,11 +1,13 @@
  
 // export default PropertyDetails;
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/Form";
+import { Propertydetails_api } from "../apiUrls";
 
 const PropertyDetails = ({ onNext }) => {
+  const [loading, setLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
       propertyDoorNumber: "",
@@ -16,10 +18,47 @@ const PropertyDetails = ({ onNext }) => {
       propertyType: "",  
       propertyNature: "", 
     },
-    onSubmit: (values) => {
-      console.log("Property Details Submitted:", values);
-      onNext();
-    },
+    // onSubmit: (values) => {
+    //   console.log("Property Details Submitted:", values);
+    //   onNext();
+    // },
+    onSubmit: async (values) => {
+      console.log('Form Submitted:', values);
+
+      // Set loading state to true
+      setLoading(true);
+
+      // Replace with your actual API endpoint
+      const apiUrl = Propertydetails_api;
+
+      try {
+          const response = await fetch(apiUrl, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(values),
+          });
+
+          if (response.ok) {
+              const data = await response.json();
+              console.log("API response:", data);
+
+              // After a successful API call, call onNext
+              onNext();
+          } else {
+              // Handle API error
+              console.error("API Error:", response.statusText);
+              // Optionally show an error message to the user
+          }
+      } catch (error) {
+          console.error("Error during API call:", error);
+          // Optionally show an error message to the user
+      } finally {
+          // Set loading state to false
+          setLoading(false);
+      }
+  },
     validate: (values) => {
       let errors = {};
       if (!values.propertyDoorNumber) {
@@ -270,9 +309,19 @@ const PropertyDetails = ({ onNext }) => {
             </div>
           </Form.Group>
 
-          <div className="d-flex justify-content-center pt-5">
+          {/* <div className="d-flex justify-content-center pt-5">
             <Button type="submit">Next</Button>
-          </div>
+          </div> */}
+          <div className="text-center">
+                        <Button
+                            type="submit"
+                            variant="primary"
+                            className="mt-3"
+                            disabled={loading}
+                        >
+                            {loading ? "Loading..." : "Next"}
+                        </Button>
+                    </div>
         </Form>
       </div>
     </div>
