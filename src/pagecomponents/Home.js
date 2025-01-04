@@ -1,26 +1,124 @@
-import React from "react";
-import Button from 'react-bootstrap/Button';
+// import React from "react";
+// import Button from 'react-bootstrap/Button';
+// import { useNavigate } from "react-router-dom";
+
+// const Home =()=>{
+//     const navigate = useNavigate(); //navigate to loan proposer page
+//     const createDocument =()=>{
+//         console.log("loan triggred")
+//         navigate("/CreateDocument");
+//     }   
+//     return(
+//         <div style={{height:'100vh', backgroundImage:`url('/frontendimg2.jpg')`,backgroundSize:"cover",backgroundPosition: 'center',
+//             position: 'relative'}} className="d-flex justify-content-center align-items-center text-center w-100">
+//             <div className="d-flex flex-column flex-lg-row align-items-center gap-4 ">
+//                 <Button variant="outline-danger px-4 mb-3 mb-lg-0" size="lg" className="fs-4 " style={{ borderWidth: '3px',width:"auto" ,color:"white",fontWeight:"bold"}} > 
+//                      Session Document
+//                 </Button>
+
+//                 <Button variant="outline-success px-5" size="lg" className="fs-4" style={{ borderWidth: '3px', width:"auto", color:"white", fontWeight:"bold"}} onClick={createDocument} >
+//                     Create Document
+//                 </Button>
+//             </div>
+//         </div>
+//     )   
+// }
+// export default Home;
+
+import React, { useEffect } from "react";
+import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
+ 
 
-const Home =()=>{
-    const navigate = useNavigate(); //navigate to loan proposer page
-    const createDocument =()=>{
-        console.log("loan triggred")
-        navigate("/CreateDocument");
+// Function to initialize a session with no expiry
+const initializeSession = () => {
+  const sessionId = uuidv4(); // Generate a unique session ID
+  sessionStorage.setItem("sessionId", sessionId); // Store the session ID in sessionStorage
+  console.log(`Session ID: ${sessionId}`);
+};
+
+const Home = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Initialize session if not already set
+    if (!sessionStorage.getItem("sessionId")) {
+      initializeSession();
     }   
-    return(
-        <div style={{height:'100vh', backgroundImage:`url('/frontendimg2.jpg')`,backgroundSize:"cover",backgroundPosition: 'center',
-            position: 'relative'}} className="d-flex justify-content-center align-items-center text-center w-100">
-            <div className="d-flex flex-column flex-lg-row align-items-center gap-4 ">
-                <Button variant="outline-danger px-4 mb-3 mb-lg-0" size="lg" className="fs-4 " style={{ borderWidth: '3px',width:"auto" ,color:"white",fontWeight:"bold"}} > 
-                     Session Document
-                </Button>
+  }, []);
 
-                <Button variant="outline-success px-5" size="lg" className="fs-4" style={{ borderWidth: '3px', width:"auto", color:"white", fontWeight:"bold"}} onClick={createDocument} >
-                    Create Document
-                </Button>
-            </div>
-        </div>
-    )   
-}
+
+
+  const createDocument = () => {
+    console.log("Create Document triggered");
+    initializeSession(); // Generate a new session ID
+    navigate("/CreateDocument"); // Navigate to the next page
+  };
+
+  const goToSessionDocument = () => {
+    navigate("/SessionDocument"); // Navigate to the SessionDocument page
+  };
+  return (
+    <div
+      style={{
+        height: "100vh",
+        backgroundImage: `url('/frontendimg2.jpg')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        position: "relative",
+      }}
+      className="d-flex justify-content-center align-items-center text-center w-100"
+    >
+      <div className="d-flex flex-column flex-lg-column align-items-center gap-4">
+        <Button
+          variant="outline-danger px-4 mb-3 mb-lg-3"
+          size="lg"
+          className="fs-4"
+          style={{
+            borderWidth: "3px",
+            width: "auto",
+            color: "white",
+            fontWeight: "bold",
+          }}
+          onClick={goToSessionDocument}
+        >
+          Session Document
+        </Button>
+
+        <Button
+          variant="outline-success px-5 mb-lg-3"
+          size="lg"
+          className="fs-4"
+          style={{
+            borderWidth: "3px",
+            width: "auto",
+            color: "white",
+            fontWeight: "bold",
+          }}
+          onClick={createDocument}
+        >
+          Create Document
+        </Button>
+         
+
+        <Button
+          variant="outline-primary px-5"
+          size="lg"
+          className="fs-4"
+          style={{
+            borderWidth: "3px",
+            width: "auto",
+            color: "white",
+            fontWeight: "bold",
+          }}
+        >
+          Finished Document
+        </Button>
+         
+      </div>
+    </div>
+  );
+};
+
 export default Home;

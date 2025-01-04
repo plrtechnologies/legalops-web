@@ -19,21 +19,31 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
         loanProposerDistrictName:"",
         loanProposerPincode:""
        },
-   //     onSubmit:(values)=>{
-   //    //filtering the value where exceptional 
-   //    const filteredValues = {};
-   //    const exceptions = ["loanProposerStreetName"]; // Define your exception fields here
+       onSubmit:(values)=>{
+      //filtering the value where exceptional 
+      const filteredValues = {};
+      const exceptions = ["loanProposerStreetName"]; // Define your exception fields here
       
-   //    for (const key in values) {
-   //       if (!exceptions.includes(key) || values[key].trim() !== "") {
-   //          filteredValues[key] = values[key];
-   //       }
-   //    }
-   //        console.log('formsubmit', values)
-   //        onNext();
-   // },
+      for (const key in values) {
+         if (!exceptions.includes(key) || values[key].trim() !== "") {
+            filteredValues[key] = values[key];
+         }
+      }
+          console.log('formsubmit', values)
+          onNext();
+   },
    onSubmit: async (values) => {
       console.log('Form Submitted:', values);
+      
+      // Step 1: Retrieve the session ID from sessionStorage
+      const sessionId = sessionStorage.getItem("sessionID"); // Retrieve session ID
+
+      // Step 2: Prepare the data to be sent to the API
+      const dataToSend = {
+          ...values,   // All form data
+          sessionId: sessionId  // Add session ID
+      };
+
 
       setLoading(true);  // Start loading state
 
@@ -337,7 +347,7 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                             className="mt-3"
                             disabled={loading}
                         >
-                            {loading ? "Loading..." : "Next"}
+                              {loading ? "Loading..." : "Next"} 
                         </Button>
                     </div>
 
