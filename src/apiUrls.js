@@ -1,4 +1,4 @@
-import { dns } from "./pagecomponents/dns"
+import { dns } from "./dns"
 
 export const LoanProposerDetails_api = dns +"/api/submit-boundaries"
 export const Login_api = dns +"/api/submit-boundaries"
