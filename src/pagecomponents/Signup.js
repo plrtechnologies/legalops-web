@@ -2,7 +2,7 @@ import { useFormik } from "formik";
 import React, { useState } from "react";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/esm/Button';
-import { signup_api } from "../apiUrls";
+import { Signup_api } from "../apiUrls";
 
 const  Signup =({ onNext })=>{
   const [loading, setLoading] = useState(false);
@@ -23,7 +23,7 @@ const  Signup =({ onNext })=>{
         setLoading(true);
 
         // Replace with your actual API endpoint
-        const apiUrl = signup_api;
+        const apiUrl = Signup_api;
 
         try {
             const response = await fetch(apiUrl, {
