@@ -9,6 +9,7 @@ import Home from './pagecomponents/Home';
 import About from './pagecomponents/About';
 import Login from './pagecomponents/Login';
 import CreateDocument from './pagecomponents/CreateDocument';
+import SessionDocument from './pagecomponents/SessionDocument';
 import TitleHolderDetails from './pagecomponents/TitleHolderDetails';
 import Signup from './pagecomponents/Signup';
 function App() {
@@ -23,6 +24,7 @@ function App() {
                 <Route path="/Login" element={<Login/>} />
                 <Route path="/Signup" element={<Signup/>} />
 
+                <Route path="/SessionDocument" element={<SessionDocument/>} />
                 {/* <Route path="/LoanProposerDetails" element={<LoanProposerDetails/>}/>  */}
                 <Route path="/CreateDocument"  element={<CreateDocument/>} />
                 <Route path="/TitleHolderDetails"  element={<TitleHolderDetails/>} />
