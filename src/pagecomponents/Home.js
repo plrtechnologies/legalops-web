@@ -62,7 +62,7 @@ const Home = () => {
   return (
     <div
       style={{
-        height: "100vh",
+        height:"80vh",
         backgroundImage: `url('/frontendimg2.jpg')`,
         backgroundSize: "cover",
         backgroundPosition: "center",

@@ -1,11 +1,16 @@
 import { useFormik } from 'formik';
-//import React, {useState} from 'react';
+import React, {useState,useEffect} from 'react';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
-import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+//import React, { useState } from "react";
 import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
+
+
  const LoanProposerDetails=({ onNext })=>{
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate(); // Initialize the navigate function
+
     const  formik = useFormik({
         initialValues:{
         loanProposerName:"",
@@ -19,22 +24,24 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
         loanProposerDistrictName:"",
         loanProposerPincode:""
        },
-       onSubmit:(values)=>{
+
+
+       
+      //  onSubmit:(values)=>{
       //filtering the value where exceptional 
-      const filteredValues = {};
-      const exceptions = ["loanProposerStreetName"]; // Define your exception fields here
+      // const filteredValues = {};
+      // const exceptions = ["loanProposerStreetName"];  Define your exception fields here
       
-      for (const key in values) {
-         if (!exceptions.includes(key) || values[key].trim() !== "") {
-            filteredValues[key] = values[key];
-         }
-      }
-          console.log('formsubmit', values)
-          onNext();
-   },
+      // for (const key in values) {
+      //    if (!exceptions.includes(key) || values[key].trim() !== "") {
+      //       filteredValues[key] = values[key];
+      //    }
+      // }
+      //     console.log('formsubmit', values)
+      //    onNext();
+   // },
    onSubmit: async (values) => {
       console.log('Form Submitted:', values);
-      
       // Step 1: Retrieve the session ID from sessionStorage
       const sessionId = sessionStorage.getItem("sessionID"); // Retrieve session ID
 
@@ -44,37 +51,37 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
           sessionId: sessionId  // Add session ID
       };
 
+    //   setLoading(true);  // Start loading state
+    //   const apiUrl = LoanProposerDetails_api;  // Replace with actual API endpoint
 
-      setLoading(true);  // Start loading state
+    //   try {
+    //       const response = await fetch(apiUrl, {
+    //           method: 'POST',
+    //           headers: {
+    //               'Content-Type': 'application/json',
+    //           },
+    //           body: JSON.stringify( ),
+    //       });
 
-      const apiUrl = LoanProposerDetails_api;  // Replace with actual API endpoint
+    //       if (response.ok) {
+    //           const data = await response.json();
+    //           console.log("API response:", data);
 
-      try {
-          const response = await fetch(apiUrl, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify( ),
-          });
-
-          if (response.ok) {
-              const data = await response.json();
-              console.log("API response:", data);
-
-              // After a successful API call, call onNext
-              onNext();
-          } else {
-              console.error("API Error:", response.statusText);
-              // Optionally handle the error (show a message to the user)
-          }
-      } catch (error) {
-          console.error("Error during API call:", error);
-          // Optionally handle the error (show a message to the user)
-      } finally {
-          setLoading(false);  // End loading state
-      }
-  },
+    //           //After a successful API call, call onNext
+    onNext();
+    //       } else {
+    //           console.error("API Error:", response.statusText);
+    //          // Optionally handle the error (show a message to the user)
+    //       }
+    //   } catch (error) {
+    //       console.error("Error during API call:", error);
+    //       //Optionally handle the error (show a message to the user)
+    //   } finally {
+    //       setLoading(false);  // End loading state
+    //   }
+      
+    },
+     
 
        validate:(values)=>{
         let errors ={};
@@ -116,18 +123,37 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
             errors.loanProposerPincode = "Pincode must be exactly 6 digits";
         }
          return errors;         
-       }
+       },
+
       
       });
 
+       // Save form data to sessionStorage on change
+    useEffect(() => {
+      sessionStorage.setItem("loanProposerData", JSON.stringify(formik.values));
+  }, [formik.values]);
+
+  //Retrieve form data from sessionStorage on component mount
+  useEffect(() => {
+      const savedData = JSON.parse(sessionStorage.getItem("loanProposerData"));
      
+      if (savedData) {
+          formik.setValues(savedData);
+      }
+  }, []);
+
+
+    
+  // this function for navigate to home page when click the back button
+   
+ 
 
 
     return(
         <div>
         <h3 className='text-center'> Loan Proposer Details   </h3>
 
-        <div style={{height:"100vh", paddingLeft:"50px",paddingTop:"10px",overflowX:"hidden"  }} >
+        <div style={{minheight:"100vh", paddingLeft:"50px",paddingTop:"10px", overflowX:"hidden"  }} >
             <Form onSubmit={formik.handleSubmit}> 
 
                  <Form.Group controlId="LoanProposeName">
@@ -141,15 +167,21 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                            name="loanProposerName"
                            value={formik.values.loanProposerName }
                            onChange={formik.handleChange}
-                        //    onBlur={handleBlur}
+                           onBlur={formik.handleBlur}
                            style={{ width:"300px", height: "40px" ,   borderColor: "black", fontSize:"20px" }}
                             
                           />
                           {/* this shows an error message  */}
-                           {formik.errors.loanProposerName?<div className="text-danger fw-bold">{formik.errors.loanProposerName}</div>:null}
-                       </div>       
-                 </div>
-                 </Form.Group>
+                           {/* {formik.errors.loanProposerName?<div className="text-danger fw-bold">{formik.errors.loanProposerName}</div>:null} */}
+                    {/* code for adustment    */}
+                    {formik.touched.loanProposerName && formik.errors.loanProposerName && (
+                            <div className="text-danger fw-bold">{formik.errors.loanProposerName}</div>
+                        )}  
+                       
+                       
+                       </div>        
+                 </div> 
+                 </Form.Group>  
                  
                 
                  <Form.Group controlId="LoanProposeRelationType">
@@ -162,7 +194,7 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                            name="loanProposerRelationType"
                            value={ formik.values.loanProposerRelationType }
                            onChange={formik.handleChange}
-                        //    onBlur={handleBlur}
+                           onBlur={formik.handleBlur}
                            style={{ width:"300px", height: "40px", borderColor: "black", fontSize:"20px" }}
                            //required 
                            >
@@ -174,7 +206,13 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                             <option value="H/O">H/O</option>
                             
                             </Form.Select>
-                            {formik.errors.loanProposerRelationType ? <div className="text-danger fw-bold">{formik.errors.loanProposerRelationType}</div>:null}
+                            {/* {formik.errors.loanProposerRelationType ? <div className="text-danger fw-bold">{formik.errors.loanProposerRelationType}</div>:null} */}
+                         
+                            {formik.touched.loanProposerRelationType  && formik.errors.loanProposerRelationType  && (
+                            <div className="text-danger fw-bold">{formik.errors.loanProposerRelationType }</div>
+                        )}  
+                       
+                       
                        </div> 
                  </div>
                  </Form.Group>
@@ -190,14 +228,19 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                            name="loanProposerRelativeName"
                            value={formik.values.loanProposerRelativeName}
                            onChange={formik.handleChange}
-                        //    onBlur={handleBlur}
+                           onBlur={formik.handleBlur}
                            style={{ width:"300px", height: "40px" ,   borderColor: "black", fontSize:"20px" }}
                            //required
                           />
-                           {formik.errors.loanProposerRelativeName  ? <div className="text-danger fw-bold">{formik.errors.loanProposerRelativeName}</div>:null}
+                           {/* {formik.errors.loanProposerRelativeName  ? <div className="text-danger fw-bold">{formik.errors.loanProposerRelativeName}</div>:null} */}
+                       
+                           {formik.touched.loanProposerRelativeName && formik.errors.loanProposerRelativeName && (
+                            <div className="text-danger fw-bold">{formik.errors.loanProposerRelativeName}</div>
+                        )}  
+                       
                        </div> 
                  </div>
-                 </Form.Group>
+                 </Form.Group>  
 
                  <Form.Group controlId="LoanProposerResidenceType">
                  <div className='d-flex flex-column flex-md-row flex-lg-row align-items-center' >
@@ -209,7 +252,7 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                            name="loanProposerResidenceType"
                            value={formik.values.loanProposerResidenceType}
                            onChange={formik.handleChange}
-                        //    onBlur={handleBlur}
+                            onBlur={formik.handleBlur}
                            style={{ width:"300px", height: "40px" ,   borderColor: "black", fontSize:"20px" }}
                            //required
                            >
@@ -218,7 +261,13 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                             <option value="House">House</option>
                               
                             </Form.Select> 
-                            {formik.errors.loanProposerResidenceType ? <div className="text-danger fw-bold">{formik.errors.loanProposerResidenceType}</div>:null}     
+                            {/* {formik.errors.loanProposerResidenceType ? <div className="text-danger fw-bold">{formik.errors.loanProposerResidenceType}</div>:null} */}
+                    
+                            {formik.touched.loanProposerResidenceType  && formik.errors.loanProposerResidenceType  && (
+                            <div className="text-danger fw-bold">{formik.errors.loanProposerResidenceType }</div>
+                        )}  
+                       
+                    
                      </div>
                      </div>
                  </Form.Group>
@@ -234,10 +283,14 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                            name="loanProposerDoorNumber"
                            value={formik.values.loanProposerDoorNumber}
                            onChange={formik.handleChange}
-                        //    onBlur={handleBlur}
+                            onBlur={formik.handleBlur}
                            style={{ width:"300px", height: "40px" ,   borderColor: "black", fontSize:"20px" }}
                           />
-                           {formik.errors.loanProposerDoorNumber  ? <div className="text-danger fw-bold">{formik.errors.loanProposerDoorNumber}</div>:null}
+                           {/* {formik.errors.loanProposerDoorNumber  ? <div className="text-danger fw-bold">{formik.errors.loanProposerDoorNumber}</div>:null} */}
+                           {formik.touched.loanProposerDoorNumber && formik.errors.loanProposerDoorNumber && (
+                            <div className="text-danger fw-bold">{formik.errors.loanProposerDoorNumber}</div>
+                        )}  
+                       
                        </div> 
                  </div>
                  </Form.Group>
@@ -253,10 +306,15 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                            name="loanProposerStreetName"
                            value={formik.values.loanProposerStreetName}
                            onChange={formik.handleChange}
-                        //    onBlur={handleBlur}
+                            onBlur={formik.handleBlur}
                            style={{ width:"300px", height: "40px" ,   borderColor: "black", fontSize:"20px" }}
                           />
-                           {formik.errors.loanProposerStreetName?<div className="text-danger fw-bold">{formik.errors.loanProposerStreetName}</div>:null}
+                           {/* {formik.errors.loanProposerStreetName?<div className="text-danger fw-bold">{formik.errors.loanProposerStreetName}</div>:null}*/}
+
+                         {formik.touched.loanProposerStreetName  && formik.errors.loanProposerStreetName  && (
+                            <div className="text-danger fw-bold">{formik.errors.loanProposerStreetName }</div>
+                        )}  
+                       
                        </div> 
                  </div>
                  </Form.Group>
@@ -272,10 +330,16 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                            name="loanProposerCityName"
                            value={formik.values.loanProposerCityName}
                            onChange={formik.handleChange}
-                        //    onBlur={handleBlur}
+                            onBlur={formik.handleBlur}
                            style={{ width:"300px", height: "40px" ,   borderColor: "black", fontSize:"20px" }}
                           />
-                           {formik.errors.loanProposerCityName ? <div className="text-danger fw-bold">{formik.errors.loanProposerCityName}</div>:null}
+                           {/* {formik.errors.loanProposerCityName ? <div className="text-danger fw-bold">{formik.errors.loanProposerCityName}</div>:null} */}
+                       
+                           {formik.touched.loanProposerCityName && formik.errors.loanProposerCityName && (
+                            <div className="text-danger fw-bold">{formik.errors.loanProposerCityName}</div>
+                        )}  
+                       
+                       
                        </div> 
                  </div>
                  </Form.Group>
@@ -291,10 +355,15 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                            name="loanProposerMandalName"
                            value={formik.values.loanProposerMandalName}
                            onChange={formik.handleChange}
-                        //    onBlur={handleBlur}
+                            onBlur={formik.handleBlur}
                            style={{ width:"300px", height: "40px" ,   borderColor: "black",fontSize:"20px" }}
                           />
-                           {formik.errors.loanProposerMandalName  ? <div className="text-danger fw-bold">{formik.errors.loanProposerMandalName}</div>:null}
+                           {/* {formik.errors.loanProposerMandalName  ? <div className="text-danger fw-bold">{formik.errors.loanProposerMandalName}</div>:null} */}
+                       
+                           {formik.touched.loanProposerMandalName && formik.errors.loanProposerMandalName && (
+                            <div className="text-danger fw-bold">{formik.errors.loanProposerMandalName}</div>
+                        )}  
+                       
                        </div> 
                  </div>
                  </Form.Group>
@@ -311,10 +380,15 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                            name="loanProposerDistrictName"
                            value={formik.values.loanProposerDistrictName}
                            onChange={formik.handleChange}
-                        //    onBlur={handleBlur}
+                            onBlur={formik.handleBlur}
                            style={{ width:"300px", height: "40px",     borderColor: "black" , fontSize:"20px"}}
                           />
-                           {formik.errors.loanProposerDistrictName  ? <div className="text-danger fw-bold">{formik.errors.loanProposerDistrictName}</div>:null}
+                           {/* {formik.errors.loanProposerDistrictName  ? <div className="text-danger fw-bold">{formik.errors.loanProposerDistrictName}</div>:null} */}
+                     
+                           {formik.touched.loanProposerDistrictName && formik.errors.loanProposerDistrictName && (
+                            <div className="text-danger fw-bold">{formik.errors.loanProposerDistrictName}</div>
+                        )}  
+                       
                        </div> 
                  </div>
                  </Form.Group>   
@@ -331,24 +405,32 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                            name="loanProposerPincode"
                            value={formik.values.loanProposerPincode}
                            onChange={formik.handleChange}
-                        //    onBlur={handleBlur}
+                            onBlur={formik.handleBlur}
                            style={{ width:"300px", height: "40px",     borderColor: "black" , fontSize:"20px"}}
                           />
-                           {formik.errors.loanProposerPincode  ? <div className="text-danger fw-bold">{formik.errors.loanProposerPincode}</div>:null}
+                           {/* {formik.errors.loanProposerPincode  ? <div className="text-danger fw-bold">{formik.errors.loanProposerPincode}</div>:null} */}
+                      
+                           {formik.touched.loanProposerPincode  && formik.errors.loanProposerPincode  && (
+                            <div className="text-danger fw-bold">{formik.errors.loanProposerPincode }</div>
+                        )}  
+                       
                        </div> 
                  </div>
                  </Form.Group>
 
-           
-                 <div className="text-center">
-                        <Button
-                            type="submit"
-                            variant="primary"
-                            className="mt-3"
-                            disabled={loading}
+
+                 <div className="text-center ">
+   {/* here is back button  */}
+
+                  
+
+                  <Button type ="submit" variant="primary" className="mt-3"  
+                            // disabled={loading}
                         >
-                              {loading ? "Loading..." : "Next"} 
+                              {loading ? "Loading..." : "Next"}    
+                               
                         </Button>
+
                     </div>
 
             </Form>
@@ -356,4 +438,7 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
         </div>
     )
 }
-export default LoanProposerDetails;
+export default LoanProposerDetails;   
+
+
+ 
