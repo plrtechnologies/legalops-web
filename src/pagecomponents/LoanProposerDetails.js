@@ -12,18 +12,18 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
     const navigate = useNavigate(); // Initialize the navigate function
 
     const  formik = useFormik({
-        initialValues:{
-        loanProposerName:"",
-        loanProposerRelationType:"",
-        loanProposerRelativeName:"",
-        loanProposerResidenceType:"",
-        loanProposerDoorNumber:"",
-        loanProposerStreetName:"",     
-        loanProposerCityName:"",
-        loanProposerMandalName:"",
-        loanProposerDistrictName:"",
-        loanProposerPincode:""
-       },
+      initialValues : JSON.parse(sessionStorage.getItem("loanProposerData")) || {
+        loanProposerName: null,
+        loanProposerRelationType: null,
+        loanProposerRelativeName: null,
+        loanProposerResidenceType: null,
+        loanProposerDoorNumber: null,
+        loanProposerStreetName: null,
+        loanProposerCityName: null,
+        loanProposerMandalName: null,
+        loanProposerDistrictName: null,
+        loanProposerPincode: null
+    },
 
 
        
