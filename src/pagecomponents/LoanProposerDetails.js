@@ -10,19 +10,19 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
  const LoanProposerDetails=({ onNext })=>{
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate(); // Initialize the navigate function
-
+  
     const  formik = useFormik({
-        initialValues:{
-        loanProposerName:"",
-        loanProposerRelationType:"",
-        loanProposerRelativeName:"",
-        loanProposerResidenceType:"",
-        loanProposerDoorNumber:"",
-        loanProposerStreetName:"",     
-        loanProposerCityName:"",
-        loanProposerMandalName:"",
-        loanProposerDistrictName:"",
-        loanProposerPincode:""
+        initialValues: JSON.parse(sessionStorage.getItem("loanProposerData")) || {
+        loanProposerName:null,
+        loanProposerRelationType:null,
+        loanProposerRelativeName:null,
+        loanProposerResidenceType:null,
+        loanProposerDoorNumber:null,
+        loanProposerStreetName:null,     
+        loanProposerCityName:null,
+        loanProposerMandalName:null,
+        loanProposerDistrictName:null,
+        loanProposerPincode:null
        },
 
 
@@ -141,7 +141,7 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
           formik.setValues(savedData);
       }
   }, []);
-
+   
 
     
   // this function for navigate to home page when click the back button
@@ -422,8 +422,6 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                  <div className="text-center ">
    {/* here is back button  */}
 
-                  
-
                   <Button type ="submit" variant="primary" className="mt-3"  
                             // disabled={loading}
                         >
@@ -440,5 +438,356 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
 }
 export default LoanProposerDetails;   
 
-
+//--------------------------------------------------------
  
+// import { useFormik } from 'formik';
+// import React, { useState, useEffect } from 'react';
+// import Button from 'react-bootstrap/esm/Button';
+// import Form from 'react-bootstrap/Form';
+// import { useNavigate } from 'react-router-dom'; // Import useNavigate
+
+// const LoanProposerDetails = ({ onNext, sessionId }) => {
+//     const [loading, setLoading] = useState(false);
+//     const navigate = useNavigate(); // Initialize the navigate function
+     
+
+//     // Clear session storage when the session ID changes
+//     useEffect(() => {
+//       sessionStorage.clear();
+//   }, [sessionId]);
+//     // Fetch stored data from session storage
+//     const storedFormData = sessionStorage.getItem('loanProposerData');
+    
+//     const initialValues = storedFormData
+//         ? JSON.parse(storedFormData) // Parse stored JSON data
+//         : {
+//               loanProposerName: "",
+//               loanProposerRelationType: "",
+//               loanProposerRelativeName: "",
+//               loanProposerResidenceType: "",
+//               loanProposerDoorNumber: "",
+//               loanProposerStreetName: "",
+//               loanProposerCityName: "",
+//               loanProposerMandalName: "",
+//               loanProposerDistrictName: "",
+//               loanProposerPincode: ""
+//           };
+
+//     const formik = useFormik({
+//         initialValues,
+//         onSubmit: async (values) => {
+//             console.log('Form Submitted:', values);
+//             onNext();
+//         },
+//         validate: (values) => {
+//             let errors = {};
+//             if (!values.loanProposerName) {
+//                 errors.loanProposerName = "*required*";
+//             }
+//             // Add your other validations here...
+
+//             if (!values.loanProposerPincode) {
+//                 errors.loanProposerPincode = "*required*";
+//             } else if (!/^\d{6}$/.test(values.loanProposerPincode)) {
+//                 errors.loanProposerPincode = "Pincode must be exactly 6 digits";
+//             }
+//             return errors;
+//         }
+//     });
+
+//     // Save form data to session storage on change
+//     useEffect(() => {
+//         sessionStorage.setItem('loanProposerData', JSON.stringify(formik.values));
+//     }, [formik.values]);
+//  // Clear session storage when the session ID changes
+  
+//     return (
+//         <div>
+//             <h3 className="text-center"> Loan Proposer Details </h3>
+
+//             <div
+//                 style={{
+//                     minHeight: "100vh",
+//                     paddingLeft: "50px",
+//                     paddingTop: "10px",
+//                     overflowX: "hidden"
+//                 }}
+//             >
+//                 <Form onSubmit={formik.handleSubmit}>
+//                     {/* Example Field */}
+//                     <Form.Group controlId="LoanProposeName">
+//                         <div className="d-flex flex-column flex-md-row flex-lg-row align-items-center">
+//                             <div className="col-12 " style={{ width: "420px" }}>
+//                                 <Form.Label className="fs-3">Loan Proposer Name </Form.Label>
+//                             </div>
+//                             <div className="col-12  ">
+//                                 <Form.Control
+//                                     type="text"
+//                                     name="loanProposerName"
+//                                     value={formik.values.loanProposerName}
+//                                     onChange={formik.handleChange}
+//                                     onBlur={formik.handleBlur}
+//                                     style={{
+//                                         width: "300px",
+//                                         height: "40px",
+//                                         borderColor: "black",
+//                                         fontSize: "20px"
+//                                     }}
+//                                 />
+//                                 {formik.touched.loanProposerName && formik.errors.loanProposerName && (
+//                                     <div className="text-danger fw-bold">
+//                                         {formik.errors.loanProposerName}
+//                                     </div>
+//                                 )}
+//                             </div>
+//                         </div>
+//                     </Form.Group>
+
+
+//                     <Form.Group controlId="LoanProposerRelationType">
+//     <div className="d-flex flex-column flex-md-row flex-lg-row align-items-center">
+//         <div className="col-12" style={{ width: "420px" }}>
+//             <Form.Label className="fs-3">Loan Proposer Relation Type</Form.Label>
+//         </div>
+//         <div className="col-12">
+//             <Form.Control
+//                 type="text"
+//                 name="loanProposerRelationType"
+//                 value={formik.values.loanProposerRelationType}
+//                 onChange={formik.handleChange}
+//                 onBlur={formik.handleBlur}
+//                 style={{
+//                     width: "300px",
+//                     height: "40px",
+//                     borderColor: "black",
+//                     fontSize: "20px",
+//                 }}
+//             />
+//             {formik.touched.loanProposerRelationType && formik.errors.loanProposerRelationType && (
+//                 <div className="text-danger fw-bold">
+//                     {formik.errors.loanProposerRelationType}
+//                 </div>
+//             )}
+//         </div>
+//     </div>
+// </Form.Group>
+
+// <Form.Group controlId="LoanProposerRelativeName">
+//     <div className="d-flex flex-column flex-md-row flex-lg-row align-items-center">
+//         <div className="col-12" style={{ width: "420px" }}>
+//             <Form.Label className="fs-3">Loan Proposer Relative Name</Form.Label>
+//         </div>
+//         <div className="col-12">
+//             <Form.Control
+//                 type="text"
+//                 name="loanProposerRelativeName"
+//                 value={formik.values.loanProposerRelativeName}
+//                 onChange={formik.handleChange}
+//                 onBlur={formik.handleBlur}
+//                 style={{
+//                     width: "300px",
+//                     height: "40px",
+//                     borderColor: "black",
+//                     fontSize: "20px",
+//                 }}
+//             />
+//             {formik.touched.loanProposerRelativeName && formik.errors.loanProposerRelativeName && (
+//                 <div className="text-danger fw-bold">
+//                     {formik.errors.loanProposerRelativeName}
+//                 </div>
+//             )}
+//         </div>
+//     </div>
+// </Form.Group>
+
+// <Form.Group controlId="LoanProposerResidenceType">
+//     <div className="d-flex flex-column flex-md-row flex-lg-row align-items-center">
+//         <div className="col-12" style={{ width: "420px" }}>
+//             <Form.Label className="fs-3">Loan Proposer Residence Type</Form.Label>
+//         </div>
+//         <div className="col-12">
+//             <Form.Control
+//                 type="text"
+//                 name="loanProposerResidenceType"
+//                 value={formik.values.loanProposerResidenceType}
+//                 onChange={formik.handleChange}
+//                 onBlur={formik.handleBlur}
+//                 style={{
+//                     width: "300px",
+//                     height: "40px",
+//                     borderColor: "black",
+//                     fontSize: "20px",
+//                 }}
+//             />
+//             {formik.touched.loanProposerResidenceType && formik.errors.loanProposerResidenceType && (
+//                 <div className="text-danger fw-bold">
+//                     {formik.errors.loanProposerResidenceType}
+//                 </div>
+//             )}
+//         </div>
+//     </div>
+// </Form.Group>
+
+// <Form.Group controlId="LoanProposerDoorNumber">
+//     <div className="d-flex flex-column flex-md-row flex-lg-row align-items-center">
+//         <div className="col-12" style={{ width: "420px" }}>
+//             <Form.Label className="fs-3">Loan Proposer Door Number</Form.Label>
+//         </div>
+//         <div className="col-12">
+//             <Form.Control
+//                 type="text"
+//                 name="loanProposerDoorNumber"
+//                 value={formik.values.loanProposerDoorNumber}
+//                 onChange={formik.handleChange}
+//                 onBlur={formik.handleBlur}
+//                 style={{
+//                     width: "300px",
+//                     height: "40px",
+//                     borderColor: "black",
+//                     fontSize: "20px",
+//                 }}
+//             />
+//             {formik.touched.loanProposerDoorNumber && formik.errors.loanProposerDoorNumber && (
+//                 <div className="text-danger fw-bold">
+//                     {formik.errors.loanProposerDoorNumber}
+//                 </div>
+//             )}
+//         </div>
+//     </div>
+// </Form.Group>
+
+// <Form.Group controlId="LoanProposerStreetName">
+//     <div className="d-flex flex-column flex-md-row flex-lg-row align-items-center">
+//         <div className="col-12" style={{ width: "420px" }}>
+//             <Form.Label className="fs-3">Loan Proposer Street Name</Form.Label>
+//         </div>
+//         <div className="col-12">
+//             <Form.Control
+//                 type="text"
+//                 name="loanProposerStreetName"
+//                 value={formik.values.loanProposerStreetName}
+//                 onChange={formik.handleChange}
+//                 onBlur={formik.handleBlur}
+//                 style={{
+//                     width: "300px",
+//                     height: "40px",
+//                     borderColor: "black",
+//                     fontSize: "20px",
+//                 }}
+//             />
+//             {formik.touched.loanProposerStreetName && formik.errors.loanProposerStreetName && (
+//                 <div className="text-danger fw-bold">
+//                     {formik.errors.loanProposerStreetName}
+//                 </div>
+//             )}
+//         </div>
+//     </div>
+// </Form.Group>
+
+// <Form.Group controlId="LoanProposerCityName">
+//     <div className="d-flex flex-column flex-md-row flex-lg-row align-items-center">
+//         <div className="col-12" style={{ width: "420px" }}>
+//             <Form.Label className="fs-3">Loan Proposer City Name</Form.Label>
+//         </div>
+//         <div className="col-12">
+//             <Form.Control
+//                 type="text"
+//                 name="loanProposerCityName"
+//                 value={formik.values.loanProposerCityName}
+//                 onChange={formik.handleChange}
+//                 onBlur={formik.handleBlur}
+//                 style={{
+//                     width: "300px",
+//                     height: "40px",
+//                     borderColor: "black",
+//                     fontSize: "20px",
+//                 }}
+//             />
+//             {formik.touched.loanProposerCityName && formik.errors.loanProposerCityName && (
+//                 <div className="text-danger fw-bold">
+//                     {formik.errors.loanProposerCityName}
+//                 </div>
+//             )}
+//         </div>
+//     </div>
+// </Form.Group>
+
+// <Form.Group controlId="LoanProposerMandalName">
+//     <div className="d-flex flex-column flex-md-row flex-lg-row align-items-center">
+//         <div className="col-12" style={{ width: "420px" }}>
+//             <Form.Label className="fs-3">Loan Proposer Mandal Name</Form.Label>
+//         </div>
+//         <div className="col-12">
+//             <Form.Control
+//                 type="text"
+//                 name="loanProposerMandalName"
+//                 value={formik.values.loanProposerMandalName}
+//                 onChange={formik.handleChange}
+//                 onBlur={formik.handleBlur}
+//                 style={{
+//                     width: "300px",
+//                     height: "40px",
+//                     borderColor: "black",
+//                     fontSize: "20px",
+//                 }}
+//             />
+//             {formik.touched.loanProposerMandalName && formik.errors.loanProposerMandalName && (
+//                 <div className="text-danger fw-bold">
+//                     {formik.errors.loanProposerMandalName}
+//                 </div>
+//             )}
+//         </div>
+//     </div>
+// </Form.Group>
+
+// <Form.Group controlId="LoanProposerDistrictName">
+//     <div className="d-flex flex-column flex-md-row flex-lg-row align-items-center">
+//         <div className="col-12" style={{ width: "420px" }}>
+//             <Form.Label className="fs-3">Loan Proposer District Name</Form.Label>
+//         </div>
+//         <div className="col-12">
+//             <Form.Control
+//                 type="text"
+//                 name="loanProposerDistrictName"
+//                 value={formik.values.loanProposerDistrictName}
+//                 onChange={formik.handleChange}
+//                 onBlur={formik.handleBlur}
+//                 style={{
+//                     width: "300px",
+//                     height: "40px",
+//                     borderColor: "black",
+//                     fontSize: "20px",
+//                 }}
+//             />
+//             {formik.touched.loanProposerDistrictName && formik.errors.loanProposerDistrictName && (
+//                 <div className="text-danger fw-bold">
+//                     {formik.errors.loanProposerDistrictName}
+//                 </div>
+//             )}
+//         </div>
+//     </div>
+// </Form.Group>
+
+
+//                     {/* Add more fields here */}
+//                     <div className="text-center ">
+//                         <Button
+//                             type="submit"
+//                             variant="primary"
+//                             className="mt-3"
+//                             disabled={loading}
+//                         >
+//                             {loading ? "Loading..." : "Next"}
+//                         </Button>
+//                     </div>
+//                 </Form>
+//             </div>
+//         </div>
+//     );
+// };
+
+// export default LoanProposerDetails;
+
+//---------------------------------------------------
+
+
