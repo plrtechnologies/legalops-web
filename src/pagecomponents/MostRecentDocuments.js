@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import Form from 'react-bootstrap/Form';
 import { Button } from "react-bootstrap";
@@ -22,36 +22,40 @@ const MostRecentDocument =({onNext})=>{
     //    },
     onSubmit: async (values) => {
         console.log('Form Submitted:', values);
-  
-        setLoading(true);  // Start loading state
-  
-        const apiUrl = Mostrecentdocuments_api;  // Replace with actual API endpoint
-  
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(values),
-            });
-  
-            if (response.ok) {
-                const data = await response.json();
-                console.log("API response:", data);
-  
-                // After a successful API call, call onNext
+        // Step 1: Retrieve the session ID from sessionStorage
+      const sessionId = sessionStorage.getItem("sessionID"); // Retrieve session ID
+      // Step 2: Prepare the data to be sent to the API
+      const dataToSend = {
+          ...values,   // All form data
+          sessionId: sessionId  // Add session ID
+      };
+
+  //comented the api code for testing purpose ............
+        // setLoading(true);  // Start loading state
+        // const apiUrl = Mostrecentdocuments_api;  // Replace with actual API endpoint
+        // try {
+        //     const response = await fetch(apiUrl, {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify(values),
+        //     });
+        //     if (response.ok) {
+        //         const data = await response.json();
+        //         console.log("API response:", data);
+        //         // After a successful API call, call onNext
                 onNext();
-            } else {
-                console.error("API Error:", response.statusText);
-                // Optionally handle the error (show a message to the user)
-            }
-        } catch (error) {
-            console.error("Error during API call:", error);
-            // Optionally handle the error (show a message to the user)
-        } finally {
-            setLoading(false);  // End loading state
-        }
+        //     } else {
+        //         console.error("API Error:", response.statusText);
+        //         // Optionally handle the error (show a message to the user)
+        //     }
+        // } catch (error) {
+        //     console.error("Error during API call:", error);
+        //     // Optionally handle the error (show a message to the user)
+        // } finally {
+        //     setLoading(false);  // End loading state
+        // }
     },
        validate:(values)=>{
           let errors ={};     //{initially no errrors}
@@ -83,6 +87,21 @@ const MostRecentDocument =({onNext})=>{
        }
  
        })
+  
+       // Save form data to sessionStorage on change
+           useEffect(() => {
+             sessionStorage.setItem("mostRecentDocumentData", JSON.stringify(formik.values));
+         }, [formik.values]);
+       
+         // Retrieve form data from sessionStorage on component mount
+         useEffect(() => {
+             const savedData = JSON.parse(sessionStorage.getItem("mostRecentDocumentData"));
+             if (savedData) {
+                 formik.setValues(savedData);
+             }
+         }, []);
+
+
            return(
         <div>
             <h2 className="text-center">Most Recent Document Details </h2>
@@ -261,16 +280,7 @@ const MostRecentDocument =({onNext})=>{
        
      )
 
-     
-    
-    
- 
-    
-       
-        
-
 }
-
-
-
 export default MostRecentDocument;
+
+ 
