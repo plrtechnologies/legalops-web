@@ -1,20 +1,22 @@
  
 // export default PropertyDetails;
 import { useFormik } from "formik";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/esm/Button";
 import Form from "react-bootstrap/Form";
+import { useNavigate } from "react-router-dom"; 
 import { Propertydetails_api } from "../apiUrls";
 
 const PropertyDetails = ({ onNext }) => {
+  const navigate = useNavigate();  // Initialize navigate
   const [loading, setLoading] = useState(false);
   const formik = useFormik({
-    initialValues: {
+    initialValues:JSON.parse(sessionStorage.getItem("PropertyDetails")) || {
       propertyDoorNumber: "",
       nearbyDoor: "", // Yes or No (radio buttons)
       propertyAssessmentNumber: "",
       propertySurveyNumber: "",
-      ExtentOfProperty: "",
+      extentOfProperty: "",
       propertyType: "",  
       propertyNature: "", 
     },
@@ -26,38 +28,38 @@ const PropertyDetails = ({ onNext }) => {
       console.log('Form Submitted:', values);
 
       // Set loading state to true
-      setLoading(true);
+      // setLoading(true);
 
       // Replace with your actual API endpoint
-      const apiUrl = Propertydetails_api;
+      // const apiUrl = Propertydetails_api;
 
-      try {
-          const response = await fetch(apiUrl, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(values),
-          });
+      // try {
+      //     const response = await fetch(apiUrl, {
+      //         method: 'POST',
+      //         headers: {
+      //             'Content-Type': 'application/json',
+      //         },
+      //         body: JSON.stringify(values),
+      //     });
 
-          if (response.ok) {
-              const data = await response.json();
-              console.log("API response:", data);
+      //     if (response.ok) {
+      //         const data = await response.json();
+      //         console.log("API response:", data);
 
-              // After a successful API call, call onNext
+      //         // After a successful API call, call onNext
               onNext();
-          } else {
-              // Handle API error
-              console.error("API Error:", response.statusText);
-              // Optionally show an error message to the user
-          }
-      } catch (error) {
-          console.error("Error during API call:", error);
-          // Optionally show an error message to the user
-      } finally {
-          // Set loading state to false
-          setLoading(false);
-      }
+      //     } else {
+      //         // Handle API error
+      //         console.error("API Error:", response.statusText);
+      //         // Optionally show an error message to the user
+      //     }
+      // } catch (error) {
+      //     console.error("Error during API call:", error);
+      //     // Optionally show an error message to the user
+      // } finally {
+      //     // Set loading state to false
+      //     setLoading(false);
+      // }
   },
     validate: (values) => {
       let errors = {};
@@ -73,8 +75,8 @@ const PropertyDetails = ({ onNext }) => {
       if (!values.propertySurveyNumber) {
         errors.propertySurveyNumber = "*required*";
       }
-      if (!values.ExtentOfProperty) {
-        errors.ExtentOfProperty = "*required*";
+      if (!values.extentOfProperty) {
+        errors.extentOfProperty = "*required*";
       }
       if (!values.propertyType) {
         errors.propertyType = "*required*";
@@ -85,7 +87,19 @@ const PropertyDetails = ({ onNext }) => {
       return errors;
     },
   });
-
+// Save form data to sessionStorage on change
+           useEffect(() => {
+             sessionStorage.setItem("PropertyDetails", JSON.stringify(formik.values));
+         }, [formik.values]);
+       
+         // Retrieve form data from sessionStorage on component mount
+         useEffect(() => {
+             const savedData = JSON.parse(sessionStorage.getItem("PropertyDetails"));
+             if (savedData) {
+                 formik.setValues(savedData);
+             }
+         }, []);     
+     
   return (
     <div>
       <h3 className="text-center">Property Details</h3>
@@ -110,6 +124,7 @@ const PropertyDetails = ({ onNext }) => {
                   name="propertyDoorNumber"
                   value={formik.values.propertyDoorNumber}
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   style={{
                     width: "300px",
                     height: "40px",
@@ -117,11 +132,15 @@ const PropertyDetails = ({ onNext }) => {
                     fontSize: "20px",
                   }}
                 />
-                {formik.errors.propertyDoorNumber && (
+                {/* {formik.errors.propertyDoorNumber && (
                   <div className="text-danger fw-bold">
                     {formik.errors.propertyDoorNumber}
                   </div>
+                )} */}
+             {formik.touched.  propertyDoorNumber && formik.errors.  propertyDoorNumber && (
+              <div className="text-danger fw-bold ">{formik.errors.  propertyDoorNumber}</div>
                 )}
+
               </div>
             </div>
           </Form.Group>
@@ -140,6 +159,7 @@ const PropertyDetails = ({ onNext }) => {
                   value="Yes"
                   checked={formik.values.nearbyDoor === "Yes"}
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
                 <Form.Check 
                   type="radio"
@@ -148,12 +168,11 @@ const PropertyDetails = ({ onNext }) => {
                   value="No"
                   checked={formik.values.nearbyDoor === "No"}
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                 />
-                {formik.errors.nearbyDoor && (
-                  <div className="text-danger fw-bold">
-                    {formik.errors.nearbyDoor}
-                  </div>
-                )}
+                 {formik.touched.nearbyDoor    && formik.errors.nearbyDoor    && (
+                            <div className="text-danger fw-bold  ">{formik.errors.nearbyDoor   }</div>
+                            )}
               </div>
             </div>
           </Form.Group>
@@ -172,6 +191,7 @@ const PropertyDetails = ({ onNext }) => {
                   name="propertyAssessmentNumber"
                   value={formik.values.propertyAssessmentNumber}
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   style={{
                     width: "300px",
                     height: "40px",
@@ -179,11 +199,9 @@ const PropertyDetails = ({ onNext }) => {
                     fontSize: "20px",
                   }}
                 />
-                {formik.errors.propertyAssessmentNumber && (
-                  <div className="text-danger fw-bold">
-                    {formik.errors.propertyAssessmentNumber}
-                  </div>
-                )}
+                 {formik.touched.  propertyAssessmentNumber && formik.errors.  propertyAssessmentNumber && (
+                            <div className="text-danger fw-bold  ">{formik.errors.  propertyAssessmentNumber}</div>
+                            )}
               </div>
             </div>
           </Form.Group>
@@ -200,6 +218,7 @@ const PropertyDetails = ({ onNext }) => {
                   name="propertySurveyNumber"
                   value={formik.values.propertySurveyNumber}
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   style={{
                     width: "300px",
                     height: "40px",
@@ -207,17 +226,15 @@ const PropertyDetails = ({ onNext }) => {
                     fontSize: "20px",
                   }}
                 />
-                {formik.errors.propertySurveyNumber && (
-                  <div className="text-danger fw-bold">
-                    {formik.errors.propertySurveyNumber}
-                  </div>
-                )}
+                {formik.touched.propertySurveyNumber && formik.errors. propertySurveyNumber && (
+                            <div className="text-danger fw-bold ">{formik.errors.propertySurveyNumber}</div>
+                            )}
               </div>
             </div>
           </Form.Group>
 
           {/* Extent Of Property */}
-          <Form.Group controlId="ExtentOfProperty">
+          <Form.Group controlId="extentOfProperty">
             <div className="d-flex flex-column flex-md-row flex-lg-row align-items-center">
               <div className="col-12" style={{ width: "420px" }}>
                 <Form.Label className="fs-3">Total Extent of Property</Form.Label>
@@ -225,9 +242,10 @@ const PropertyDetails = ({ onNext }) => {
               <div className="col-12">
                 <Form.Control
                   type="text"
-                  name="ExtentOfProperty"
-                  value={formik.values.ExtentOfProperty}
+                  name="extentOfProperty"
+                  value={formik.values.extentOfProperty}
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   style={{
                     width: "300px",
                     height: "40px",
@@ -235,11 +253,9 @@ const PropertyDetails = ({ onNext }) => {
                     fontSize: "20px",
                   }}
                 />
-                {formik.errors.ExtentOfProperty && (
-                  <div className="text-danger fw-bold">
-                    {formik.errors.ExtentOfProperty}
-                  </div>
-                )}
+                 {formik.touched. extentOfProperty && formik.errors. extentOfProperty && (
+                            <div className="text-danger fw-bold  ">{formik.errors. extentOfProperty}</div>
+                            )}
               </div>
             </div>
           </Form.Group>
@@ -255,6 +271,7 @@ const PropertyDetails = ({ onNext }) => {
                   name="propertyType"
                   value={formik.values.propertyType}
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   style={{
                     width: "300px",
                     height: "40px",
@@ -268,11 +285,9 @@ const PropertyDetails = ({ onNext }) => {
                   <option value="Tiled House">Tiled House</option>
                    
                 </Form.Select>
-                {formik.errors.propertyType && (
-                  <div className="text-danger fw-bold">
-                    {formik.errors.propertyType}
-                  </div>
-                )}
+                {formik.touched. propertyType   && formik.errors. propertyType  && (
+                            <div className="text-danger fw-bold  ">{formik.errors.propertyType }</div>
+                            )}
               </div>
             </div>
           </Form.Group>
@@ -288,6 +303,7 @@ const PropertyDetails = ({ onNext }) => {
                   name="propertyNature"
                   value={formik.values.propertyNature}
                   onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
                   style={{
                     width: "300px",
                     height: "40px",
@@ -300,11 +316,18 @@ const PropertyDetails = ({ onNext }) => {
                   <option value="Residential">Residential</option>
                   
                 </Form.Select>
-                {formik.errors.propertyNature && (
+                {/* {formik.errors.propertyNature && (
                   <div className="text-danger fw-bold">
                     {formik.errors.propertyNature}
                   </div>
-                )}
+                )} */}
+
+
+                    {formik.touched. propertyNature && formik.errors. propertyNature && (
+                            <div className="text-danger fw-bold  ">{formik.errors. propertyNature}</div>
+                        )}  
+
+
               </div>
             </div>
           </Form.Group>
@@ -313,6 +336,16 @@ const PropertyDetails = ({ onNext }) => {
             <Button type="submit">Next</Button>
           </div> */}
           <div className="text-center">
+                         
+                          {/* Back Button */}
+                        <Button
+                            variant="secondary"
+                            className="mt-3 me-3"
+                            onClick={() => navigate(-1)}  // Navigate back
+                            >
+                            Back
+                        </Button>
+                        
                         <Button
                             type="submit"
                             variant="primary"

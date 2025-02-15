@@ -57,10 +57,6 @@ const Home = () => {
     // Clear all session storage data when "Create Document" is clicked
     sessionStorage.clear(); // This will clear everything in sessionStorage
 
-
-
-
-
     initializeSession(); // Generate a new session ID
     navigate("CreateDocument"); // Navigate to the next page
   };
@@ -72,6 +68,7 @@ const Home = () => {
     <div
       style={{
         height:"82vh",
+        
         backgroundImage: `url('/frontendimg2.jpg')`,
         backgroundSize: "cover",
         backgroundPosition: "center",
@@ -79,7 +76,7 @@ const Home = () => {
       }}
       className="d-flex justify-content-center align-items-center text-center w-100"
     >
-      <div className="d-flex flex-column flex-lg-column align-items-center gap-4">
+      <div className="d-flex flex-column flex-lg-column align-items-center gap-4 ">
         <Button
           variant="outline-danger px-4 mb-3 mb-lg-3"
           size="lg"
