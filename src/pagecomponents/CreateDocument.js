@@ -150,6 +150,7 @@ import MostRecentDocuments from "../pagecomponents/MostRecentDocuments";
 import PropertyBoundaries from "../pagecomponents/PropertyBoundaries";
 import TitleHolderDetails from "../pagecomponents/TitleHolderDetails";
 import PropertyDetails from "../pagecomponents/PropertyDetails";
+import LinkDocuments from "../pagecomponents/LinkDocuments"
 
 const CreateDocument = () => {
   const navigate = useNavigate();
@@ -177,8 +178,13 @@ const CreateDocument = () => {
         return <PropertyDetails onNext={() => navigate("/CreateDocument/PropertyBoundaries")} />;
       case "/CreateDocument/PropertyBoundaries":
         return <PropertyBoundaries />;
+        case "/CreateDocument/LinkDocuments":
+          return <LinkDocuments />;
+
       default:
         return <LoanProposerDetails onNext={() => navigate("/CreateDocument/LoanProposerAndTitleHolder")} />;
+    
+    
     }
   };
 
@@ -204,8 +210,8 @@ const CreateDocument = () => {
             Property Boundaries
           </Button>
  {/* dummy buttons added below for showing ui  */}
-          <Button className="w-100 m-1 fs-5" onClick={() => navigate("/CreateDocument/PropertyBoundaries")}>
-             Dummy buttons 
+          <Button className="w-100 m-1 fs-5" onClick={() => navigate("/CreateDocument/LinkDocuments")}>
+             Link Documents  
           </Button>
           <Button className="w-100 m-1 fs-5" onClick={() => navigate("/CreateDocument/PropertyBoundaries")}>
              Dummy buttons

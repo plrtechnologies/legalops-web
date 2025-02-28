@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import { useFormik } from 'formik';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
@@ -7,17 +7,17 @@ import { TitleHolderDetails_api } from "../apiUrls";
 const TitleHolderDetails = ({ onNext }) => {
     const [loading, setLoading] = useState(false);
     const formik = useFormik({
-        initialValues: {
-            TitleHolderName: "",
-            TitleHolderRelationType: "",
-            TitleHolderRelativeName: "",
-            TitleHolderResidenceType: "",
-            TitleHolderDoorNumber: "",
-            TitleHolderStreetName: "",
-            TitleHolderCityName: "",
-            TitleHolderMandalName: "",
-            TitleHolderDistrictName: "",
-            TitleHolderPincode: ""
+        initialValues:JSON.parse(sessionStorage.getItem("TitleHoldersData")) ||  {
+            titleHolderName: "",
+            titleHolderRelationType: "",
+            titleHolderRelativeName: "",
+            titleHolderResidenceType: "",
+            titleHolderDoorNumber: "",
+            titleHolderStreetName: "",
+            titleHolderCityName: "",
+            titleHolderMandalName: "",
+            titleHolderDistrictName: "",
+            titleHolderPincode: ""
         },
         // onSubmit: (values) => {
         //     console.log('formsubmit', values)
@@ -27,75 +27,88 @@ const TitleHolderDetails = ({ onNext }) => {
             console.log('Form Submitted:', values);
 
             // Set loading state to true
-            setLoading(true);
+            //setLoading(true);
 
             // Replace with your actual API endpoint
-            const apiUrl = TitleHolderDetails_api;
+            // const apiUrl = TitleHolderDetails_api;
 
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(values),
-                });
+            // try {
+            //     const response = await fetch(apiUrl, {
+            //         method: 'POST',
+            //         headers: {
+            //             'Content-Type': 'application/json',
+            //         },
+            //         body: JSON.stringify(values),
+            //     });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    console.log("API response:", data);
+            //     if (response.ok) {
+            //         const data = await response.json();
+            //         console.log("API response:", data);
 
-                    // After a successful API call, call onNext
-                    onNext();
-                } else {
-                    // Handle API error
-                    console.error("API Error:", response.statusText);
-                    // Optionally show an error message to the user
-                }
-            } catch (error) {
-                console.error("Error during API call:", error);
-                // Optionally show an error message to the user
-            } finally {
-                // Set loading state to false
-                setLoading(false);
-            }
+            //         // After a successful API call, call onNext
+          onNext();
+            //     } else {
+            //         // Handle API error
+            //         console.error("API Error:", response.statusText);
+            //         // Optionally show an error message to the user
+            //     }
+            // } catch (error) {
+            //     console.error("Error during API call:", error);
+            //     // Optionally show an error message to the user
+            // } finally {
+            //     // Set loading state to false
+            //     setLoading(false);
+            // }
         },
         validate: (values) => {
             let errors = {};
-            if (!values.TitleHolderName) {
-                errors.TitleHolderName = "*required*"
+            if (!values.titleHolderName) {
+                errors.titleHolderName = "*required*"
             }
-            if (!values.TitleHolderRelationType) {
-                errors.TitleHolderRelationType = "*required*";
+            if (!values.titleHolderRelationType) {
+                errors.titleHolderRelationType = "*required*";
             }
-            if (!values.TitleHolderRelativeName) {
-                errors.TitleHolderRelativeName = "*required*";
+            if (!values.titleHolderRelativeName) {
+                errors.titleHolderRelativeName = "*required*";
             }
-            if (!values.TitleHolderResidenceType) {
-                errors.TitleHolderResidenceType = "*required*";
+            if (!values.titleHolderResidenceType) {
+                errors.titleHolderResidenceType = "*required*";
             }
-            if (!values.TitleHolderDoorNumber) {
-                errors.TitleHolderDoorNumber = "*required*";
+            if (!values.titleHolderDoorNumber) {
+                errors.titleHolderDoorNumber = "*required*";
             }
-            if (!values.TitleHolderStreetName) {
-                errors.TitleHolderStreetName = "*required*";
+            if (!values.titleHolderStreetName) {
+                errors.titleHolderStreetName = "*required*";
             }
 
-            if (!values.TitleHolderCityName) {
-                errors.TitleHolderCityName = "*required*";
+            if (!values.titleHolderCityName) {
+                errors.titleHolderCityName = "*required*";
             }
-            if (!values.TitleHolderMandalName) {
-                errors.TitleHolderMandalName = "*required*";
+            if (!values.titleHolderMandalName) {
+                errors.titleHolderMandalName = "*required*";
             }
-            if (!values.TitleHolderDistrictName) {
-                errors.TitleHolderDistrictName = "*required*";
+            if (!values.titleHolderDistrictName) {
+                errors.titleHolderDistrictName = "*required*";
             }
-            if (!values.TitleHolderPincode) {
-                errors.TitleHolderPincode = "*required*";
+            if (!values.titleHolderPincode) {
+                errors.titleHolderPincode = "*required*";
             }
             return errors;
         }
     });
+
+    // Save form data to sessionStorage on change
+               useEffect(() => {
+                 sessionStorage.setItem("TitleHolderDetails", JSON.stringify(formik.values));
+             }, [formik.values]);
+           
+             // Retrieve form data from sessionStorage on component mount
+             useEffect(() => {
+                 const savedData = JSON.parse(sessionStorage.getItem("TitleHolderDetails"));
+                 if (savedData) {
+                     formik.setValues(savedData);
+                 }
+             }, []);
 
     return (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", paddingBottom: "50px" }}>
@@ -110,12 +123,17 @@ const TitleHolderDetails = ({ onNext }) => {
                             <div className="col-12 col-md-6">
                                 <Form.Control
                                     type="text"
-                                    name="TitleHolderName"
-                                    value={formik.values.TitleHolderName}
+                                    name="titleHolderName"
+                                    value={formik.values.titleHolderName}
                                     onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
                                     style={{ height: "40px", fontSize: "20px", borderColor: "#333333"}}
                                 />
-                                {formik.errors.TitleHolderName && <div className="text-danger fw-bold">{formik.errors.TitleHolderName}</div>}
+                                {/* {formik.errors.TitleHolderName && <div className="text-danger fw-bold">{formik.errors.TitleHolderName}</div>} */}
+                        
+                                {formik.touched.   titleHolderName && formik.errors.   titleHolderName && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.   titleHolderName}</div>
+                            )}
                             </div>
                         </div>
 
@@ -125,10 +143,10 @@ const TitleHolderDetails = ({ onNext }) => {
                             </div>
                             <div className="col-12 col-md-6">
                                     <Form.Select   
-                                name="TitleHolderRelationType"
-                                value={ formik.values.TitleHolderRelationType }
+                                name="titleHolderRelationType"
+                                value={ formik.values.titleHolderRelationType }
                                 onChange={formik.handleChange}
-                                //    onBlur={handleBlur}
+                                onBlur={formik.handleBlur}
                                 style={{ width:"100%", height: "40px", borderColor: "black", fontSize:"20px" }}
                                 //required 
                                 >
@@ -140,7 +158,10 @@ const TitleHolderDetails = ({ onNext }) => {
                                     <option value="H/O">H/O</option>
                             
                             </Form.Select>
-                                {formik.errors.TitleHolderRelationType && <div className="text-danger fw-bold">{formik.errors.TitleHolderRelationType}</div>}
+                                {/* {formik.errors.TitleHolderRelationType && <div className="text-danger fw-bold">{formik.errors.TitleHolderRelationType}</div>} */}
+                                {formik.touched.   titleHolderRelationType && formik.errors.   titleHolderRelationType && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.   titleHolderRelationType}</div>
+                            )}
                             </div>
                         </div>
 
@@ -151,12 +172,17 @@ const TitleHolderDetails = ({ onNext }) => {
                             <div className="col-12 col-md-6">
                                 <Form.Control
                                     type="text"
-                                    name="TitleHolderRelativeName"
+                                    name="titleHolderRelativeName"
                                     value={formik.values.TitleHolderRelativeName}
                                     onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
                                     style={{ height: "40px", fontSize: "20px", borderColor: "#333333" }}
                                 />
-                                {formik.errors.TitleHolderRelativeName && <div className="text-danger fw-bold">{formik.errors.TitleHolderRelativeName}</div>}
+                                {/* {formik.errors.TitleHolderRelativeName && <div className="text-danger fw-bold">{formik.errors.TitleHolderRelativeName}</div>} */}
+                                {formik.touched.   titleHolderRelativeName && formik.errors.   titleHolderRelativeName && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.   titleHolderRelativeName}</div>
+                            )}
+                            
                             </div>
                         </div>
 
@@ -166,10 +192,11 @@ const TitleHolderDetails = ({ onNext }) => {
                             </div>
                             <div className="col-12 col-md-6">
                             <Form.Select   
-                                name="TitleHolderResidenceType"
-                                value={ formik.values.TitleHolderResidenceType }
+                                name="titleHolderResidenceType"
+                                value={ formik.values.titleHolderResidenceType }
                                 onChange={formik.handleChange}
-                                //    onBlur={handleBlur}
+                                onBlur={formik.handleBlur}
+                                 
                                 style={{ width:"100%", height: "40px", borderColor: "black", fontSize:"20px" }}
                                 //required 
                                 >
@@ -177,7 +204,11 @@ const TitleHolderDetails = ({ onNext }) => {
                                     <option value="Flat">Flat</option>
                                     <option value="House">House</option>
                             </Form.Select>
-                                {formik.errors.TitleHolderResidenceType && <div className="text-danger fw-bold">{formik.errors.TitleHolderResidenceType}</div>}
+                                {/* {formik.errors.titleHolderResidenceType && <div className="text-danger fw-bold">{formik.errors.TitleHolderResidenceType}</div>} */}
+                                {formik.touched.   titleHolderResidenceType && formik.errors.   titleHolderResidenceType && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.   titleHolderResidenceType}</div>
+                            )}
+                           
                             </div>
                         </div>
 
@@ -188,12 +219,17 @@ const TitleHolderDetails = ({ onNext }) => {
                             <div className="col-12 col-md-6">
                                 <Form.Control
                                     type="text"
-                                    name="TitleHolderDoorNumber"
-                                    value={formik.values.TitleHolderDoorNumber}
+                                    name="titleHolderDoorNumber"
+                                    value={formik.values.titleHolderDoorNumber}
                                     onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
                                     style={{ height: "40px", fontSize: "20px", borderColor: "#333333"}}
                                 />
-                                {formik.errors.TitleHolderDoorNumber && <div className="text-danger fw-bold">{formik.errors.TitleHolderDoorNumber}</div>}
+                                {/* {formik.errors.titleHolderDoorNumber && <div className="text-danger fw-bold">{formik.errors.TitleHolderDoorNumber}</div>} */}
+                            
+                                {formik.touched.  titleHolderDoorNumber && formik.errors.  titleHolderDoorNumber && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.  titleHolderDoorNumber}</div>
+                            )}
                             </div>
                         </div>
 
@@ -204,12 +240,17 @@ const TitleHolderDetails = ({ onNext }) => {
                             <div className="col-12 col-md-6">
                                 <Form.Control
                                     type="text"
-                                    name="TitleHolderStreetName"
-                                    value={formik.values.TitleHolderStreetName}
+                                    name="titleHolderStreetName"
+                                    value={formik.values.titleHolderStreetName}
                                     onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
                                     style={{ height: "40px", fontSize: "20px", borderColor: "#333333"}}
                                 />
-                                {formik.errors.TitleHolderStreetName && <div className="text-danger fw-bold">{formik.errors.TitleHolderStreetName}</div>}
+                                {/* {formik.errors.TitleHolderStreetName && <div className="text-danger fw-bold">{formik.errors.TitleHolderStreetName}</div>} */}
+                                {formik.touched.   titleHolderStreetName && formik.errors.   titleHolderStreetName && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.   titleHolderStreetName}</div>
+                            )}
+                            
                             </div>
                         </div>
 
@@ -220,12 +261,17 @@ const TitleHolderDetails = ({ onNext }) => {
                             <div className="col-12 col-md-6">
                                 <Form.Control
                                     type="text"
-                                    name="TitleHolderCityName"
-                                    value={formik.values.TitleHolderCityName}
+                                    name="titleHolderCityName"
+                                    value={formik.values.titleHolderCityName}
                                     onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
                                     style={{ height: "40px", fontSize: "20px", borderColor: "#333333"}}
                                 />
-                                {formik.errors.TitleHolderCityName && <div className="text-danger fw-bold">{formik.errors.TitleHolderCityName}</div>}
+                                {/* {formik.errors.TitleHolderCityName && <div className="text-danger fw-bold">{formik.errors.TitleHolderCityName}</div>} */}
+                                {formik.touched.   titleHolderCityName && formik.errors.   titleHolderCityName && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.   titleHolderCityName}</div>
+                            )}
+                           
                             </div>
                         </div>
 
@@ -236,12 +282,17 @@ const TitleHolderDetails = ({ onNext }) => {
                             <div className="col-12 col-md-6">
                                 <Form.Control
                                     type="text"
-                                    name="TitleHolderMandalName"
-                                    value={formik.values.TitleHolderMandalName}
+                                    name="titleHolderMandalName"
+                                    value={formik.values.titleHolderMandalName}
                                     onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
                                     style={{ height: "40px", fontSize: "20px", borderColor: "#333333"}}
                                 />
-                                {formik.errors.TitleHolderMandalName && <div className="text-danger fw-bold">{formik.errors.TitleHolderMandalName}</div>}
+                                {/* {formik.errors.TitleHolderMandalName && <div className="text-danger fw-bold">{formik.errors.TitleHolderMandalName}</div>} */}
+                            
+                                {formik.touched.  titleHolderMandalName && formik.errors.  titleHolderMandalName && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.  titleHolderMandalName}</div>
+                            )}
                             </div>
                         </div>
 
@@ -252,12 +303,17 @@ const TitleHolderDetails = ({ onNext }) => {
                             <div className="col-12 col-md-6">
                                 <Form.Control
                                     type="text"
-                                    name="TitleHolderDistrictName"
+                                    name="titleHolderDistrictName"
                                     value={formik.values.TitleHolderDistrictName}
                                     onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
                                     style={{ height: "40px", fontSize: "20px", borderColor: "#333333"}}
                                 />
-                                {formik.errors.TitleHolderDistrictName && <div className="text-danger fw-bold">{formik.errors.TitleHolderDistrictName}</div>}
+                                {/* {formik.errors.TitleHolderDistrictName && <div className="text-danger fw-bold">{formik.errors.TitleHolderDistrictName}</div>} */}
+                                {formik.touched.   titleHolderDistrictName && formik.errors.   titleHolderDistrictName && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.   titleHolderDistrictName}</div>
+                            )}
+                          
                             </div>
                         </div>
 
@@ -268,12 +324,17 @@ const TitleHolderDetails = ({ onNext }) => {
                             <div className="col-12 col-md-6">
                                 <Form.Control
                                     type="text"
-                                    name="TitleHolderPincode"
+                                    name="titleHolderPincode"
                                     value={formik.values.TitleHolderPincode}
                                     onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
                                     style={{ height: "40px", fontSize: "20px", borderColor: "#333333"}}
                                 />
-                                {formik.errors.TitleHolderPincode && <div className="text-danger fw-bold">{formik.errors.TitleHolderPincode}</div>}
+                                {/* {formik.errors.TitleHolderPincode && <div className="text-danger fw-bold">{formik.errors.TitleHolderPincode}</div>} */}
+                     
+                                {formik.touched.  titleHolderRelativeName && formik.errors.  titleHolderRelativeName && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.  titleHolderRelativeName}</div>
+                            )}
                             </div>
                         </div>
 

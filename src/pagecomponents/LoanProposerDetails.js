@@ -13,20 +13,18 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
   
     const  formik = useFormik({
         initialValues: JSON.parse(sessionStorage.getItem("loanProposerData")) || {
-        loanProposerName:null,
-        loanProposerRelationType:null,
-        loanProposerRelativeName:null,
-        loanProposerResidenceType:null,
-        loanProposerDoorNumber:null,
-        loanProposerStreetName:null,     
-        loanProposerCityName:null,
-        loanProposerMandalName:null,
-        loanProposerDistrictName:null,
-        loanProposerPincode:null
+        loanProposerName: "",
+        loanProposerRelationType: "",
+        loanProposerRelativeName: "",
+        loanProposerResidenceType: "",
+        loanProposerDoorNumber: "",
+        loanProposerStreetName: "",     
+        loanProposerCityName: "",
+        loanProposerMandalName: "",
+        loanProposerDistrictName: "",
+        loanProposerPincode: ""
        },
 
-
-       
       //  onSubmit:(values)=>{
       //filtering the value where exceptional 
       // const filteredValues = {};
@@ -206,13 +204,9 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                             <option value="H/O">H/O</option>
                             
                             </Form.Select>
-                            {/* {formik.errors.loanProposerRelationType ? <div className="text-danger fw-bold">{formik.errors.loanProposerRelationType}</div>:null} */}
-                         
                             {formik.touched.loanProposerRelationType  && formik.errors.loanProposerRelationType  && (
                             <div className="text-danger fw-bold">{formik.errors.loanProposerRelationType }</div>
                         )}  
-                       
-                       
                        </div> 
                  </div>
                  </Form.Group>
@@ -232,8 +226,6 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
                            style={{ width:"300px", height: "40px" ,   borderColor: "black", fontSize:"20px" }}
                            //required
                           />
-                           {/* {formik.errors.loanProposerRelativeName  ? <div className="text-danger fw-bold">{formik.errors.loanProposerRelativeName}</div>:null} */}
-                       
                            {formik.touched.loanProposerRelativeName && formik.errors.loanProposerRelativeName && (
                             <div className="text-danger fw-bold">{formik.errors.loanProposerRelativeName}</div>
                         )}  
