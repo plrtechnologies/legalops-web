@@ -139,7 +139,7 @@ const  Signup =({ onNext })=>{
                     </Form.Group>
                     
                      {/* <p> If you have an account   <Link to="/Login">Login</Link> here</p>   */}
-                    {/* <Button type="submit"> Signup</Button> */}
+                    {/* <Button type="submit"> Signup</Button>  */}
                     <div className="text-center">
                         <Button
                             type="submit"
@@ -147,7 +147,7 @@ const  Signup =({ onNext })=>{
                             className="mt-3"
                             disabled={loading}
                         >
-                            {loading ? "Loading..." : "Next"}
+                             {loading ? "Loading..." : "Signup"} {/*here i change signup button name instead of "Next"  */}
                         </Button>
                     </div>
                 </Form>  

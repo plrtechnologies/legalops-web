@@ -112,7 +112,7 @@ const   Login =({ onNext })=>{
                          {formik.errors.password?<div className="text-danger">{formik.errors.password}</div>:null}
                     </Form.Group>
                     
-                     <p>If you don't have an account  <Link to="/Signup">signup</Link> here</p>
+                     <p>If you don't have an account  <Link to="/Signup">Signup</Link> here</p>
                      <div className="text-center">
                         <Button
                             type="submit"
