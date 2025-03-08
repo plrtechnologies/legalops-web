@@ -1,0 +1,5 @@
+{
+  "dns": "8.8.8.8",
+  "api_url": "https://api.example.com",
+  "api_key": "your-secret-api-key"
+}
