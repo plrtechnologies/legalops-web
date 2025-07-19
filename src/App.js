@@ -49,19 +49,36 @@ import Footer from "./designcomponents/Footer";
 import About from "./pagecomponents/About";
 import Login from "./pagecomponents/Login";
 import Signup from "./pagecomponents/Signup";
+import PrivateRoute from "./PrivateRoute";
 function App() {
   return (
-    <Router>
-      <Header/>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/About" element={<About />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/Signup" element={<Signup />} />
-        <Route path="/CreateDocument/*" element={<CreateDocument />} />
-      </Routes>
-       <Footer/>
-    </Router>
+    <div className="d-flex flex-column min-vh-100">
+      <Router>
+        <Header/>
+        <div className="flex-grow-1">
+          <Routes>
+            <Route path="/Login" element={<Login />} />
+            <Route path="/Signup" element={<Signup />} />
+            <Route path="/" element={
+              <PrivateRoute>
+                <Home />
+              </PrivateRoute>
+            } />
+            <Route path="/About" element={
+              <PrivateRoute>
+                <About />
+              </PrivateRoute>
+            } />
+            <Route path="/CreateDocument/*" element={
+              <PrivateRoute>
+                <CreateDocument />
+              </PrivateRoute>
+            } />
+          </Routes>
+        </div>
+        <Footer/>
+      </Router>
+    </div>
   );
 }
 

@@ -26,6 +26,7 @@
 // export default Home;
 
 import React, { useEffect } from "react";
+import { getToken } from "../auth";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -47,7 +48,10 @@ const Home = () => {
     // Initialize session if not already set
     if (!sessionStorage.getItem("sessionId")) {
       initializeSession();
-    }   
+    }
+    // Print token in console when Home loads
+    const token = getToken();
+    console.log("JWT/Bearer Token:", token);
   }, []); // This runs only once, when the component mounts
 
 

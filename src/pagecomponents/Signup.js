@@ -3,9 +3,11 @@ import React, { useState } from "react";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/esm/Button';
 import { signup_api } from "../apiUrls";
+import { useNavigate } from "react-router-dom";
 
 const  Signup =({ onNext })=>{
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
    const  formik = useFormik({
       initialValues:{
         name:"",
@@ -17,39 +19,30 @@ const  Signup =({ onNext })=>{
       //   console.log("form submit", formik.values)
       // },
       onSubmit: async (values) => {
-        console.log('Form Submitted:', values);
-
-        // Set loading state to true
         setLoading(true);
-
-        // Replace with your actual API endpoint
         const apiUrl = signup_api;
-
+        // Only send name, email, password to backend
+        const payload = {
+          name: values.name,
+          email: values.email,
+          password: values.password
+        };
         try {
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(values),
+                body: JSON.stringify(payload),
             });
-
             if (response.ok) {
-                const data = await response.json();
-                console.log("API response:", data);
-
-                // After a successful API call, call onNext
-                onNext();
+                navigate('/Login');
             } else {
-                // Handle API error
-                console.error("API Error:", response.statusText);
                 // Optionally show an error message to the user
             }
         } catch (error) {
-            console.error("Error during API call:", error);
             // Optionally show an error message to the user
         } finally {
-            // Set loading state to false
             setLoading(false);
         }
     },
@@ -104,7 +97,7 @@ const  Signup =({ onNext })=>{
                  <Form autoComplete="off" onSubmit={formik.handleSubmit}>
                     <Form.Group className="mb-3" controlId="forname">
                         <Form.Label className="fs-4">Name </Form.Label>
-                        <Form.Control   type="text" placeholder="Enter name" name="name"  
+                        <Form.Control   type="text" placeholder="Enter your full name" name="name"  
                          value={formik.values.name}
                          onChange={formik.handleChange}
                          onBlur={formik.handleBlur} />
@@ -113,7 +106,7 @@ const  Signup =({ onNext })=>{
 
                     <Form.Group className="mb-3" controlId="formBasicEmail">
                         <Form.Label className="fs-4">Email </Form.Label>
-                        <Form.Control type="email" placeholder="Enter email" name="email"
+                        <Form.Control type="email" placeholder="Enter your email address" name="email"
                          value={formik.values.email} 
                          onChange={formik.handleChange}
                          onBlur={formik.handleBlur}/>
@@ -122,7 +115,7 @@ const  Signup =({ onNext })=>{
  
                     <Form.Group className="mb-3" controlId="Password">
                         <Form.Label className="fs-4">Password</Form.Label>
-                        <Form.Control type="password" placeholder="Password" name="password"
+                        <Form.Control type="password" placeholder="Create a password" name="password"
                          value={formik.values.password}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}/>
@@ -131,7 +124,7 @@ const  Signup =({ onNext })=>{
                     
                     <Form.Group className="mb-3" controlId="confirmPassword">
                         <Form.Label className="fs-4">confirm Password</Form.Label>
-                        <Form.Control type="password" placeholder="confirmPassword" name="confirmPassword"
+                        <Form.Control type="password" placeholder="Confirm your password" name="confirmPassword"
                          value={formik.values.confirmPassword}
                           onChange={formik.handleChange} 
                           onBlur={formik.handleBlur}/>
