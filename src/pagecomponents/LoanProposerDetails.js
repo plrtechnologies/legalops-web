@@ -1,16 +1,27 @@
 import { useFormik } from 'formik';
 import React, {useState,useEffect} from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+//import { useNavigate } from 'react-router-dom'; // Import useNavigate
 //import React, { useState } from "react";
-import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
-
+//import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
 
  const LoanProposerDetails=({ onNext })=>{
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate(); // Initialize the navigate function
-  
+    const [searchParams] = useSearchParams();
+
+    const sessionIdFromUrl = searchParams.get("sessionId");
+
+    // Save sessionId into sessionStorage
+    useEffect(() => {
+    if (sessionIdFromUrl) {
+      sessionStorage.setItem("sessionId", sessionIdFromUrl);
+      console.log("Session ID stored in sessionStorage:", sessionIdFromUrl);
+    }
+  }, [sessionIdFromUrl]);
+    //const navigate = useNavigate(); // Initialize the navigate function
+
     const  formik = useFormik({
         initialValues: JSON.parse(sessionStorage.getItem("loanProposerData")) || {
         loanProposerName: "",
@@ -22,65 +33,68 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
         loanProposerCityName: "",
         loanProposerMandalName: "",
         loanProposerDistrictName: "",
-        loanProposerPincode: ""
+        loanProposerPincode: "",
        },
 
-      //  onSubmit:(values)=>{
-      //filtering the value where exceptional 
-      // const filteredValues = {};
-      // const exceptions = ["loanProposerStreetName"];  Define your exception fields here
-      
-      // for (const key in values) {
-      //    if (!exceptions.includes(key) || values[key].trim() !== "") {
-      //       filteredValues[key] = values[key];
-      //    }
-      // }
-      //     console.log('formsubmit', values)
-      //    onNext();
-   // },
-   onSubmit: async (values) => {
-      console.log('Form Submitted:', values);
-      // Step 1: Retrieve the session ID from sessionStorage
-      const sessionId = sessionStorage.getItem("sessionID"); // Retrieve session ID
-
-      // Step 2: Prepare the data to be sent to the API
+    onSubmit: async (values) => {
+      console.log("Form Submitted:", values);
+    
+      // Step 1: Get session ID from sessionStorage
+      //const sessionID = sessionStorage.getItem("sessionID");
+    const sessionId = sessionStorage.getItem("sessionId"); 
+    const userId = sessionStorage.getItem("user_id"); 
+      // Step 2: Merge form values with session ID
       const dataToSend = {
-          ...values,   // All form data
-          sessionId: sessionId  // Add session ID
+        ...values,
+        session_id: sessionId,
+        user_id:"123" // backend expect snake case
+        // user_id: userId,
       };
+    
+      // Step 3: Get API URL from .env
+      const BASE_URL = process.env.REACT_APP_API_BASE_URL;
 
-    //   setLoading(true);  // Start loading state
-    //   const apiUrl = LoanProposerDetails_api;  // Replace with actual API endpoint
+      // after testing we can use this real api calls 
+     // const SESSION_ENDPOINT = process.env.REACT_APP_API_SESSION;
+     // const apiUrl = `${BASE_URL}${SESSION_ENDPOINT}`;
+    
+     const apiUrl = `${process.env.REACT_APP_API_BASE_URL}${process.env.REACT_APP_API_SESSION}`;
+     console.log("API URL:", apiUrl); // Optional: to debug the final URL
+     console.log("Payload:", dataToSend);
 
-    //   try {
-    //       const response = await fetch(apiUrl, {
-    //           method: 'POST',
-    //           headers: {
-    //               'Content-Type': 'application/json',
-    //           },
-    //           body: JSON.stringify( ),
-    //       });
-
-    //       if (response.ok) {
-    //           const data = await response.json();
-    //           console.log("API response:", data);
-
-    //           //After a successful API call, call onNext
-    onNext();
-    //       } else {
-    //           console.error("API Error:", response.statusText);
-    //          // Optionally handle the error (show a message to the user)
-    //       }
-    //   } catch (error) {
-    //       console.error("Error during API call:", error);
-    //       //Optionally handle the error (show a message to the user)
-    //   } finally {
-    //       setLoading(false);  // End loading state
-    //   }
-      
+      // Step 4: Make API call
+      setLoading(true);
+      try {
+    //     const dataToSend = {
+    // ...values, 
+    // sessionId: sessionStorage.getItem("sessionIdFromUrl"), 
+    //     };
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: {
+                 "Content-Type": "application/json", 
+            //  "Authorization": `Bearer ${token}` 
+           },          
+          body: JSON.stringify(dataToSend),
+        });
+    
+        if (response.ok) {
+          const data = await response.json();
+          console.log("API response:", data);
+          onNext(); // Go to next page
+        } else {
+          console.error("API Error:", response.statusText);
+          alert("Something went wrong. Please try again.");
+        }
+      } catch (error) {
+        console.error("Fetch error:", error);
+        alert("Network error. Please check your connection.");
+      } finally {
+        setLoading(false);
+      }
+    //};----------------------
+    
     },
-     
-
        validate:(values)=>{
         let errors ={};
         if(!values.loanProposerName){
@@ -139,13 +153,32 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
           formik.setValues(savedData);
       }
   }, []);
-   
 
-    
+  useEffect(() => {
+  
+    const sessionId = sessionStorage.getItem("sessionId");
+  if (sessionId) {
+     
+    //fetch(`https://687129ef7ca4d06b34b991a7.mockapi.io/sessions/${sessionId}`)
+    //  real api written  //
+    //fetch(`http://localhost:3000/api/session/create-session/${sessionId}`)
+    fetch(`http://localhost:3000/api/session/create-session`)
+      .then((res) => res.json())
+      .then((data) => {
+        // Prefill form values from backend
+        Object.keys(data).forEach((key) => {
+          if (formik.values.hasOwnProperty(key)) {
+            formik.setFieldValue(key, data[key] || "");
+          }
+        });
+      })
+      .catch((err) => {
+        console.error("Failed to fetch previous session data", err);
+      });
+  }
+}, []);
+
   // this function for navigate to home page when click the back button
-   
- 
-
 
     return(
         <div>
@@ -428,7 +461,7 @@ import { LoanProposerDetails_api, USER_DETAILS } from '../apiUrls';
         </div>
     )
 }
-export default LoanProposerDetails;   
+export default LoanProposerDetails;    
 
 //--------------------------------------------------------
  
@@ -439,8 +472,8 @@ export default LoanProposerDetails;
 // import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 // const LoanProposerDetails = ({ onNext, sessionId }) => {
-//     const [loading, setLoading] = useState(false);
-//     const navigate = useNavigate(); // Initialize the navigate function
+//    const [loading, setLoading] = useState(false);
+//    const navigate = useNavigate(); // Initialize the navigate function
      
 
 //     // Clear session storage when the session ID changes
@@ -777,9 +810,7 @@ export default LoanProposerDetails;
 //         </div>
 //     );
 // };
-
-// export default LoanProposerDetails;
-
+//  export default LoanProposerDetails;
 //---------------------------------------------------
 
 

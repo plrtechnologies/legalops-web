@@ -40,7 +40,7 @@
 
 // export default App;
 
-import React from "react";
+import React , {useEffect} from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pagecomponents/Home";
 import CreateDocument from "./pagecomponents/CreateDocument";
@@ -49,18 +49,40 @@ import Footer from "./designcomponents/Footer";
 import About from "./pagecomponents/About";
 import Login from "./pagecomponents/Login";
 import Signup from "./pagecomponents/Signup";
+import SessionDocument from "./pagecomponents/SessionDocument";
+//import LoanProposerDetails from "./pagecomponents/LoanProposerDetails";
 function App() {
+
+  useEffect(() => {
+    console.log("✅ Base URL:", process.env.REACT_APP_API_BASE_URL);
+    console.log("✅ Session Endpoint:", process.env.REACT_APP_API_SESSION);
+
+    const fullApiUrl = `${process.env.REACT_APP_API_BASE_URL}${process.env.REACT_APP_API_SESSION}`;
+    console.log("✅ Full API URL:", fullApiUrl);
+  }, []);
   return (
+
+    //testing of .env file 
+    // useEffect(() => {
+    //   alert(`Base URL: ${process.env.REACT_APP_API_BASE_URL}`);
+    // }, []),
     <Router>
       <Header/>
+      
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/About" element={<About />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/Signup" element={<Signup />} />
         <Route path="/CreateDocument/*" element={<CreateDocument />} />
+        <Route path="/SessionDocument" element={<SessionDocument />} />
+
+         
       </Routes>
-       <Footer/>
+
+      <Footer/>
+           
+      
     </Router>
   );
 }
