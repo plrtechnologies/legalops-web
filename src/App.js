@@ -49,8 +49,10 @@ import Footer from "./designcomponents/Footer";
 import About from "./pagecomponents/About";
 import Login from "./pagecomponents/Login";
 import Signup from "./pagecomponents/Signup";
+import PrivateRoute from "./PrivateRoute";
 import SessionDocument from "./pagecomponents/SessionDocument";
 //import LoanProposerDetails from "./pagecomponents/LoanProposerDetails";
+
 function App() {
 
   useEffect(() => {
@@ -61,29 +63,38 @@ function App() {
     console.log("✅ Full API URL:", fullApiUrl);
   }, []);
   return (
-
-    //testing of .env file 
-    // useEffect(() => {
-    //   alert(`Base URL: ${process.env.REACT_APP_API_BASE_URL}`);
-    // }, []),
-    <Router>
-      <Header/>
-      
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/About" element={<About />} />
-        <Route path="/Login" element={<Login />} />
-        <Route path="/Signup" element={<Signup />} />
-        <Route path="/CreateDocument/*" element={<CreateDocument />} />
-        <Route path="/SessionDocument" element={<SessionDocument />} />
-
-         
-      </Routes>
-
-      <Footer/>
-           
-      
-    </Router>
+    <div className="d-flex flex-column min-vh-100">
+      <Router>
+        <Header/>
+        <div className="flex-grow-1">
+          <Routes>
+            <Route path="/Login" element={<Login />} />
+            <Route path="/Signup" element={<Signup />} />
+            <Route path="/" element={
+              <PrivateRoute>
+                <Home />
+              </PrivateRoute>
+            } />
+            <Route path="/About" element={
+              <PrivateRoute>
+                <About />
+              </PrivateRoute>
+            } />
+            <Route path="/CreateDocument/*" element={
+              <PrivateRoute>
+                <CreateDocument />
+              </PrivateRoute>
+            } />
+              <Route path="/SessionDocument/*" element={
+              <PrivateRoute>
+                <SessionDocument />
+              </PrivateRoute>
+            } />
+          </Routes>
+        </div>
+        <Footer/>
+      </Router>
+    </div>
   );
 }
 
