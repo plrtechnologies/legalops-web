@@ -367,11 +367,165 @@
 
 
 
+//--------------------
+// below running code is good 
+// import React, { useState } from "react";
+// import { useFormik } from "formik";
+
+// const BASE_URL = process.env.REACT_APP_API_URL; // e.g., http://localhost:3000
+// const SIGNUP_ENDPOINT = "/api/auth/signup";
+
+// export default function Signup() {
+//   const [serverError, setServerError] = useState("");
+//   const [userId, setUserId] = useState(null); // 🔹 store backend generated user_id
+
+//   const formik = useFormik({
+//     initialValues: {
+//       name: "",
+//       email: "",
+//       password: "",
+//       confirmPassword: "",
+//     },
+
+//     onSubmit: async (values, { setSubmitting }) => {
+//       setServerError("");
+
+//       // ---------- Simple manual validation ----------
+//       if (!values.name || !values.email || !values.password || !values.confirmPassword) {
+//         setServerError("All fields are required.");
+//         setSubmitting(false);
+//         return;
+//       }
+
+//       if (values.password !== values.confirmPassword) {
+//         setServerError("Passwords do not match.");
+//         setSubmitting(false);
+//         return;
+//       }
+
+//       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//       if (!emailPattern.test(values.email)) {
+//         setServerError("Please enter a valid email address.");
+//         setSubmitting(false);
+//         return;
+//       }
+//       // ----------------------------------------------
+
+//       try {
+//         const response = await fetch(`${BASE_URL}${SIGNUP_ENDPOINT}`, {
+//           method: "POST",
+//           headers: { "Content-Type": "application/json" },
+//           body: JSON.stringify({
+//             name: values.name,
+//             email: values.email,
+//             password: values.password,
+//           }), // confirmPassword only for frontend check
+//         });
+
+//         if (!response.ok) {
+//           let errorMsg = `Error ${response.status}`;
+//           try {
+//             const errData = await response.json();
+//             if (errData?.error) errorMsg = errData.error;
+//           } catch {
+//             // ignore parse error
+//           }
+//           setServerError(errorMsg);
+//           return;
+//         }
+
+//         const data = await response.json();
+//         console.log("Signup success:", data);
+
+//         // ✅ Save backend-generated user_id
+//         if (data.user && data.user.user_id) {
+//           setUserId(data.user.user_id);
+//           console.log("User ID from backend:", data.user.user_id);
+//           // Optional: localStorage.setItem("user_id", data.user.user_id);
+//         }
+
+//         alert("Signup successful!");
+//       } catch (err) {
+//         console.error("Network error:", err);
+//         setServerError("Unable to connect to server.");
+//       } finally {
+//         setSubmitting(false);
+//       }
+//     },
+//   });
+
+//   return (
+//     <div style={{ maxWidth: "400px", margin: "2rem auto" }}>
+//       <h2>Signup</h2>
+//       <form onSubmit={formik.handleSubmit}>
+//         <div>
+//           <label>Name</label>
+//           <input
+//             type="text"
+//             name="name"
+//             onChange={formik.handleChange}
+//             value={formik.values.name}
+//           />
+//         </div>
+
+//         <div>
+//           <label>Email</label>
+//           <input
+//             type="email"
+//             name="email"
+//             onChange={formik.handleChange}
+//             value={formik.values.email}
+//           />
+//         </div>
+
+//         <div>
+//           <label>Password</label>
+//           <input
+//             type="password"
+//             name="password"
+//             onChange={formik.handleChange}
+//             value={formik.values.password}
+//           />
+//         </div>
+
+//         <div>
+//           <label>Confirm Password</label>
+//           <input
+//             type="password"
+//             name="confirmPassword"
+//             onChange={formik.handleChange}
+//             value={formik.values.confirmPassword}
+//           />
+//         </div>
+
+//         {serverError && (
+//           <div style={{ color: "red", marginTop: "10px" }}>{serverError}</div>
+//         )}
+
+//         <button type="submit" disabled={formik.isSubmitting}>
+//           {formik.isSubmitting ? "Signing up…" : "Signup"}
+//         </button>
+//       </form>
+
+//       {/* 🔹 Show the user_id that backend sends after signup */}
+//       {userId && (
+//         <p style={{ marginTop: "20px", color: "green" }}>
+//           Your User ID: <strong>{userId}</strong>
+//         </p>
+//       )}
+//     </div>
+//   );
+// }
+
+
+//complete modified code 
 
 import React, { useState } from "react";
 import { useFormik } from "formik";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
-const BASE_URL = process.env.REACT_APP_API_URL; // e.g., http://localhost:3000
+const BASE_URL = process.env.REACT_APP_API_URL;   // e.g. http://localhost:3000
 const SIGNUP_ENDPOINT = "/api/auth/signup";
 
 export default function Signup() {
@@ -454,64 +608,94 @@ export default function Signup() {
   });
 
   return (
-    <div style={{ maxWidth: "400px", margin: "2rem auto" }}>
-      <h2>Signup</h2>
-      <form onSubmit={formik.handleSubmit}>
-        <div>
-          <label>Name</label>
-          <input
-            type="text"
-            name="name"
-            onChange={formik.handleChange}
-            value={formik.values.name}
-          />
+    <div>
+      <h1 className="text-center text-primary">Signup</h1>
+
+      <div className="d-flex justify-content-center">
+        <div
+          className="col col-md-6 col-lg-10"
+          style={{
+            border: "2px solid #007bff",
+            borderRadius: "10px",
+            padding: "20px",
+            width: "400px",
+            backgroundColor: "#f8f9fa",
+            marginBottom: "84px",
+          }}
+        >
+          <Form autoComplete="off" onSubmit={formik.handleSubmit}>
+            <Form.Group className="mb-3" controlId="forname">
+              <Form.Label className="fs-4">Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter name"
+                name="name"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.name}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Label className="fs-4">Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                name="email"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.email}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="Password">
+              <Form.Label className="fs-4">Password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                name="password"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.password}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="confirmPassword">
+              <Form.Label className="fs-4">Confirm Password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Confirm Password"
+                name="confirmPassword"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.confirmPassword}
+              />
+            </Form.Group>
+
+            {serverError && (
+              <div className="text-danger mb-3">{serverError}</div>
+            )}
+
+            <div className="text-center">
+              <Button
+                type="submit"
+                variant="primary"
+                className="mt-3"
+                disabled={formik.isSubmitting}
+              >
+                {formik.isSubmitting ? "Signing up…" : "Signup"}
+              </Button>
+            </div>
+          </Form>
+
+          {/* 🔹 Show the user_id that backend sends after signup */}
+          {userId && (
+            <p style={{ marginTop: "20px", color: "green" }}>
+              Your User ID: <strong>{userId}</strong>
+            </p>
+          )}
         </div>
-
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            onChange={formik.handleChange}
-            value={formik.values.email}
-          />
-        </div>
-
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            onChange={formik.handleChange}
-            value={formik.values.password}
-          />
-        </div>
-
-        <div>
-          <label>Confirm Password</label>
-          <input
-            type="password"
-            name="confirmPassword"
-            onChange={formik.handleChange}
-            value={formik.values.confirmPassword}
-          />
-        </div>
-
-        {serverError && (
-          <div style={{ color: "red", marginTop: "10px" }}>{serverError}</div>
-        )}
-
-        <button type="submit" disabled={formik.isSubmitting}>
-          {formik.isSubmitting ? "Signing up…" : "Signup"}
-        </button>
-      </form>
-
-      {/* 🔹 Show the user_id that backend sends after signup */}
-      {userId && (
-        <p style={{ marginTop: "20px", color: "green" }}>
-          Your User ID: <strong>{userId}</strong>
-        </p>
-      )}
+      </div>
     </div>
   );
 }

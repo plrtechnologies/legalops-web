@@ -424,15 +424,157 @@
 
 
 
-//new code 
+//new code running good but ui not good 
+
+// import React, { useState } from "react";
+// import { useFormik } from "formik";
+
+// const BASE_URL = process.env.REACT_APP_API_URL;   // e.g. http://localhost:3000
+// const LOGIN_ENDPOINT = "/api/auth/login";
+
+// export default function Login() {
+//   const [serverError, setServerError] = useState("");
+//   const [userId, setUserId] = useState(null); // 🔹 to display user_id returned by backend
+
+//   const formik = useFormik({
+//     initialValues: {
+//       name: "",
+//       email: "",
+//       password: "",
+//     },
+
+//     onSubmit: async (values, { setSubmitting }) => {
+//       setServerError("");
+
+//       // ---------- Simple manual validation ----------
+//       if (!values.name || !values.email || !values.password) {
+//         setServerError("Name, Email and Password are required.");
+//         setSubmitting(false);
+//         return;
+//       }
+
+//       const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//       if (!emailPattern.test(values.email)) {
+//         setServerError("Please enter a valid email address.");
+//         setSubmitting(false);
+//         return;
+//       }
+//       // ----------------------------------------------
+
+//       try {
+//         const response = await fetch(`${BASE_URL}${LOGIN_ENDPOINT}`, {
+//           method: "POST",
+//           headers: { "Content-Type": "application/json" },
+//           body: JSON.stringify(values),
+//         });
+
+//         if (!response.ok) {
+//           let errorMsg = `Error ${response.status}`;
+//           try {
+//             const errData = await response.json();
+//             if (errData?.error) errorMsg = errData.error;
+//           } catch {
+//             // ignore parse error
+//           }
+//           setServerError(errorMsg);
+//           return;
+//         }
+
+//          const data = await response.json();
+// console.log("JWT Token:", data.token); // now this will show the token
+// localStorage.setItem("authToken", data.token);
+
+//         // ✅ Get user_id from backend response
+//         if (data.user && data.user.user_id) {
+//           setUserId(data.user.user_id);
+//           console.log("User ID from backend:", data.user.user_id);
+//           // If you want to use it later across pages:
+//           // localStorage.setItem("user_id", data.user.user_id);
+//         }
+//  if (data.token) {
+//   localStorage.setItem("authToken", data.token);
+//   localStorage.setItem("user_id", data.user.user_id); // optional: store user_id
+// }
+
+//         alert("Login successful!");
+//       } catch (err) {
+//         console.error("Network error:", err);
+//         setServerError("Unable to connect to server.");
+//       } finally {
+//         setSubmitting(false);
+//       }
+//     },
+//   });
+
+//   return (
+//     <div style={{ maxWidth: "400px", margin: "2rem auto" }}>
+//       <h2>Login</h2>
+//       <form onSubmit={formik.handleSubmit}>
+//         <div>
+//           <label>Name</label>
+//           <input
+//             type="text"
+//             name="name"
+//             onChange={formik.handleChange}
+//             value={formik.values.name}
+//           />
+//         </div>
+
+//         <div>
+//           <label>Email</label>
+//           <input
+//             type="email"
+//             name="email"
+//             onChange={formik.handleChange}
+//             value={formik.values.email}
+//           />
+//         </div>
+
+//         <div>
+//           <label>Password</label>
+//           <input
+//             type="password"
+//             name="password"
+//             onChange={formik.handleChange}
+//             value={formik.values.password}
+//           />
+//         </div>
+
+//         {serverError && (
+//           <div style={{ color: "red", marginTop: "10px" }}>{serverError}</div>
+//         )}
+
+//         <button type="submit" disabled={formik.isSubmitting}>
+//           {formik.isSubmitting ? "Logging in…" : "Login"}
+//         </button>
+//       </form>
+
+//       {/* 🔹 Show the user_id that backend sends after login */}
+//       {userId && (
+//         <p style={{ marginTop: "20px", color: "green" }}>
+//           Logged in User ID: <strong>{userId}</strong>
+//         </p>
+//       )}
+//     </div>
+//   );
+// }
+
+
+//---------------------------
+//------------------------
 
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
+import { Link } from "react-router-dom";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
 
 const BASE_URL = process.env.REACT_APP_API_URL;   // e.g. http://localhost:3000
 const LOGIN_ENDPOINT = "/api/auth/login";
 
 export default function Login() {
+  const navigate = useNavigate(); 
   const [serverError, setServerError] = useState("");
   const [userId, setUserId] = useState(null); // 🔹 to display user_id returned by backend
 
@@ -480,9 +622,9 @@ export default function Login() {
           return;
         }
 
-         const data = await response.json();
-console.log("JWT Token:", data.token); // now this will show the token
-localStorage.setItem("authToken", data.token);
+        const data = await response.json();
+        console.log("JWT Token:", data.token); // now this will show the token
+        localStorage.setItem("authToken", data.token);
 
         // ✅ Get user_id from backend response
         if (data.user && data.user.user_id) {
@@ -491,12 +633,13 @@ localStorage.setItem("authToken", data.token);
           // If you want to use it later across pages:
           // localStorage.setItem("user_id", data.user.user_id);
         }
- if (data.token) {
-  localStorage.setItem("authToken", data.token);
-  localStorage.setItem("user_id", data.user.user_id); // optional: store user_id
-}
+        if (data.token) {
+          localStorage.setItem("authToken", data.token);
+          localStorage.setItem("user_id", data.user.user_id); // optional: store user_id
+        }
 
-        alert("Login successful!");
+        //alert("Login successful!");
+        navigate("/");    
       } catch (err) {
         console.error("Network error:", err);
         setServerError("Unable to connect to server.");
@@ -507,54 +650,83 @@ localStorage.setItem("authToken", data.token);
   });
 
   return (
-    <div style={{ maxWidth: "400px", margin: "2rem auto" }}>
-      <h2>Login</h2>
-      <form onSubmit={formik.handleSubmit}>
-        <div>
-          <label>Name</label>
-          <input
-            type="text"
-            name="name"
-            onChange={formik.handleChange}
-            value={formik.values.name}
-          />
+    <div>
+      <h1 className="text-center text-primary">Login</h1>
+
+      <div className="d-flex justify-content-center">
+        <div
+          className="col col-md-6 col-lg-10"
+          style={{
+            border: "2px solid #007bff",
+            borderRadius: "10px",
+            padding: "20px",
+            width: "400px",
+            backgroundColor: "#f8f9fa",
+            marginBottom: "84px",
+          }}
+        >
+          <Form autoComplete="off" onSubmit={formik.handleSubmit}>
+            <Form.Group className="mb-3" controlId="forname">
+              <Form.Label className="fs-4">Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter name"
+                name="name"
+                onChange={formik.handleChange}
+                value={formik.values.name}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Label className="fs-4">Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                name="email"
+                onChange={formik.handleChange}
+                value={formik.values.email}
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formGroupPassword">
+              <Form.Label className="fs-4">Password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Password"
+                name="password"
+                onChange={formik.handleChange}
+                value={formik.values.password}
+              />
+            </Form.Group>
+
+            {serverError && (
+              <div className="text-danger mb-3">{serverError}</div>
+            )}
+
+            <p>
+              If you don't have an account <Link to="/Signup">Signup</Link> here
+            </p>
+
+            <div className="text-center">
+              <Button
+                type="submit"
+                variant="primary"
+                className="mt-3"
+                disabled={formik.isSubmitting}
+              >
+                {formik.isSubmitting ? "Logging in…" : "Login"}
+              </Button>
+            </div>
+          </Form>
+
+          {/* 🔹 Show the user_id that backend sends after login */}
+          {userId && (
+            <p style={{ marginTop: "20px", color: "green" }}>
+              Logged in User ID: <strong>{userId}</strong>
+            </p>
+          )}
         </div>
-
-        <div>
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            onChange={formik.handleChange}
-            value={formik.values.email}
-          />
-        </div>
-
-        <div>
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            onChange={formik.handleChange}
-            value={formik.values.password}
-          />
-        </div>
-
-        {serverError && (
-          <div style={{ color: "red", marginTop: "10px" }}>{serverError}</div>
-        )}
-
-        <button type="submit" disabled={formik.isSubmitting}>
-          {formik.isSubmitting ? "Logging in…" : "Login"}
-        </button>
-      </form>
-
-      {/* 🔹 Show the user_id that backend sends after login */}
-      {userId && (
-        <p style={{ marginTop: "20px", color: "green" }}>
-          Logged in User ID: <strong>{userId}</strong>
-        </p>
-      )}
+      </div>
     </div>
   );
 }
