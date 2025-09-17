@@ -123,7 +123,7 @@ const  Signup =({ onNext })=>{
                     </Form.Group>
                     
                     <Form.Group className="mb-3" controlId="confirmPassword">
-                        <Form.Label className="fs-4">confirm Password</Form.Label>
+                        <Form.Label className="fs-4">Confirm Password</Form.Label>
                         <Form.Control type="password" placeholder="Confirm your password" name="confirmPassword"
                          value={formik.values.confirmPassword}
                           onChange={formik.handleChange} 

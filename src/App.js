@@ -40,7 +40,7 @@
 
 // export default App;
 
-import React from "react";
+import React , {useEffect} from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pagecomponents/Home";
 import CreateDocument from "./pagecomponents/CreateDocument";
@@ -50,7 +50,18 @@ import About from "./pagecomponents/About";
 import Login from "./pagecomponents/Login";
 import Signup from "./pagecomponents/Signup";
 import PrivateRoute from "./PrivateRoute";
+import SessionDocument from "./pagecomponents/SessionDocument";
+//import LoanProposerDetails from "./pagecomponents/LoanProposerDetails";
+
 function App() {
+
+  useEffect(() => {
+    console.log("✅ Base URL:", process.env.REACT_APP_API_BASE_URL);
+    console.log("✅ Session Endpoint:", process.env.REACT_APP_API_SESSION);
+
+    const fullApiUrl = `${process.env.REACT_APP_API_BASE_URL}${process.env.REACT_APP_API_SESSION}`;
+    console.log("✅ Full API URL:", fullApiUrl);
+  }, []);
   return (
     <div className="d-flex flex-column min-vh-100">
       <Router>
@@ -72,6 +83,11 @@ function App() {
             <Route path="/CreateDocument/*" element={
               <PrivateRoute>
                 <CreateDocument />
+              </PrivateRoute>
+            } />
+              <Route path="/SessionDocument/*" element={
+              <PrivateRoute>
+                <SessionDocument />
               </PrivateRoute>
             } />
           </Routes>

@@ -1,11 +1,33 @@
 import React, { useState, useEffect} from "react";
+import { useSearchParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
+import { useNavigate } from "react-router-dom";  
 import { TitleHolderDetails_api } from "../apiUrls";
 
 const TitleHolderDetails = ({ onNext }) => {
     const [loading, setLoading] = useState(false);
+
+    const [searchParams] = useSearchParams();
+    const sessionid = searchParams.get("sessionId");
+    useEffect(() => {
+  if (sessionid) {
+    fetch(`http://localhost:30000/api/get-data?sessionid=${sessionid}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          formik.setValues({
+            ...formik.values,
+            ...data // merge existing values with fetched ones
+          });
+        }
+      })
+      .catch(err => console.error('Error fetching data:', err));
+  }
+}, [sessionid]);
+
+    const navigate = useNavigate();  // Initialize navigate
     const formik = useFormik({
         initialValues:JSON.parse(sessionStorage.getItem("TitleHoldersData")) ||  {
             titleHolderName: "",
@@ -131,8 +153,8 @@ const TitleHolderDetails = ({ onNext }) => {
                                 />
                                 {/* {formik.errors.TitleHolderName && <div className="text-danger fw-bold">{formik.errors.TitleHolderName}</div>} */}
                         
-                                {formik.touched.   titleHolderName && formik.errors.   titleHolderName && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors.   titleHolderName}</div>
+                                {formik.touched.titleHolderName && formik.errors.titleHolderName && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.titleHolderName}</div>
                             )}
                             </div>
                         </div>
@@ -159,8 +181,8 @@ const TitleHolderDetails = ({ onNext }) => {
                             
                             </Form.Select>
                                 {/* {formik.errors.TitleHolderRelationType && <div className="text-danger fw-bold">{formik.errors.TitleHolderRelationType}</div>} */}
-                                {formik.touched.   titleHolderRelationType && formik.errors.   titleHolderRelationType && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors.   titleHolderRelationType}</div>
+                                {formik.touched.titleHolderRelationType && formik.errors.titleHolderRelationType && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.titleHolderRelationType}</div>
                             )}
                             </div>
                         </div>
@@ -179,8 +201,8 @@ const TitleHolderDetails = ({ onNext }) => {
                                     style={{ height: "40px", fontSize: "20px", borderColor: "#333333" }}
                                 />
                                 {/* {formik.errors.TitleHolderRelativeName && <div className="text-danger fw-bold">{formik.errors.TitleHolderRelativeName}</div>} */}
-                                {formik.touched.   titleHolderRelativeName && formik.errors.   titleHolderRelativeName && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors.   titleHolderRelativeName}</div>
+                                {formik.touched.titleHolderRelativeName && formik.errors.titleHolderRelativeName && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.titleHolderRelativeName}</div>
                             )}
                             
                             </div>
@@ -205,8 +227,8 @@ const TitleHolderDetails = ({ onNext }) => {
                                     <option value="House">House</option>
                             </Form.Select>
                                 {/* {formik.errors.titleHolderResidenceType && <div className="text-danger fw-bold">{formik.errors.TitleHolderResidenceType}</div>} */}
-                                {formik.touched.   titleHolderResidenceType && formik.errors.   titleHolderResidenceType && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors.   titleHolderResidenceType}</div>
+                                {formik.touched.titleHolderResidenceType && formik.errors.titleHolderResidenceType && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.titleHolderResidenceType}</div>
                             )}
                            
                             </div>
@@ -227,8 +249,8 @@ const TitleHolderDetails = ({ onNext }) => {
                                 />
                                 {/* {formik.errors.titleHolderDoorNumber && <div className="text-danger fw-bold">{formik.errors.TitleHolderDoorNumber}</div>} */}
                             
-                                {formik.touched.  titleHolderDoorNumber && formik.errors.  titleHolderDoorNumber && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors.  titleHolderDoorNumber}</div>
+                                {formik.touched.titleHolderDoorNumber && formik.errors.titleHolderDoorNumber && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.titleHolderDoorNumber}</div>
                             )}
                             </div>
                         </div>
@@ -247,8 +269,8 @@ const TitleHolderDetails = ({ onNext }) => {
                                     style={{ height: "40px", fontSize: "20px", borderColor: "#333333"}}
                                 />
                                 {/* {formik.errors.TitleHolderStreetName && <div className="text-danger fw-bold">{formik.errors.TitleHolderStreetName}</div>} */}
-                                {formik.touched.   titleHolderStreetName && formik.errors.   titleHolderStreetName && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors.   titleHolderStreetName}</div>
+                                {formik.touched.titleHolderStreetName && formik.errors.titleHolderStreetName && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.titleHolderStreetName}</div>
                             )}
                             
                             </div>
@@ -268,8 +290,8 @@ const TitleHolderDetails = ({ onNext }) => {
                                     style={{ height: "40px", fontSize: "20px", borderColor: "#333333"}}
                                 />
                                 {/* {formik.errors.TitleHolderCityName && <div className="text-danger fw-bold">{formik.errors.TitleHolderCityName}</div>} */}
-                                {formik.touched.   titleHolderCityName && formik.errors.   titleHolderCityName && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors.   titleHolderCityName}</div>
+                                {formik.touched.titleHolderCityName && formik.errors.titleHolderCityName && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.titleHolderCityName}</div>
                             )}
                            
                             </div>
@@ -290,8 +312,8 @@ const TitleHolderDetails = ({ onNext }) => {
                                 />
                                 {/* {formik.errors.TitleHolderMandalName && <div className="text-danger fw-bold">{formik.errors.TitleHolderMandalName}</div>} */}
                             
-                                {formik.touched.  titleHolderMandalName && formik.errors.  titleHolderMandalName && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors.  titleHolderMandalName}</div>
+                                {formik.touched.titleHolderMandalName && formik.errors.titleHolderMandalName && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.titleHolderMandalName}</div>
                             )}
                             </div>
                         </div>
@@ -310,8 +332,8 @@ const TitleHolderDetails = ({ onNext }) => {
                                     style={{ height: "40px", fontSize: "20px", borderColor: "#333333"}}
                                 />
                                 {/* {formik.errors.TitleHolderDistrictName && <div className="text-danger fw-bold">{formik.errors.TitleHolderDistrictName}</div>} */}
-                                {formik.touched.   titleHolderDistrictName && formik.errors.   titleHolderDistrictName && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors.   titleHolderDistrictName}</div>
+                                {formik.touched.titleHolderDistrictName && formik.errors.titleHolderDistrictName && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.titleHolderDistrictName}</div>
                             )}
                           
                             </div>
@@ -332,8 +354,8 @@ const TitleHolderDetails = ({ onNext }) => {
                                 />
                                 {/* {formik.errors.TitleHolderPincode && <div className="text-danger fw-bold">{formik.errors.TitleHolderPincode}</div>} */}
                      
-                                {formik.touched.  titleHolderRelativeName && formik.errors.  titleHolderRelativeName && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors.  titleHolderRelativeName}</div>
+                                {formik.touched.titleHolderRelativeName && formik.errors.titleHolderRelativeName && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.titleHolderRelativeName}</div>
                             )}
                             </div>
                         </div>
@@ -345,6 +367,15 @@ const TitleHolderDetails = ({ onNext }) => {
                         <Button type="submit" variant="primary" className="mt-3">Next</Button>
                     </div> */}
                     <div className="text-center">
+                          {/* Back Button */}
+                          <Button
+                            variant="secondary"
+                            className="mt-3 me-3"
+                            onClick={() => navigate(-1)}  // Navigate back
+                        >
+                            Back
+                        </Button>
+
                         <Button
                             type="submit"
                             variant="primary"

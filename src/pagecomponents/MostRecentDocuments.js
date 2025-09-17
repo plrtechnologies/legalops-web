@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import Form from 'react-bootstrap/Form';
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";  
-import { Mostrecentdocuments_api } from "../apiUrls";
+//import { Mostrecentdocuments_api } from "../apiUrls";
 
 const MostRecentDocument =({onNext})=>{
     const navigate = useNavigate();  // Initialize navigate
@@ -19,12 +19,9 @@ const MostRecentDocument =({onNext})=>{
             subregistrarOfficeDistrict:"",
             subregistrarOfficeLocalAuthority:"" 
 },
-    //    onSubmit:(values)=>{
-    //     console.log("formik",values)
-    //     onNext();
-    //    },
+    
     onSubmit: async (values) => {
-        console.log('Form Submitted:', values);
+        //console.log('Form Submitted:', values);
         // Step 1: Retrieve the session ID from sessionStorage
       const sessionId = sessionStorage.getItem("sessionID"); // Retrieve session ID
       // Step 2: Prepare the data to be sent to the API
@@ -34,31 +31,37 @@ const MostRecentDocument =({onNext})=>{
       };
 
   //comented the api code for testing purpose ............
-        // setLoading(true);  // Start loading state
-        // const apiUrl = Mostrecentdocuments_api;  // Replace with actual API endpoint
-        // try {
-        //     const response = await fetch(apiUrl, {
-        //         method: 'POST',
-        //         headers: {
-        //             'Content-Type': 'application/json',
-        //         },
-        //         body: JSON.stringify(values),
-        //     });
-        //     if (response.ok) {
-        //         const data = await response.json();
-        //         console.log("API response:", data);
-        //         // After a successful API call, call onNext
-                onNext();
-        //     } else {
-        //         console.error("API Error:", response.statusText);
-        //         // Optionally handle the error (show a message to the user)
-        //     }
-        // } catch (error) {
-        //     console.error("Error during API call:", error);
-        //     // Optionally handle the error (show a message to the user)
-        // } finally {
-        //     setLoading(false);  // End loading state
-        // }
+
+   const apiUrl = `${process.env.REACT_APP_API_BASE_URL}${process.env.REACT_APP_API_SESSION}`;
+ console.log("Final API URL:", apiUrl);  
+  setLoading(true);  // Start loading state
+        
+        // for testing purpose used the api 
+       //const apiUrl =  "http://localhost:3000/api/session"; // "https://jsonplaceholder.typicode.com/posts"   // "http://localhost:3000/api/session"; Replace with actual API endpoint
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dataToSend),
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log("API response:", data);
+                // After a successful API call, call onNext
+               onNext();
+            } else {
+                console.error("API Error:", response.statusText);
+                // Optionally handle the error (show a message to the user)
+            }
+        } catch (error) {
+            console.error("Error during API call:", error);
+            // Optionally handle the error (show a message to the user)
+        } finally {
+            setLoading(false);  // End loading state
+        }
+        
     },
        validate:(values)=>{
           let errors ={};     //{initially no errrors}
@@ -109,14 +112,14 @@ const MostRecentDocument =({onNext})=>{
         <div>
             <h2 className="text-center">Most Recent Document Details </h2>
             <div 
-            style={{height:"100vh",paddingLeft:"20px",paddingTop:"10px",overflowX:"hidden" }}>
+            style={{height:"100vh",paddingLeft:"50px",paddingTop:"10px",overflowX:"hidden" }}>
 
                 <Form onSubmit={formik.handleSubmit}>
                 <Form.Group controlId="SelectDeedType">
                    
                 <div className="d-flex flex-column flex-md-row flex-lg-row fs-3 mb-3">
                     <div className="col-12 col-lg-5">
-                        <Form.Label className="fs-3">
+                        <Form.Label className="fs-2">
                         SelectDeedType  
                         </Form.Label>
                     </div>
@@ -125,7 +128,7 @@ const MostRecentDocument =({onNext})=>{
                              value={formik.values.selectDeedType}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            style={{fontSize:"25px"}}>
+                            style={{fontSize:"20px", height:"40px" }}>
                             <option value=""> select</option>
                             <option value="sale deed">sale deed </option>
                             <option value="gift deed">gift deed </option>
@@ -155,10 +158,10 @@ const MostRecentDocument =({onNext})=>{
                             value={formik.values.dateofRegistration} 
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            style={{fontSize:"25px"}}/>
+                            style={{ fontSize:"20px", height:"40px" }}/>
                             {/* {formik.errors.dateofRegistration?<div className="text-danger fs-5 ">{formik.errors.dateofRegistration}</div>:null}  */}
-                            {formik.touched. dateofRegistration && formik.errors. dateofRegistration && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors. dateofRegistration}</div>
+                            {formik.touched.dateofRegistration && formik.errors.dateofRegistration && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.dateofRegistration}</div>
                             )}
                             </div>
                         </div>
@@ -179,10 +182,10 @@ const MostRecentDocument =({onNext})=>{
                             value={formik.values.documentNumber}
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            style={{fontSize:"25px"}} />
+                            style={{ fontSize:"20px", height:"40px" }} />
                             {/* {formik.errors.documentNumber?<div className="text-danger fs-5 ">{formik.errors.documentNumber}</div>:null} */}
-                            {formik.touched. documentNumber && formik.errors. documentNumber && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors. documentNumber} </div>
+                            {formik.touched.documentNumber && formik.errors.documentNumber && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.documentNumber} </div>
                             )}
                            
                             </div>
@@ -204,10 +207,10 @@ const MostRecentDocument =({onNext})=>{
                                value={formik.values.nameofSubregistrarOffice} 
                                onChange={formik.handleChange}
                                onBlur={formik.handleBlur}
-                               style={{fontSize:"25px"}}/>
+                               style={{ fontSize:"20px", height:"40px" }}/>
                                {/* {formik.errors.nameofSubregistrarOffice?<div className="text-danger  fs-5 ">{formik.errors.nameofSubregistrarOffice}</div>:null} */}
-                               {formik.touched.  nameofSubregistrarOffice && formik.errors.  nameofSubregistrarOffice && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors.  nameofSubregistrarOffice}</div>
+                               {formik.touched.nameofSubregistrarOffice && formik.errors.nameofSubregistrarOffice && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.nameofSubregistrarOffice}</div>
                             )}
                             
                             </div>
@@ -227,10 +230,10 @@ const MostRecentDocument =({onNext})=>{
                              value={formik.values.locationOfSubregistrarOffice}
                              onChange={formik.handleChange}
                              onBlur={formik.handleBlur}
-                             style={{fontSize:"25px"}} />
+                             style={{ fontSize:"20px", height:"40px" }} />
                               {/* {formik.errors.locationOfSubregistrarOffice?<div className="text-danger  fs-5 ">{formik.errors.locationOfSubregistrarOffice}</div>:null} */}
-                            {formik.touched.  locationOfSubregistrarOffice && formik.errors.  locationOfSubregistrarOffice && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors.  locationOfSubregistrarOffice}</div>
+                            {formik.touched.locationOfSubregistrarOffice && formik.errors.locationOfSubregistrarOffice && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.locationOfSubregistrarOffice}</div>
                             )}
                             
                             </div>
@@ -250,10 +253,10 @@ const MostRecentDocument =({onNext})=>{
                              value={formik.values.subregistrarOfficeMandal} 
                              onChange={formik.handleChange}
                              onBlur={formik.handleBlur}
-                             style={{fontSize:"25px"}}/>
+                             style={{ fontSize:"20px", height:"40px" }}/>
                               {/* {formik.errors.subregistrarOfficeMandal?<div className="text-danger  fs-5 ">{formik.errors.subregistrarOfficeMandal}</div>:null} */}
-                              {formik.touched.  subregistrarOfficeMandal && formik.errors.  subregistrarOfficeMandal && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors.  subregistrarOfficeMandal}</div>
+                              {formik.touched.subregistrarOfficeMandal && formik.errors.subregistrarOfficeMandal && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.subregistrarOfficeMandal}</div>
                             )}
                             
                             </div>
@@ -273,10 +276,10 @@ const MostRecentDocument =({onNext})=>{
                             value={formik.values.subregistrarOfficeDistrict} 
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            style={{fontSize:"25px"}}/>
+                            style={{ fontSize:"20px", height:"40px" }}/>
                              {/* {formik.errors.subregistrarOfficeDistrict?<div className="text-danger  fs-5 ">{formik.errors.subregistrarOfficeDistrict}</div>:null} */}
-                             {formik.touched.  subregistrarOfficeDistrict && formik.errors.  subregistrarOfficeDistrict && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors.  subregistrarOfficeDistrict}</div>
+                             {formik.touched.subregistrarOfficeDistrict && formik.errors.subregistrarOfficeDistrict && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.subregistrarOfficeDistrict}</div>
                             )}
                             
                             </div>
@@ -296,10 +299,10 @@ const MostRecentDocument =({onNext})=>{
                                 value={formik.values.subregistrarOfficeLocalAuthority} 
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                style={{fontSize:"25px"}}/>
+                                style={{ fontSize:"20px", height:"40px" }}/>
                                  {/* {formik.errors.subregistrarOfficeLocalAuthority?<div className="text-danger fs-5">{formik.errors.subregistrarOfficeLocalAuthority}</div>:null} */}
-                                 {formik.touched.  subregistrarOfficeLocalAuthority && formik.errors.  subregistrarOfficeLocalAuthority && (
-                            <div className="text-danger fw-bold fs-5">{formik.errors.  subregistrarOfficeLocalAuthority}</div>
+                                 {formik.touched.subregistrarOfficeLocalAuthority && formik.errors.subregistrarOfficeLocalAuthority && (
+                            <div className="text-danger fw-bold fs-5">{formik.errors.subregistrarOfficeLocalAuthority}</div>
                             )}
                            
                             </div>
@@ -326,7 +329,8 @@ const MostRecentDocument =({onNext})=>{
                                 disabled={loading}>
                             {loading ? "Loading..." : "Next"}
                                         </Button>
-                                    </div>
+
+                            </div>
                     </Form>                   
             </div>
         </div>
