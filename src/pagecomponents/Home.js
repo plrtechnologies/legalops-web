@@ -28,9 +28,12 @@ const Home = () => {
 
   const createDocument = () => {
     console.log("Create Document triggered");
-    // Clear all session storage data when "Create Document" is clicked
-    sessionStorage.clear(); // This will clear everything in sessionStorage
-
+    // Preserve user_id before clearing sessionStorage
+    const userId = sessionStorage.getItem("user_id");
+    sessionStorage.clear();
+    if (userId) {
+      sessionStorage.setItem("user_id", userId);
+    }
     initializeSession(); // Generate a new session ID
     navigate("CreateDocument"); // Navigate to the next page
   };

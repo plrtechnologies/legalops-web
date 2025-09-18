@@ -35,6 +35,13 @@ const   Login =({ onNext })=>{
             const data = await response.json();
             if (data && data.token) {
               setToken(data.token);
+              // Optionally store user info in localStorage or context
+              if (data.user) {
+                localStorage.setItem('user', JSON.stringify(data.user));
+                if (data.user.user_id) {
+                  sessionStorage.setItem('user_id', data.user.user_id);
+                }
+              }
               if (onNext) {
                 onNext();
               } else {
