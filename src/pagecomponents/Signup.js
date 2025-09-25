@@ -1,155 +1,361 @@
 import { useFormik } from "formik";
 import React, { useState } from "react";
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/esm/Button';
-import { signup_api } from "../apiUrls";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/esm/Button";
+import { Signup_api } from "../apiUrls";   // ✅ updated name to match Login_api style
 import { useNavigate } from "react-router-dom";
 
-const  Signup =({ onNext })=>{
+const Signup = ({ onNext }) => {
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(""); // ✅ state to show backend or network errors
   const navigate = useNavigate();
-   const  formik = useFormik({
-      initialValues:{
-        name:"",
-        email:"",
-        password:"",
-        confirmPassword:""
-      },
-      // onSubmit:(values)=>{
-      //   console.log("form submit", formik.values)
-      // },
-      onSubmit: async (values) => {
-        setLoading(true);
-        const apiUrl = signup_api;
-        // Only send name, email, password to backend
-        const payload = {
-          name: values.name,
-          email: values.email,
-          password: values.password
-        };
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload),
-            });
-            if (response.ok) {
-                navigate('/Login');
-            } else {
-                // Optionally show an error message to the user
-            }
-        } catch (error) {
-            // Optionally show an error message to the user
-        } finally {
-            setLoading(false);
-        }
+
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: ""
     },
-      validate:(values)=>{
-         let errors ={};     
-         
-         if (!values.name){    // if name is empty while submitting, it will show error 
-             errors.name= "Name is required"
-         }
-         if (!values.email) {   
-          errors.email = "Email is required";
-        } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(values.email)) {
-          errors.email = "Invalid email address";
-        }
-        
-         
-        // Password Validation
-        if (!values.password) {
-          errors.password = "Password is required";
-        } else if (values.password.length < 6) {
-          errors.password = "Password must be at least 6 characters";
-        }
+    onSubmit: async (values) => {
+      setLoading(true);
+      setErrorMsg(""); // ✅ reset error message every submit
 
-        // Confirm Password Validation
-        if (!values.confirmPassword) {
-          errors.confirmPassword = "Confirm Password is required";
-        } else if (values.password && values.password.length >= 6) {
-          if (values.password !== values.confirmPassword) {
-            errors.confirmPassword = "Passwords do not match";
-          }
+      const apiUrl = Signup_api;
+      const payload = {
+        name: values.name,
+        email: values.email,
+        password: values.password
+      };
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+          navigate("/Login");
+        } else {
+          // ✅ Show backend error message if available
+          const data = await response.json().catch(() => null);
+          setErrorMsg(
+            data && data.message
+              ? data.message
+              : "Signup failed. Please try again."
+          );
         }
+      } catch (error) {
+        // ✅ Show network error message
+        setErrorMsg("An error occurred. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    validate: (values) => {
+      let errors = {};
 
-      return errors;
-
+      if (!values.name) {
+        errors.name = "Name is required";
+      }
+      if (!values.email) {
+        errors.email = "Email is required";
+      } else if (
+        !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(values.email)
+      ) {
+        errors.email = "Invalid email address";
       }
 
-   })
-    return(
-        <div>
-            <h1 className="text-center text-primary"> Signup   </h1>   {/*just here creating another page */}
+      if (!values.password) {
+        errors.password = "Password is required";
+      } else if (values.password.length < 6) {
+        errors.password = "Password must be at least 6 characters";
+      }
 
-              <div className="d-flex justify-content-center"  > 
-              <div className="col col-md-6 col-lg-10" 
-                    style={{
-                            border: '2px solid #007bff',
-                            borderRadius: '10px',
-                            padding: '20px',
-                            width: '400px',
-                            backgroundColor: '#f8f9fa',
-                            marginBottom:"84px"
-                        }}>
-                 <Form autoComplete="off" onSubmit={formik.handleSubmit}>
-                    <Form.Group className="mb-3" controlId="forname">
-                        <Form.Label className="fs-4">Name </Form.Label>
-                        <Form.Control   type="text" placeholder="Enter your full name" name="name"  
-                         value={formik.values.name}
-                         onChange={formik.handleChange}
-                         onBlur={formik.handleBlur} />
-                         {formik.errors.name?<div className="text-danger">{formik.errors.name}</div>:null}
-                    </Form.Group>
+      if (!values.confirmPassword) {
+        errors.confirmPassword = "Confirm Password is required";
+      } else if (values.password && values.password.length >= 6) {
+        if (values.password !== values.confirmPassword) {
+          errors.confirmPassword = "Passwords do not match";
+        }
+      }
 
-                    <Form.Group className="mb-3" controlId="formBasicEmail">
-                        <Form.Label className="fs-4">Email </Form.Label>
-                        <Form.Control type="email" placeholder="Enter your email address" name="email"
-                         value={formik.values.email} 
-                         onChange={formik.handleChange}
-                         onBlur={formik.handleBlur}/>
-                         {formik.errors.email?<div className="text-danger">{formik.errors.email}</div>:null}
-                    </Form.Group>
- 
-                    <Form.Group className="mb-3" controlId="Password">
-                        <Form.Label className="fs-4">Password</Form.Label>
-                        <Form.Control type="password" placeholder="Create a password" name="password"
-                         value={formik.values.password}
-                          onChange={formik.handleChange}
-                          onBlur={formik.handleBlur}/>
-                         {formik.errors.password?<div className="text-danger">{formik.errors.password}</div>:null}
-                    </Form.Group>
-                    
-                    <Form.Group className="mb-3" controlId="confirmPassword">
-                        <Form.Label className="fs-4">Confirm Password</Form.Label>
-                        <Form.Control type="password" placeholder="Confirm your password" name="confirmPassword"
-                         value={formik.values.confirmPassword}
-                          onChange={formik.handleChange} 
-                          onBlur={formik.handleBlur}/>
-                         {formik.errors.confirmPassword?<div className="text-danger">{formik.errors.confirmPassword}</div>:null}
-                    </Form.Group>
-                    
-                     {/* <p> If you have an account   <Link to="/Login">Login</Link> here</p>   */}
-                    {/* <Button type="submit"> Signup</Button>  */}
-                    <div className="text-center">
-                        <Button
-                            type="submit"
-                            variant="primary"
-                            className="mt-3"
-                            disabled={loading}
-                        >
-                             {loading ? "Loading..." : "Signup"} {/*here i change signup button name instead of "Next"  */}
-                        </Button>
-                    </div>
-                </Form>  
-                   
-              </div>
-              </div>
+      return errors;
+    }
+  });
 
+  return (
+    <div
+      style={{
+        minHeight: "82vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center"
+      }}
+    >
+      <div style={{ height: 32 }} />
+      <h1 className="text-center text-primary" style={{ marginBottom: 0 }}>
+        Signup
+      </h1>
+
+      <div
+        className="d-flex justify-content-center align-items-center w-100"
+        style={{ flex: 1 }}
+      >
+        <div
+          className="col col-md-6 col-lg-10"
+          style={{
+            border: "2px solid #007bff",
+            borderRadius: "10px",
+            padding: "20px",
+            width: "400px",
+            backgroundColor: "#f8f9fa",
+            marginBottom: "84px",
+            boxShadow: "0 4px 16px rgba(0,0,0,0.08)" // ✅ same look as Login page
+          }}
+        >
+          <Form autoComplete="off" onSubmit={formik.handleSubmit}>
+            {/* ✅ Show API or network error if any */}
+            {errorMsg && (
+              <div className="text-danger text-center mb-2">{errorMsg}</div>
+            )}
+
+            <Form.Group className="mb-3" controlId="forname">
+              <Form.Label className="fs-4">Name</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Enter your full name"
+                name="name"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.errors.name && (
+                <div className="text-danger">{formik.errors.name}</div>
+              )}
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="formBasicEmail">
+              <Form.Label className="fs-4">Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter your email address"
+                name="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.errors.email && (
+                <div className="text-danger">{formik.errors.email}</div>
+              )}
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="Password">
+              <Form.Label className="fs-4">Password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Create a password"
+                name="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.errors.password && (
+                <div className="text-danger">{formik.errors.password}</div>
+              )}
+            </Form.Group>
+
+            <Form.Group className="mb-3" controlId="confirmPassword">
+              <Form.Label className="fs-4">Confirm Password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Confirm your password"
+                name="confirmPassword"
+                value={formik.values.confirmPassword}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.errors.confirmPassword && (
+                <div className="text-danger">{formik.errors.confirmPassword}</div>
+              )}
+            </Form.Group>
+
+            <div className="text-center">
+              <Button
+                type="submit"
+                variant="primary"
+                className="mt-3"
+                disabled={loading}
+              >
+                {loading ? "Loading..." : "Signup"}
+              </Button>
+            </div>
+          </Form>
         </div>
-    )
-}
+      </div>
+    </div>
+  );
+};
 
-export default  Signup;
+export default Signup;
+
+
+
+
+// import { useFormik } from "formik";
+// import React, { useState } from "react";
+// import Form from 'react-bootstrap/Form';
+// import Button from 'react-bootstrap/esm/Button';
+// import { signup_api } from "../apiUrls";
+// import { useNavigate } from "react-router-dom";
+
+// const  Signup =({ onNext })=>{
+//   const [loading, setLoading] = useState(false);
+//   const navigate = useNavigate();
+//    const  formik = useFormik({
+//       initialValues:{
+//         name:"",
+//         email:"",
+//         password:"",
+//         confirmPassword:""
+//       },
+//       // onSubmit:(values)=>{
+//       //   console.log("form submit", formik.values)
+//       // },
+//       onSubmit: async (values) => {
+//         setLoading(true);
+//         const apiUrl = signup_api;
+//         // Only send name, email, password to backend
+//         const payload = {
+//           name: values.name,
+//           email: values.email,
+//           password: values.password
+//         };
+//         try {
+//             const response = await fetch(apiUrl, {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                 },
+//                 body: JSON.stringify(payload),
+//             });
+//             if (response.ok) {
+//                 navigate('/Login');
+//             } else {
+//                 // Optionally show an error message to the user
+//             }
+//         } catch (error) {
+//             // Optionally show an error message to the user
+//         } finally {
+//             setLoading(false);
+//         }
+//     },
+//       validate:(values)=>{
+//          let errors ={};     
+         
+//          if (!values.name){    // if name is empty while submitting, it will show error 
+//              errors.name= "Name is required"
+//          }
+//          if (!values.email) {   
+//           errors.email = "Email is required";
+//         } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/.test(values.email)) {
+//           errors.email = "Invalid email address";
+//         }
+        
+         
+//         // Password Validation
+//         if (!values.password) {
+//           errors.password = "Password is required";
+//         } else if (values.password.length < 6) {
+//           errors.password = "Password must be at least 6 characters";
+//         }
+
+//         // Confirm Password Validation
+//         if (!values.confirmPassword) {
+//           errors.confirmPassword = "Confirm Password is required";
+//         } else if (values.password && values.password.length >= 6) {
+//           if (values.password !== values.confirmPassword) {
+//             errors.confirmPassword = "Passwords do not match";
+//           }
+//         }
+
+//       return errors;
+
+//       }
+
+//    })
+//     return(
+//         <div>
+//             <h1 className="text-center text-primary"> Signup   </h1>   {/*just here creating another page */}
+
+//               <div className="d-flex justify-content-center"  > 
+//               <div className="col col-md-6 col-lg-10" 
+//                     style={{
+//                             border: '2px solid #007bff',
+//                             borderRadius: '10px',
+//                             padding: '20px',
+//                             width: '400px',
+//                             backgroundColor: '#f8f9fa',
+//                             marginBottom:"84px"
+//                         }}>
+//                  <Form autoComplete="off" onSubmit={formik.handleSubmit}>
+//                     <Form.Group className="mb-3" controlId="forname">
+//                         <Form.Label className="fs-4">Name </Form.Label>
+//                         <Form.Control   type="text" placeholder="Enter your full name" name="name"  
+//                          value={formik.values.name}
+//                          onChange={formik.handleChange}
+//                          onBlur={formik.handleBlur} />
+//                          {formik.errors.name?<div className="text-danger">{formik.errors.name}</div>:null}
+//                     </Form.Group>
+
+//                     <Form.Group className="mb-3" controlId="formBasicEmail">
+//                         <Form.Label className="fs-4">Email </Form.Label>
+//                         <Form.Control type="email" placeholder="Enter your email address" name="email"
+//                          value={formik.values.email} 
+//                          onChange={formik.handleChange}
+//                          onBlur={formik.handleBlur}/>
+//                          {formik.errors.email?<div className="text-danger">{formik.errors.email}</div>:null}
+//                     </Form.Group>
+ 
+//                     <Form.Group className="mb-3" controlId="Password">
+//                         <Form.Label className="fs-4">Password</Form.Label>
+//                         <Form.Control type="password" placeholder="Create a password" name="password"
+//                          value={formik.values.password}
+//                           onChange={formik.handleChange}
+//                           onBlur={formik.handleBlur}/>
+//                          {formik.errors.password?<div className="text-danger">{formik.errors.password}</div>:null}
+//                     </Form.Group>
+                    
+//                     <Form.Group className="mb-3" controlId="confirmPassword">
+//                         <Form.Label className="fs-4">Confirm Password</Form.Label>
+//                         <Form.Control type="password" placeholder="Confirm your password" name="confirmPassword"
+//                          value={formik.values.confirmPassword}
+//                           onChange={formik.handleChange} 
+//                           onBlur={formik.handleBlur}/>
+//                          {formik.errors.confirmPassword?<div className="text-danger">{formik.errors.confirmPassword}</div>:null}
+//                     </Form.Group>
+                    
+//                      {/* <p> If you have an account   <Link to="/Login">Login</Link> here</p>   */}
+//                     {/* <Button type="submit"> Signup</Button>  */}
+//                     <div className="text-center">
+//                         <Button
+//                             type="submit"
+//                             variant="primary"
+//                             className="mt-3"
+//                             disabled={loading}
+//                         >
+//                              {loading ? "Loading..." : "Signup"} {/*here i change signup button name instead of "Next"  */}
+//                         </Button>
+//                     </div>
+//                 </Form>  
+                   
+//               </div>
+//               </div>
+
+//         </div>
+//     )
+// }
+
+// export default  Signup;
