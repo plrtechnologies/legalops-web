@@ -2,17 +2,17 @@ const BASE = process.env.REACT_APP_API_BASE_URL; // dynamic base from .env
 
 export const Login_api = `${BASE}${process.env.REACT_APP_API_LOGIN}`;
 export const Signup_api = `${BASE}${process.env.REACT_APP_API_SIGNUP}`;
+
 export const LoanProposerDetails_api = `${BASE}${process.env.REACT_APP_API_SESSION}`;
 export const TitleHolderDetails_api = `${BASE}${process.env.REACT_APP_API_SESSION}`;
 export const MostRecentDocuments_api = `${BASE}${process.env.REACT_APP_API_SESSION}`;
-
 export const PropertyBoundaries_api = `${BASE}${process.env.REACT_APP_API_SESSION}`;
-
 export const PropertyDetails_api = `${BASE}${process.env.REACT_APP_API_SESSION}`;
 
 export const LoanProposerAndTitleHolders_api = `${BASE}${process.env.REACT_APP_API_SESSION}`;
 
-
+// link document apis 
+export const LinkDoc_api = `${BASE}${process.env.REACT_APP_API_LINKDOC}`;
 
 // const BASE = process.env.REACT_APP_API_BASE;
 

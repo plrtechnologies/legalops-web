@@ -1163,14 +1163,14 @@
  
  //---------------------------------------------------
  //-------------------------------------------------------
+ 
+//below code is working code 
 
 // import { useFormik } from "formik";
 // import React, { useState, useEffect } from "react";
 // import { Button, Form, Row, Col } from "react-bootstrap";
-// //import { useNavigate } from "react-router-dom";
 
 // const LinkDocuments = ({ onNext }) => {
-//   //const navigate = useNavigate();
 //   const [documents, setDocuments] = useState(
 //     JSON.parse(sessionStorage.getItem("documents")) || []
 //   );
@@ -1182,7 +1182,7 @@
 //     onSubmit: (values) => {
 //       console.log("Form Submitted:", values);
 //       sessionStorage.setItem("linkDocumentsData", JSON.stringify(values));
-//       onNext(); // Proceed to the next step
+//       onNext(); // Proceed to next step
 //     },
 //   });
 
@@ -1191,7 +1191,75 @@
 //     sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
 //   }, [formik.values]);
 
-//   // **🔹 Handle Document Addition**
+//   // **🔹 Define Fields for Each Document Type**
+//   const documentFields = {
+//     GiftDeed: {
+//       donorName: "",
+//       doneeName: "",
+//       registrationDate: "",
+//       documentNumber: "",
+//       issuingAuthority: "",
+//     },
+//     SaleDeed: {
+//       sellerName: "",
+//       buyerName: "",
+//       registrationDate: "",
+//       documentNumber: "",
+//       issuingAuthority: "",
+//     },
+//     RelinquishmentDeed: {
+//       relinquisherName: "",
+//       recipientName: "",
+//       registrationDate: "",
+//       documentNumber: "",
+//       issuingAuthority: "",
+//     },
+//     PartitionDeed: {
+//       partitionerName: "",
+//       precipientName: "",
+//       registrationDate: "",
+//       documentNumber: "",
+//       issuingAuthority: "",
+//     },
+//     MortgageDeed: {
+//       mortgagorName: "",
+//       mortgageeName: "",
+//       registrationDate: "",
+//       documentNumber: "",
+//       issuingAuthority: "",
+//     },
+//     WillDeed: {
+//       testatorName: "",
+//       benificiaryName: "",
+//       registrationDate: "",
+//       documentNumber: "",
+//       issuingAuthority: "",
+//     },
+//     EncumbranceCertificate: {
+//       ecIssuingAuthority: "",
+//       ecstatementNumber: "",
+//       fromDate: "",
+//       toDate: "",
+       
+//     },
+//     HouseTaxReceipt: {
+//       ReceiptIssuingAuthority: "",
+//       DoorNumberOnReceipt: "",
+//       assessmentNumberOnRecept:"",
+//        amountPaid: "",
+//        amountPaidInFavourOf: "",
+//     },
+//     HouseTaxDemandNotice: {
+//       NoticeIssueAuthority: "",
+//       DoorNumberOnReceipt: "",
+//       assessmentNumberOnRecept:"",
+//       amountDue: "",
+//       amountDueInFavourOf: "",
+       
+//     },
+//   };
+
+//   // **🔹 Add a New Document**
 //   const addDocument = () => {
 //     const newDocId = `doc-${documents.length + 1}`;
 //     setDocuments([...documents, newDocId]);
@@ -1204,7 +1272,7 @@
 //     sessionStorage.setItem("documents", JSON.stringify([...documents, newDocId]));
 //   };
 
-//   // **🔹 Handle Document Removal**
+//   // **🔹 Remove a Document**
 //   const removeDocument = (docId) => {
 //     const updatedDocs = documents.filter((id) => id !== docId);
 //     setDocuments(updatedDocs);
@@ -1221,31 +1289,15 @@
 //     const docType = e.target.value;
 //     formik.setValues({
 //       ...formik.values,
-//       [docId]: { documentType: docType, ...getFieldsByDocumentType(docType) },
+//       [docId]: { documentType: docType, ...documentFields[docType] },
 //     });
 //   };
 
-//   // **🔹 Define Fields for Each Document Type**
-//   const getFieldsByDocumentType = (type) => {
-//     const fieldMap = {
-//       GiftDeed: { donorName: "", doneeName: "" },
-//       SaleDeed: { sellerName: "", buyerName: "" },
-//       RelinquishmentDeed: { relinquisherName: "", recipientName: "" },
-//       PartitionDeed: { partitionerName: "", precipientName: "" },
-//       MortgageDeed: { mortgagorName: "", mortgageeName: "" },
-//       WillDeed: { testatorName: "", benificiaryName: "" },
-//       EncumbranceCertificate: { ecIssuingAuthority: "", ecstatementNumber: "" },
-//       HouseTaxReceipt: { ReceiptIssuingAuthority: "", DoorNumberOnReceipt: "" },
-//       HouseTaxDemandNotice: { NoticeIssueAuthority: "", DoorNumberOnReceipt: "" },
-//     };
-//     return fieldMap[type] || {};
-//   };
-
 //   return (
-//     <div>
-//       <h3 className="text-center">Link Documents</h3>
+//     <div style={{   height: "100vh", overflowx: "scroll"  }}>
+//       <h3 className="text-center mt-3">Link Documents</h3>
 
-//       <div style={{ padding: "20px" }}>
+//       <div style={{height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px"    }}>
 //         <Form onSubmit={formik.handleSubmit}>
 //           {documents.map((docId) => (
 //             <div key={docId} className="mb-4 p-3 border rounded">
@@ -1260,36 +1312,30 @@
 //                   onChange={(e) => handleDocTypeChange(e, docId)}
 //                 >
 //                   <option value="">Select</option>
-//                   <option value="GiftDeed">Gift Deed</option>
-//                   <option value="SaleDeed">Sale Deed</option>
-//                   <option value="RelinquishmentDeed">Relinquishment Deed</option>
-//                   <option value="PartitionDeed">Partition Deed</option>
-//                   <option value="MortgageDeed">Mortgage Deed</option>
-//                   <option value="WillDeed">Will Deed</option>
-//                   <option value="EncumbranceCertificate">Encumbrance Certificate</option>
-//                   <option value="HouseTaxReceipt">House Tax Receipt</option>
-//                   <option value="HouseTaxDemandNotice">House Tax Demand Notice</option>
+//                   {Object.keys(documentFields).map((type) => (
+//                     <option key={type} value={type}>
+//                       {type.replace(/([A-Z])/g, " $1").trim()}
+//                     </option>
+//                   ))}
 //                 </Form.Select>
 //               </Form.Group>
 
 //               {/* **🔹 Render Relevant Fields** */}
-//               {formik.values[docId] &&
-//                 Object.keys(formik.values[docId])
-//                   .filter((key) => key !== "documentType")
-//                   .map((fieldKey) => (
-//                     <Form.Group as={Row} key={fieldKey} className="mb-3">
-//                       <Form.Label column sm="6">{fieldKey.replace(/([A-Z])/g, " $1").trim()}:</Form.Label>
-//                       <Col sm="6">
-//                         <Form.Control
-//                           type="text"
-//                           name={`${docId}.${fieldKey}`}
-//                           value={formik.values[docId]?.[fieldKey] || ""}
-//                           onChange={formik.handleChange}
-//                           placeholder={`Enter ${fieldKey}`}
-//                         />
-//                       </Col>
-//                     </Form.Group>
-//                   ))}
+//               {formik.values[docId]?.documentType &&
+//                 Object.keys(documentFields[formik.values[docId]?.documentType]).map((fieldKey) => (
+//                   <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4 ">
+//                     <Form.Label column sm="6">{fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1).replace(/([A-Z])/g, " $1").trim()}:</Form.Label>
+//                     <Col sm="6">
+//                       <Form.Control
+//                         type="text"
+//                         name={`${docId}.${fieldKey}`}
+//                         value={formik.values[docId]?.[fieldKey] || ""}
+//                         onChange={formik.handleChange}
+//                         placeholder={`Enter ${fieldKey}`}
+//                       />
+//                     </Col>
+//                   </Form.Group>
+//                 ))}
 
 //               {/* **🔹 Remove Document Button** */}
 //               <Button variant="danger" onClick={() => removeDocument(docId)} className="mt-2">
@@ -1315,113 +1361,2675 @@
 
 // export default LinkDocuments;
 
-import { useFormik } from "formik";
+
+// import { useFormik } from "formik";
+// import React, { useState, useEffect } from "react";
+// import { Button, Form, Row, Col } from "react-bootstrap";
+
+// const LinkDocuments = ({ onNext }) => {
+//   const [documents, setDocuments] = useState(
+//     JSON.parse(sessionStorage.getItem("documents")) || []
+//   );
+
+//   // **🔹 Initialize Formik**
+//   const formik = useFormik({
+//     initialValues: JSON.parse(sessionStorage.getItem("linkDocumentsData")) || {},
+
+//     onSubmit: () => {
+//       // Disabled default form submit
+//     },
+//   });
+
+//   // **🔹 Save form data to sessionStorage on change**
+//   useEffect(() => {
+//     sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   // **🔹 Define Fields for Each Document Type**
+//   const documentFields = {
+//     GiftDeed: {
+//       donorName: "",
+//       doneeName: "",
+//       registrationDate: "",
+//       documentNumber: "",
+//       issuingAuthority: "",
+//     },
+//     SaleDeed: {
+//       sellerName: "",
+//       buyerName: "",
+//       registrationDate: "",
+//       documentNumber: "",
+//       issuingAuthority: "",
+//     },
+//     RelinquishmentDeed: {
+//       relinquisherName: "",
+//       recipientName: "",
+//       registrationDate: "",
+//       documentNumber: "",
+//       issuingAuthority: "",
+//     },
+//     PartitionDeed: {
+//       partitionerName: "",
+//       precipientName: "",
+//       registrationDate: "",
+//       documentNumber: "",
+//       issuingAuthority: "",
+//     },
+//     MortgageDeed: {
+//       mortgagorName: "",
+//       mortgageeName: "",
+//       registrationDate: "",
+//       documentNumber: "",
+//       issuingAuthority: "",
+//     },
+//     WillDeed: {
+//       testatorName: "",
+//       benificiaryName: "",
+//       registrationDate: "",
+//       documentNumber: "",
+//       issuingAuthority: "",
+//     },
+//     EncumbranceCertificate: {
+//       ecIssuingAuthority: "",
+//       ecstatementNumber: "",
+//       fromDate: "",
+//       toDate: "",
+//     },
+//     HouseTaxReceipt: {
+//       ReceiptIssuingAuthority: "",
+//       DoorNumberOnReceipt: "",
+//       assessmentNumberOnRecept: "",
+//       amountPaid: "",
+//       amountPaidInFavourOf: "",
+//     },
+//     HouseTaxDemandNotice: {
+//       NoticeIssueAuthority: "",
+//       DoorNumberOnReceipt: "",
+//       assessmentNumberOnRecept: "",
+//       amountDue: "",
+//       amountDueInFavourOf: "",
+//     },
+//   };
+
+//   // **🔹 Add a New Document**
+//   const addDocument = () => {
+//     const newDocId = `doc-${documents.length + 1}`;
+//     setDocuments([...documents, newDocId]);
+
+//     formik.setValues({
+//       ...formik.values,
+//       [newDocId]: { documentType: "" }, // Start with only documentType
+//     });
+
+//     sessionStorage.setItem("documents", JSON.stringify([...documents, newDocId]));
+//   };
+
+//   // **🔹 Remove a Document**
+//   const removeDocument = (docId) => {
+//     const updatedDocs = documents.filter((id) => id !== docId);
+//     setDocuments(updatedDocs);
+
+//     const updatedValues = { ...formik.values };
+//     delete updatedValues[docId];
+//     formik.setValues(updatedValues);
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   // **🔹 Handle Document Type Change**
+//   const handleDocTypeChange = (e, docId) => {
+//     const docType = e.target.value;
+//     formik.setValues({
+//       ...formik.values,
+//       [docId]: { documentType: docType, ...documentFields[docType] },
+//     });
+//   };
+
+//   // **🔹 Handle Next (API Call)**
+//   const handleNext = async () => {
+//     if (documents.length === 0) {
+//       alert("Please add at least one document!");
+//       return;
+//     }
+
+//     const currentDocId = documents[documents.length - 1]; // last added document
+//     const currentDocData = formik.values[currentDocId];
+
+//     if (!currentDocData?.documentType) {
+//       alert("Please select document type for the current document!");
+//       return;
+//     }
+
+//     const token = sessionStorage.getItem("token");
+//     const session_id = sessionStorage.getItem("sessionId");
+//     const user_id = sessionStorage.getItem("user_id");
+
+//     const dataToSend = {
+//       session_id,
+//       user_id,
+//       ...currentDocData,
+//     };
+
+//     try {
+//       const response = await fetch("/api/linkdoc/create-linkdoc", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//         body: JSON.stringify(dataToSend),
+//       });
+
+//       if (!response.ok) throw new Error("API Error");
+
+//       const data = await response.json();
+//       console.log("API Response:", data);
+
+//       // Save all documents in sessionStorage
+//       sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+
+//       // Move to next step
+//       if (onNext) onNext();
+//     } catch (err) {
+//       console.error(err);
+//       alert("Failed to save document, please try again.");
+//     }
+//   };
+
+//   return (
+//     <div style={{ height: "100vh", overflowX: "scroll" }}>
+//       <h3 className="text-center mt-3">Link Documents</h3>
+
+//       <div style={{ height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px" }}>
+//         <Form>
+//           {documents.map((docId) => (
+//             <div key={docId} className="mb-4 p-3 border rounded">
+//               <h5>{docId}</h5>
+
+//               {/* Document Type Selection */}
+//               <Form.Group controlId={`${docId}-documentType`}>
+//                 <Form.Label>Document Type:</Form.Label>
+//                 <Form.Select
+//                   name={`${docId}.documentType`}
+//                   value={formik.values[docId]?.documentType || ""}
+//                   onChange={(e) => handleDocTypeChange(e, docId)}
+//                 >
+//                   <option value="">Select</option>
+//                   {Object.keys(documentFields).map((type) => (
+//                     <option key={type} value={type}>
+//                       {type.replace(/([A-Z])/g, " $1").trim()}
+//                     </option>
+//                   ))}
+//                 </Form.Select>
+//               </Form.Group>
+
+//               {/* Render Relevant Fields */}
+//               {formik.values[docId]?.documentType &&
+//                 Object.keys(documentFields[formik.values[docId]?.documentType]).map((fieldKey) => (
+//                   <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4">
+//                     <Form.Label column sm="6">
+//                       {fieldKey.charAt(0).toUpperCase() +
+//                         fieldKey.slice(1).replace(/([A-Z])/g, " $1").trim()}
+//                       :
+//                     </Form.Label>
+//                     <Col sm="6">
+//                       <Form.Control
+//                         type="text"
+//                         name={`${docId}.${fieldKey}`}
+//                         value={formik.values[docId]?.[fieldKey] || ""}
+//                         onChange={formik.handleChange}
+//                         placeholder={`Enter ${fieldKey}`}
+//                       />
+//                     </Col>
+//                   </Form.Group>
+//                 ))}
+
+//               {/* Remove Document Button */}
+//               <Button variant="danger" onClick={() => removeDocument(docId)} className="mt-2">
+//                 Remove Document
+//               </Button>
+//             </div>
+//           ))}
+
+//           {/* Add Document & Next Buttons */}
+//           <div className="text-center">
+//             <Button variant="primary" onClick={addDocument} className="me-3">
+//               Add Document
+//             </Button>
+//             <Button type="button" variant="success" onClick={handleNext}>
+//               Next
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+ 
+
+// import { useFormik } from "formik";
+// import React, { useState, useEffect } from "react";
+// import { Button, Form, Row, Col } from "react-bootstrap";
+
+// const LinkDocuments = ({ onNext }) => {
+//   const [documents, setDocuments] = useState(
+//     JSON.parse(sessionStorage.getItem("documents")) || []
+//   );
+
+//   const formik = useFormik({
+//     initialValues: JSON.parse(sessionStorage.getItem("linkDocumentsData")) || {},
+
+//     onSubmit: () => {
+//       // Disabled default submit
+//     },
+//   });
+
+//   // Auto-save form data
+//   useEffect(() => {
+//     sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   // Document fields template
+//   const documentFields = {
+//     GiftDeed: { donorName: "", doneeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     SaleDeed: { sellerName: "", buyerName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     RelinquishmentDeed: { relinquisherName: "", recipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     PartitionDeed: { partitionerName: "", precipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     MortgageDeed: { mortgagorName: "", mortgageeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     WillDeed: { testatorName: "", benificiaryName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     EncumbranceCertificate: { ecIssuingAuthority: "", ecstatementNumber: "", fromDate: "", toDate: "" },
+//     HouseTaxReceipt: { ReceiptIssuingAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountPaid: "", amountPaidInFavourOf: "" },
+//     HouseTaxDemandNotice: { NoticeIssueAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountDue: "", amountDueInFavourOf: "" },
+//   };
+
+//   // Add new document
+//   const addDocument = () => {
+//     const newDocId = `doc-${documents.length + 1}`;
+//     setDocuments([...documents, newDocId]);
+
+//     formik.setValues({
+//       ...formik.values,
+//       [newDocId]: { documentType: "" },
+//     });
+
+//     sessionStorage.setItem("documents", JSON.stringify([...documents, newDocId]));
+//   };
+
+//   // Remove document
+//   const removeDocument = (docId) => {
+//     const updatedDocs = documents.filter((id) => id !== docId);
+//     setDocuments(updatedDocs);
+
+//     const updatedValues = { ...formik.values };
+//     delete updatedValues[docId];
+//     formik.setValues(updatedValues);
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   // Handle document type change
+//   const handleDocTypeChange = (e, docId) => {
+//     const docType = e.target.value;
+//     formik.setValues({
+//       ...formik.values,
+//       [docId]: { documentType: docType, ...documentFields[docType] },
+//     });
+//   };
+
+//   // Handle Next (API call for last added document)
+//   const handleNext = async () => {
+//     if (documents.length === 0) {
+//       alert("Please add at least one document!");
+//       return;
+//     }
+
+//     const currentDocId = documents[documents.length - 1];
+//     const currentDocData = formik.values[currentDocId];
+
+//     if (!currentDocData?.documentType) {
+//       alert("Please select document type for the current document!");
+//       return;
+//     }
+
+//     const token = sessionStorage.getItem("token");
+//     const session_id = sessionStorage.getItem("sessionId");
+//     const user_id = sessionStorage.getItem("user_id");
+
+//     if (!token || !session_id || !user_id) {
+//       alert("Authentication required. Please login.");
+//       return;
+//     }
+
+//     const dataToSend = { session_id, user_id, ...currentDocData };
+
+//     try {
+//       const response = await fetch("http://localhost:3000/api/linkdoc/create-linkdoc", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//         body: JSON.stringify(dataToSend),
+//       });
+
+//       if (!response.ok) throw new Error(`API Error: ${response.status}`);
+//       const data = await response.json();
+//       console.log("API Response:", data);
+
+//       sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+
+//       if (onNext) onNext();
+//     } catch (err) {
+//       console.error(err);
+//       alert("Failed to save document. Please try again.");
+//     }
+//   };
+
+//   return (
+//     <div style={{ height: "100vh", overflowX: "scroll" }}>
+//       <h3 className="text-center mt-3">Link Documents</h3>
+
+//       <div style={{ height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px" }}>
+//         <Form>
+//           {documents.map((docId) => (
+//             <div key={docId} className="mb-4 p-3 border rounded">
+//               <h5>{docId}</h5>
+
+//               <Form.Group controlId={`${docId}-documentType`}>
+//                 <Form.Label>Document Type:</Form.Label>
+//                 <Form.Select
+//                   name={`${docId}.documentType`}
+//                   value={formik.values[docId]?.documentType || ""}
+//                   onChange={(e) => handleDocTypeChange(e, docId)}
+//                 >
+//                   <option value="">Select</option>
+//                   {Object.keys(documentFields).map((type) => (
+//                     <option key={type} value={type}>
+//                       {type.replace(/([A-Z])/g, " $1").trim()}
+//                     </option>
+//                   ))}
+//                 </Form.Select>
+//               </Form.Group>
+
+//               {formik.values[docId]?.documentType &&
+//                 Object.keys(documentFields[formik.values[docId]?.documentType]).map((fieldKey) => (
+//                   <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4">
+//                     <Form.Label column sm="6">
+//                       {fieldKey.charAt(0).toUpperCase() +
+//                         fieldKey.slice(1).replace(/([A-Z])/g, " $1").trim()}
+//                       :
+//                     </Form.Label>
+//                     <Col sm="6">
+//                       <Form.Control
+//                         type="text"
+//                         name={`${docId}.${fieldKey}`}
+//                         value={formik.values[docId]?.[fieldKey] || ""}
+//                         onChange={formik.handleChange}
+//                         placeholder={`Enter ${fieldKey}`}
+//                       />
+//                     </Col>
+//                   </Form.Group>
+//                 ))}
+
+//               <Button variant="danger" onClick={() => removeDocument(docId)} className="mt-2">
+//                 Remove Document
+//               </Button>
+//             </div>
+//           ))}
+
+//           <div className="text-center">
+//             <Button variant="primary" onClick={addDocument} className="me-3">
+//               Add Document
+//             </Button>
+//             <Button type="button" variant="success" onClick={handleNext}>
+//               Next
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LinkDocuments;
+
+//==================
+
+// import { useFormik } from "formik";
+// import React, { useState, useEffect } from "react";
+// import { Button, Form, Row, Col } from "react-bootstrap";
+
+// const LinkDocuments = ({ onNext }) => {
+//   const [documents, setDocuments] = useState(
+//     JSON.parse(sessionStorage.getItem("documents")) || []
+//   );
+
+//   // Initialize Formik
+//   const formik = useFormik({
+//     initialValues: JSON.parse(sessionStorage.getItem("linkDocumentsData")) || {},
+//     onSubmit: () => {
+//       // Disabled default submit
+//     },
+//   });
+
+//   // Auto-save form data
+//   useEffect(() => {
+//     sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   // Document fields template
+//   const documentFields = {
+//     GiftDeed: { donorName: "", doneeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     SaleDeed: { sellerName: "", buyerName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     RelinquishmentDeed: { relinquisherName: "", recipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     PartitionDeed: { partitionerName: "", precipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     MortgageDeed: { mortgagorName: "", mortgageeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     WillDeed: { testatorName: "", benificiaryName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     EncumbranceCertificate: { ecIssuingAuthority: "", ecstatementNumber: "", fromDate: "", toDate: "" },
+//     HouseTaxReceipt: { ReceiptIssuingAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountPaid: "", amountPaidInFavourOf: "" },
+//     HouseTaxDemandNotice: { NoticeIssueAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountDue: "", amountDueInFavourOf: "" },
+//   };
+
+//   // Add new document
+//   const addDocument = () => {
+//     const newDocId = `doc-${documents.length + 1}`;
+//     setDocuments([...documents, newDocId]);
+
+//     formik.setValues({
+//       ...formik.values,
+//       [newDocId]: { documentType: "" },
+//     });
+
+//     sessionStorage.setItem("documents", JSON.stringify([...documents, newDocId]));
+//   };
+
+//   // Remove document
+//   const removeDocument = (docId) => {
+//     const updatedDocs = documents.filter((id) => id !== docId);
+//     setDocuments(updatedDocs);
+
+//     const updatedValues = { ...formik.values };
+//     delete updatedValues[docId];
+//     formik.setValues(updatedValues);
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   // Handle document type change
+//   const handleDocTypeChange = (e, docId) => {
+//     const docType = e.target.value;
+//     formik.setValues({
+//       ...formik.values,
+//       [docId]: { documentType: docType, ...documentFields[docType] },
+//     });
+//   };
+
+//   // Handle Next (API call for last added document)
+//   const handleNext = async () => {
+//     console.log("Documents:", documents);
+//     console.log("Formik values:", formik.values);
+
+//     if (documents.length === 0) {
+//       alert("Please add at least one document!");
+//       return;
+//     }
+
+//     const currentDocId = documents[documents.length - 1];
+//     const currentDocData = formik.values[currentDocId];
+
+//     if (!currentDocData?.documentType) {
+//       alert("Please select document type for the current document!");
+//       return;
+//     }
+
+//     const token = sessionStorage.getItem("token");
+//     const session_id = sessionStorage.getItem("sessionId");
+//     const user_id = sessionStorage.getItem("user_id");
+
+//     console.log("Token:", token, "Session ID:", session_id, "User ID:", user_id);
+
+//     if (!token || !session_id || !user_id) {
+//       alert("Authentication required. Please login.");
+//       return;
+//     }
+
+//     const dataToSend = { session_id, user_id, ...currentDocData };
+//     console.log("Data to send:", dataToSend);
+
+//     try {
+//       const response = await fetch("http://localhost:3000/api/linkdoc/create-linkdoc", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//         body: JSON.stringify(dataToSend),
+//       });
+
+//       console.log("Fetch called, response status:", response.status);
+
+//       if (!response.ok) throw new Error(`API Error: ${response.status}`);
+//       const data = await response.json();
+//       console.log("API Response:", data);
+
+//       // Save all documents in sessionStorage
+//       sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+
+//       // Move to next step
+//       if (onNext) onNext();
+//     } catch (err) {
+//       console.error(err);
+//       alert("Failed to save document. Please try again.");
+//     }
+//   };
+
+//   return (
+//     <div style={{ height: "100vh", overflowX: "scroll" }}>
+//       <h3 className="text-center mt-3">Link Documents</h3>
+
+//       <div style={{ height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px" }}>
+//         <Form>
+//           {documents.map((docId) => (
+//             <div key={docId} className="mb-4 p-3 border rounded">
+//               <h5>{docId}</h5>
+
+//               <Form.Group controlId={`${docId}-documentType`}>
+//                 <Form.Label>Document Type:</Form.Label>
+//                 <Form.Select
+//                   name={`${docId}.documentType`}
+//                   value={formik.values[docId]?.documentType || ""}
+//                   onChange={(e) => handleDocTypeChange(e, docId)}
+//                 >
+//                   <option value="">Select</option>
+//                   {Object.keys(documentFields).map((type) => (
+//                     <option key={type} value={type}>
+//                       {type.replace(/([A-Z])/g, " $1").trim()}
+//                     </option>
+//                   ))}
+//                 </Form.Select>
+//               </Form.Group>
+
+//               {formik.values[docId]?.documentType &&
+//                 Object.keys(documentFields[formik.values[docId]?.documentType]).map((fieldKey) => (
+//                   <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4">
+//                     <Form.Label column sm="6">
+//                       {fieldKey.charAt(0).toUpperCase() +
+//                         fieldKey.slice(1).replace(/([A-Z])/g, " $1").trim()}
+//                       :
+//                     </Form.Label>
+//                     <Col sm="6">
+//                       <Form.Control
+//                         type="text"
+//                         name={`${docId}.${fieldKey}`}
+//                         value={formik.values[docId]?.[fieldKey] || ""}
+//                         onChange={formik.handleChange}
+//                         placeholder={`Enter ${fieldKey}`}
+//                       />
+//                     </Col>
+//                   </Form.Group>
+//                 ))}
+
+//               <Button variant="danger" onClick={() => removeDocument(docId)} className="mt-2">
+//                 Remove Document
+//               </Button>
+//             </div>
+//           ))}
+
+//           <div className="text-center">
+//             <Button variant="primary" onClick={addDocument} className="me-3">
+//               Add Document
+//             </Button>
+//             <Button type="button" variant="success" onClick={handleNext}>
+//               Next
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LinkDocuments;
+
+
+// import { useFormik } from "formik";
+// import React, { useState, useEffect } from "react";
+// import { Button, Form, Row, Col } from "react-bootstrap";
+
+// const LinkDocuments = ({ onNext }) => {
+//   const [documents, setDocuments] = useState(
+//     JSON.parse(sessionStorage.getItem("documents")) || []
+//   );
+
+//   // Initialize Formik
+//   const formik = useFormik({
+//     initialValues: JSON.parse(sessionStorage.getItem("linkDocumentsData")) || {},
+//     onSubmit: () => {
+//       // Disabled default submit
+//     },
+//   });
+
+//   // Auto-save form data to sessionStorage
+//   useEffect(() => {
+//     sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   // Template for all document types
+//   const documentFields = {
+//     GiftDeed: { donorName: "", doneeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     SaleDeed: { sellerName: "", buyerName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     RelinquishmentDeed: { relinquisherName: "", recipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     PartitionDeed: { partitionerName: "", precipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     MortgageDeed: { mortgagorName: "", mortgageeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     WillDeed: { testatorName: "", benificiaryName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     EncumbranceCertificate: { ecIssuingAuthority: "", ecstatementNumber: "", fromDate: "", toDate: "" },
+//     HouseTaxReceipt: { ReceiptIssuingAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountPaid: "", amountPaidInFavourOf: "" },
+//     HouseTaxDemandNotice: { NoticeIssueAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountDue: "", amountDueInFavourOf: "" },
+//   };
+
+//   // Add a new document
+//   const addDocument = () => {
+//     const newDocId = `doc-${documents.length + 1}`;
+//     setDocuments([...documents, newDocId]);
+
+//     formik.setValues({
+//       ...formik.values,
+//       [newDocId]: { documentType: "" },
+//     });
+
+//     sessionStorage.setItem("documents", JSON.stringify([...documents, newDocId]));
+//   };
+
+//   // Remove a document
+//   const removeDocument = (docId) => {
+//     const updatedDocs = documents.filter((id) => id !== docId);
+//     setDocuments(updatedDocs);
+
+//     const updatedValues = { ...formik.values };
+//     delete updatedValues[docId];
+//     formik.setValues(updatedValues);
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   // Handle document type change
+//   const handleDocTypeChange = (e, docId) => {
+//     const docType = e.target.value;
+//     formik.setValues({
+//       ...formik.values,
+//       [docId]: { documentType: docType, ...documentFields[docType] },
+//     });
+//   };
+
+//   // Handle Next: send all documents in one API call
+//   const handleNext = async () => {
+//     if (documents.length === 0) {
+//       alert("Please add at least one document!");
+//       return;
+//     }
+
+//     // Filter only documents with a selected type
+//     const documentsToSend = documents
+//       .map((docId) => formik.values[docId])
+//       .filter((doc) => doc?.documentType);
+
+//     if (documentsToSend.length === 0) {
+//       alert("Please select document type for at least one document!");
+//       return;
+//     }
+
+//     const token = sessionStorage.getItem("token");
+//     const session_id = sessionStorage.getItem("sessionId");
+//     const user_id = sessionStorage.getItem("user_id");
+
+//     if (!token || !session_id || !user_id) {
+//       alert("Authentication required. Please login.");
+//       return;
+//     }
+
+//     const payload = { session_id, user_id, documents: documentsToSend };
+
+//     try {
+//       const response = await fetch("http://localhost:3000/api/linkdoc/create-linkdoc", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//         body: JSON.stringify(payload),
+//       });
+
+//       if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+//       const data = await response.json();
+//       console.log("API Response:", data);
+
+//       sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+
+//       if (onNext) onNext();
+//     } catch (err) {
+//       console.error(err);
+//       alert("Failed to save document. Please try again.");
+//     }
+//   };
+
+//   return (
+//     <div style={{ height: "100vh", overflowX: "scroll" }}>
+//       <h3 className="text-center mt-3">Link Documents</h3>
+
+//       <div style={{ height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px" }}>
+//         <Form>
+//           {documents.map((docId) => (
+//             <div key={docId} className="mb-4 p-3 border rounded">
+//               <h5>{docId}</h5>
+
+//               {/* Document Type Selection */}
+//               <Form.Group controlId={`${docId}-documentType`}>
+//                 <Form.Label>Document Type:</Form.Label>
+//                 <Form.Select
+//                   name={`${docId}.documentType`}
+//                   value={formik.values[docId]?.documentType || ""}
+//                   onChange={(e) => handleDocTypeChange(e, docId)}
+//                 >
+//                   <option value="">Select</option>
+//                   {Object.keys(documentFields).map((type) => (
+//                     <option key={type} value={type}>
+//                       {type.replace(/([A-Z])/g, " $1").trim()}
+//                     </option>
+//                   ))}
+//                 </Form.Select>
+//               </Form.Group>
+
+//               {/* Render Relevant Fields */}
+//               {formik.values[docId]?.documentType &&
+//                 Object.keys(documentFields[formik.values[docId]?.documentType]).map((fieldKey) => (
+//                   <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4">
+//                     <Form.Label column sm="6">
+//                       {fieldKey.charAt(0).toUpperCase() +
+//                         fieldKey.slice(1).replace(/([A-Z])/g, " $1").trim()}
+//                       :
+//                     </Form.Label>
+//                     <Col sm="6">
+//                       <Form.Control
+//                         type="text"
+//                         name={`${docId}.${fieldKey}`}
+//                         value={formik.values[docId]?.[fieldKey] || ""}
+//                         onChange={formik.handleChange}
+//                         placeholder={`Enter ${fieldKey}`}
+//                       />
+//                     </Col>
+//                   </Form.Group>
+//                 ))}
+
+//               {/* Remove Document Button */}
+//               <Button variant="danger" onClick={() => removeDocument(docId)} className="mt-2">
+//                 Remove Document
+//               </Button>
+//             </div>
+//           ))}
+
+//           {/* Add Document & Next Buttons */}
+//           <div className="text-center">
+//             <Button variant="primary" onClick={addDocument} className="me-3">
+//               Add Document
+//             </Button>
+//             <Button type="button" variant="success" onClick={handleNext}>
+//               Next
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LinkDocuments;
+//====================
+//=======================
+
+
+// import { useFormik } from "formik";
+// import React, { useState, useEffect } from "react";
+// import { Button, Form, Row, Col } from "react-bootstrap";
+
+// const LinkDocuments = ({ onNext }) => {
+//   const [documents, setDocuments] = useState(
+//     JSON.parse(sessionStorage.getItem("documents")) || []
+//   );
+
+//   // Ensure token/sessionId/userId are available
+//   const [auth, setAuth] = useState({
+//     token: sessionStorage.getItem("token") || null,
+//     sessionId: sessionStorage.getItem("sessionId") || null,
+//     userId: sessionStorage.getItem("user_id") || null,
+//   });
+
+//   useEffect(() => {
+//     // Update auth state if sessionStorage changes
+//     setAuth({
+//       token: sessionStorage.getItem("token"),
+//       sessionId: sessionStorage.getItem("sessionId"),
+//       userId: sessionStorage.getItem("user_id"),
+//     });
+//     console.log("DEBUG: Auth Info", {
+//       token: sessionStorage.getItem("token"),
+//       sessionId: sessionStorage.getItem("sessionId"),
+//       userId: sessionStorage.getItem("user_id"),
+//     });
+//   }, []);
+
+//   // Initialize Formik
+//   const formik = useFormik({
+//     initialValues: JSON.parse(sessionStorage.getItem("linkDocumentsData")) || {},
+//     onSubmit: () => {},
+//   });
+
+//   // Auto-save form data
+//   useEffect(() => {
+//     sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   const documentFields = {
+//     GiftDeed: { donorName: "", doneeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     SaleDeed: { sellerName: "", buyerName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     RelinquishmentDeed: { relinquisherName: "", recipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     PartitionDeed: { partitionerName: "", precipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     MortgageDeed: { mortgagorName: "", mortgageeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     WillDeed: { testatorName: "", benificiaryName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     EncumbranceCertificate: { ecIssuingAuthority: "", ecstatementNumber: "", fromDate: "", toDate: "" },
+//     HouseTaxReceipt: { ReceiptIssuingAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountPaid: "", amountPaidInFavourOf: "" },
+//     HouseTaxDemandNotice: { NoticeIssueAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountDue: "", amountDueInFavourOf: "" },
+//   };
+
+//   const addDocument = () => {
+//     const newDocId = `doc-${documents.length + 1}`;
+//     const updatedDocs = [...documents, newDocId];
+//     setDocuments(updatedDocs);
+
+//     formik.setValues({
+//       ...formik.values,
+//       [newDocId]: { documentType: "" },
+//     });
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const removeDocument = (docId) => {
+//     const updatedDocs = documents.filter((id) => id !== docId);
+//     setDocuments(updatedDocs);
+
+//     const updatedValues = { ...formik.values };
+//     delete updatedValues[docId];
+//     formik.setValues(updatedValues);
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const handleDocTypeChange = (e, docId) => {
+//     const docType = e.target.value;
+//     formik.setValues({
+//       ...formik.values,
+//       [docId]: { documentType: docType, ...documentFields[docType] },
+//     });
+//   };
+
+//   const handleNext = async () => {
+//     if (documents.length === 0) {
+//       alert("Please add at least one document!");
+//       return;
+//     }
+
+//     // Filter only documents with a selected type
+//     const documentsToSend = documents
+//       .map((docId) => formik.values[docId])
+//       .filter((doc) => doc?.documentType);
+
+//     if (documentsToSend.length === 0) {
+//       alert("Please select document type for at least one document!");
+//       return;
+//     }
+
+//     // Authentication check
+//     if (!auth.token || !auth.sessionId || !auth.userId) {
+//       alert("Authentication required. Please login.");
+//       console.error("DEBUG: Token =", auth.token);
+//       console.error("DEBUG: Session ID =", auth.sessionId);
+//       console.error("DEBUG: User ID =", auth.userId);
+//       return;
+//     }
+
+//     const payload = {
+//       session_id: auth.sessionId,
+//       user_id: auth.userId,
+//       documents: documentsToSend,
+//     };
+
+//     console.log("DEBUG: Sending payload:", payload);
+
+//     try {
+//       const response = await fetch("http://localhost:3000/api/linkdoc/create-linkdoc", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${auth.token}`,
+//         },
+//         body: JSON.stringify(payload),
+//       });
+
+//       if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+//       const data = await response.json();
+//       console.log("API Response:", data);
+
+//       sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+
+//       if (onNext) onNext();
+//     } catch (err) {
+//       console.error("Error sending documents:", err);
+//       alert("Failed to save document. Please try again.");
+//     }
+//   };
+
+//   return (
+//     <div style={{ height: "100vh", overflowX: "scroll" }}>
+//       <h3 className="text-center mt-3">Link Documents</h3>
+
+//       <div style={{ height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px" }}>
+//         <Form>
+//           {documents.map((docId) => (
+//             <div key={docId} className="mb-4 p-3 border rounded">
+//               <h5>{docId}</h5>
+
+//               <Form.Group controlId={`${docId}-documentType`}>
+//                 <Form.Label>Document Type:</Form.Label>
+//                 <Form.Select
+//                   name={`${docId}.documentType`}
+//                   value={formik.values[docId]?.documentType || ""}
+//                   onChange={(e) => handleDocTypeChange(e, docId)}
+//                 >
+//                   <option value="">Select</option>
+//                   {Object.keys(documentFields).map((type) => (
+//                     <option key={type} value={type}>
+//                       {type.replace(/([A-Z])/g, " $1").trim()}
+//                     </option>
+//                   ))}
+//                 </Form.Select>
+//               </Form.Group>
+
+//               {formik.values[docId]?.documentType &&
+//                 Object.keys(documentFields[formik.values[docId]?.documentType]).map((fieldKey) => (
+//                   <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4">
+//                     <Form.Label column sm="6">
+//                       {fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1).replace(/([A-Z])/g, " $1").trim()}:
+//                     </Form.Label>
+//                     <Col sm="6">
+//                       <Form.Control
+//                         type="text"
+//                         name={`${docId}.${fieldKey}`}
+//                         value={formik.values[docId]?.[fieldKey] || ""}
+//                         onChange={formik.handleChange}
+//                         placeholder={`Enter ${fieldKey}`}
+//                       />
+//                     </Col>
+//                   </Form.Group>
+//                 ))}
+
+//               <Button variant="danger" onClick={() => removeDocument(docId)} className="mt-2">
+//                 Remove Document
+//               </Button>
+//             </div>
+//           ))}
+
+//           <div className="text-center">
+//             <Button variant="primary" onClick={addDocument} className="me-3">
+//               Add Document
+//             </Button>
+//             <Button type="button" variant="success" onClick={handleNext}>
+//               Next
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LinkDocuments;
+
+// import { useFormik } from "formik";
+// import React, { useState, useEffect } from "react";
+// import { Button, Form, Row, Col } from "react-bootstrap";
+// import { getToken } from "../auth";
+
+// const LinkDocuments = ({ onNext }) => {
+//   const [documents, setDocuments] = useState(
+//     JSON.parse(sessionStorage.getItem("documents")) || []
+//   );
+
+//   // Initialize Formik
+//   const formik = useFormik({
+//     initialValues: JSON.parse(sessionStorage.getItem("linkDocumentsData")) || {},
+//     onSubmit: () => {},
+//   });
+
+//   // Auto-save form data
+//   useEffect(() => {
+//     sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   const documentFields = {
+//     GiftDeed: { donorName: "", doneeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     SaleDeed: { sellerName: "", buyerName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     RelinquishmentDeed: { relinquisherName: "", recipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     PartitionDeed: { partitionerName: "", precipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     MortgageDeed: { mortgagorName: "", mortgageeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     WillDeed: { testatorName: "", benificiaryName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     EncumbranceCertificate: { ecIssuingAuthority: "", ecstatementNumber: "", fromDate: "", toDate: "" },
+//     HouseTaxReceipt: { ReceiptIssuingAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountPaid: "", amountPaidInFavourOf: "" },
+//     HouseTaxDemandNotice: { NoticeIssueAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountDue: "", amountDueInFavourOf: "" },
+//   };
+
+//   const addDocument = () => {
+//     const newDocId = `doc-${documents.length + 1}`;
+//     const updatedDocs = [...documents, newDocId];
+//     setDocuments(updatedDocs);
+
+//     formik.setValues({
+//       ...formik.values,
+//       [newDocId]: { documentType: "" },
+//     });
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const removeDocument = (docId) => {
+//     const updatedDocs = documents.filter((id) => id !== docId);
+//     setDocuments(updatedDocs);
+
+//     const updatedValues = { ...formik.values };
+//     delete updatedValues[docId];
+//     formik.setValues(updatedValues);
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const handleDocTypeChange = (e, docId) => {
+//     const docType = e.target.value;
+//     formik.setValues({
+//       ...formik.values,
+//       [docId]: { documentType: docType, ...documentFields[docType] },
+//     });
+//   };
+
+//   const handleNext = async () => {
+//     if (documents.length === 0) {
+//       alert("Please add at least one document!");
+//       return;
+//     }
+
+//     // Filter only documents with a selected type
+//     const documentsToSend = documents
+//       .map((docId) => formik.values[docId])
+//       .filter((doc) => doc?.documentType);
+
+//     if (documentsToSend.length === 0) {
+//       alert("Please select document type for at least one document!");
+//       return;
+//     }
+
+//     // ✅ Read latest token/sessionId/userId from sessionStorage
+    
+//     //const token = sessionStorage.getItem("token");
+//      const token = getToken();
+//     const sessionId = sessionStorage.getItem("sessionId");
+//     const userId = sessionStorage.getItem("user_id");
+
+//     if (!token || !sessionId || !userId) {
+//       alert("Authentication required. Please login.");
+//       console.error("DEBUG: Token =", token);
+//       console.error("DEBUG: Session ID =", sessionId);
+//       console.error("DEBUG: User ID =", userId);
+//       return;
+//     }
+
+//     const payload = {
+//       session_id: sessionId,
+//       user_id: userId,
+//       documents: documentsToSend,
+//     };
+
+//     console.log("DEBUG: Sending payload:", payload);
+
+//     try {
+//       const response = await fetch("http://localhost:3000/api/linkdoc/create-linkdoc", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//         body: JSON.stringify(payload),
+//       });
+
+//       if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+//       const data = await response.json();
+//       console.log("API Response:", data);
+
+//       sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+
+//       if (onNext) onNext();
+//     } catch (err) {
+//       console.error("Error sending documents:", err);
+//       alert("Failed to save document. Please try again.");
+//     }
+//   };
+
+//   return (
+//     <div style={{ height: "100vh", overflowX: "scroll" }}>
+//       <h3 className="text-center mt-3">Link Documents</h3>
+
+//       <div style={{ height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px" }}>
+//         <Form>
+//           {documents.map((docId) => (
+//             <div key={docId} className="mb-4 p-3 border rounded">
+//               <h5>{docId}</h5>
+
+//               <Form.Group controlId={`${docId}-documentType`}>
+//                 <Form.Label>Document Type:</Form.Label>
+//                 <Form.Select
+//                   name={`${docId}.documentType`}
+//                   value={formik.values[docId]?.documentType || ""}
+//                   onChange={(e) => handleDocTypeChange(e, docId)}
+//                 >
+//                   <option value="">Select</option>
+//                   {Object.keys(documentFields).map((type) => (
+//                     <option key={type} value={type}>
+//                       {type.replace(/([A-Z])/g, " $1").trim()}
+//                     </option>
+//                   ))}
+//                 </Form.Select>
+//               </Form.Group>
+
+//               {formik.values[docId]?.documentType &&
+//                 Object.keys(documentFields[formik.values[docId]?.documentType]).map((fieldKey) => (
+//                   <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4">
+//                     <Form.Label column sm="6">
+//                       {fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1).replace(/([A-Z])/g, " $1").trim()}:
+//                     </Form.Label>
+//                     <Col sm="6">
+//                       <Form.Control
+//                         type="text"
+//                         name={`${docId}.${fieldKey}`}
+//                         value={formik.values[docId]?.[fieldKey] || ""}
+//                         onChange={formik.handleChange}
+//                         placeholder={`Enter ${fieldKey}`}
+//                       />
+//                     </Col>
+//                   </Form.Group>
+//                 ))}
+
+//               <Button variant="danger" onClick={() => removeDocument(docId)} className="mt-2">
+//                 Remove Document
+//               </Button>
+//             </div>
+//           ))}
+
+//           <div className="text-center">
+//             <Button variant="primary" onClick={addDocument} className="me-3">
+//               Add Document
+//             </Button>
+//             <Button type="button" variant="success" onClick={handleNext}>
+//               Next
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LinkDocuments;
+
+// import { useFormik } from "formik";
+// import React, { useState, useEffect } from "react";
+// import { Button, Form, Row, Col } from "react-bootstrap";
+
+// const LinkDocuments = ({ onNext }) => {
+//   const [documents, setDocuments] = useState(
+//     JSON.parse(sessionStorage.getItem("documents")) || []
+//   );
+
+//   // Initialize Formik
+//   const formik = useFormik({
+//     initialValues: JSON.parse(sessionStorage.getItem("linkDocumentsData")) || {},
+//     onSubmit: () => {},
+//   });
+
+//   // Auto-save form data
+//   useEffect(() => {
+//     sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   const documentFields = {
+//     GiftDeed: { donorName: "", doneeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     SaleDeed: { sellerName: "", buyerName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     RelinquishmentDeed: { relinquisherName: "", recipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     PartitionDeed: { partitionerName: "", precipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     MortgageDeed: { mortgagorName: "", mortgageeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     WillDeed: { testatorName: "", benificiaryName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     EncumbranceCertificate: { ecIssuingAuthority: "", ecstatementNumber: "", fromDate: "", toDate: "" },
+//     HouseTaxReceipt: { ReceiptIssuingAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountPaid: "", amountPaidInFavourOf: "" },
+//     HouseTaxDemandNotice: { NoticeIssueAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountDue: "", amountDueInFavourOf: "" },
+//   };
+
+//   const addDocument = () => {
+//     const newDocId = `doc-${documents.length + 1}`;
+//     const updatedDocs = [...documents, newDocId];
+//     setDocuments(updatedDocs);
+
+//     formik.setValues({
+//       ...formik.values,
+//       [newDocId]: { documentType: "" },
+//     });
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const removeDocument = (docId) => {
+//     const updatedDocs = documents.filter((id) => id !== docId);
+//     setDocuments(updatedDocs);
+
+//     const updatedValues = { ...formik.values };
+//     delete updatedValues[docId];
+//     formik.setValues(updatedValues);
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const handleDocTypeChange = (e, docId) => {
+//     const docType = e.target.value;
+//     formik.setValues({
+//       ...formik.values,
+//       [docId]: { documentType: docType, ...documentFields[docType] },
+//     });
+//   };
+
+//   const handleNext = async () => {
+//     if (documents.length === 0) {
+//       alert("Please add at least one document!");
+//       return;
+//     }
+
+//     // Normalize payload
+//     const documentsToSend = documents
+//       .map((docId) => formik.values[docId])
+//       .filter((doc) => doc?.documentType)
+//       .map((doc) => {
+//         const normalized = {};
+//         Object.keys(doc).forEach((k) => {
+//           normalized[k] = doc[k] || ""; // no undefined or null
+//         });
+//         return normalized;
+//       });
+
+//     if (documentsToSend.length === 0) {
+//       alert("Please select document type for at least one document!");
+//       return;
+//     }
+
+//     // Read latest token/sessionId/userId from sessionStorage
+//     const token = sessionStorage.getItem("token");
+//     const sessionId = sessionStorage.getItem("sessionId");
+//     const userId = sessionStorage.getItem("user_id");
+
+//     if (!token || !sessionId || !userId) {
+//       alert("Authentication required. Please login.");
+//       console.error("DEBUG: Token =", token);
+//       console.error("DEBUG: Session ID =", sessionId);
+//       console.error("DEBUG: User ID =", userId);
+//       return;
+//     }
+
+//     const payload = {
+//       session_id: sessionId,
+//       user_id: userId,
+//       documents: documentsToSend,
+//     };
+
+//     console.log("DEBUG: Sending payload:", payload);
+
+//     try {
+//       const response = await fetch("http://localhost:3000/api/linkdoc/create-linkdoc", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//         body: JSON.stringify(payload),
+//       });
+
+//       if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+//       const data = await response.json();
+//       console.log("API Response:", data);
+
+//       sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+
+//       if (onNext) onNext();
+//     } catch (err) {
+//       console.error("Error sending documents:", err);
+//       alert("Failed to save document. Please try again.");
+//     }
+//   };
+
+//   return (
+//     <div style={{ height: "100vh", overflowX: "scroll" }}>
+//       <h3 className="text-center mt-3">Link Documents</h3>
+
+//       <div style={{ height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px" }}>
+//         <Form>
+//           {documents.map((docId) => (
+//             <div key={docId} className="mb-4 p-3 border rounded">
+//               <h5>{docId}</h5>
+
+//               <Form.Group controlId={`${docId}-documentType`}>
+//                 <Form.Label>Document Type:</Form.Label>
+//                 <Form.Select
+//                   name={`${docId}.documentType`}
+//                   value={formik.values[docId]?.documentType || ""}
+//                   onChange={(e) => handleDocTypeChange(e, docId)}
+//                 >
+//                   <option value="">Select</option>
+//                   {Object.keys(documentFields).map((type) => (
+//                     <option key={type} value={type}>
+//                       {type.replace(/([A-Z])/g, " $1").trim()}
+//                     </option>
+//                   ))}
+//                 </Form.Select>
+//               </Form.Group>
+
+//               {formik.values[docId]?.documentType &&
+//                 Object.keys(documentFields[formik.values[docId]?.documentType]).map((fieldKey) => (
+//                   <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4">
+//                     <Form.Label column sm="6">
+//                       {fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1).replace(/([A-Z])/g, " $1").trim()}:
+//                     </Form.Label>
+//                     <Col sm="6">
+//                       <Form.Control
+//                         type="text"
+//                         name={`${docId}.${fieldKey}`}
+//                         value={formik.values[docId]?.[fieldKey] || ""}
+//                         onChange={formik.handleChange}
+//                         placeholder={`Enter ${fieldKey}`}
+//                       />
+//                     </Col>
+//                   </Form.Group>
+//                 ))}
+
+//               <Button variant="danger" onClick={() => removeDocument(docId)} className="mt-2">
+//                 Remove Document
+//               </Button>
+//             </div>
+//           ))}
+
+//           <div className="text-center">
+//             <Button variant="primary" onClick={addDocument} className="me-3">
+//               Add Document
+//             </Button>
+//             <Button type="button" variant="success" onClick={handleNext}>
+//               Next
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LinkDocuments;
+
+
+
+
+
+
+
+
+
+
+
+
+// import { useFormik } from "formik";
+// import React, { useState, useEffect } from "react";
+// import { Button, Form, Row, Col } from "react-bootstrap";
+// import { getToken } from "../auth"; // Make sure getToken reads from localStorage/sessionStorage
+
+// const LinkDocuments = ({ onNext }) => {
+//   const [documents, setDocuments] = useState(
+//     JSON.parse(sessionStorage.getItem("documents")) || []
+//   );
+
+//   // Initialize Formik
+//   const formik = useFormik({
+//     initialValues: JSON.parse(sessionStorage.getItem("linkDocumentsData")) || {},
+//     onSubmit: () => {},
+//   });
+
+//   // Auto-save form data
+//   useEffect(() => {
+//     sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   const documentFields = {
+//     GiftDeed: { donorName: "", doneeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     SaleDeed: { sellerName: "", buyerName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     RelinquishmentDeed: { relinquisherName: "", recipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     PartitionDeed: { partitionerName: "", precipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     MortgageDeed: { mortgagorName: "", mortgageeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     WillDeed: { testatorName: "", benificiaryName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     EncumbranceCertificate: { ecIssuingAuthority: "", ecstatementNumber: "", fromDate: "", toDate: "" },
+//     HouseTaxReceipt: { ReceiptIssuingAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountPaid: "", amountPaidInFavourOf: "" },
+//     HouseTaxDemandNotice: { NoticeIssueAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountDue: "", amountDueInFavourOf: "" },
+//   };
+
+//   const addDocument = () => {
+//     const newDocId = `doc-${documents.length + 1}`;
+//     const updatedDocs = [...documents, newDocId];
+//     setDocuments(updatedDocs);
+
+//     formik.setValues({
+//       ...formik.values,
+//       [newDocId]: { documentType: "" },
+//     });
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const removeDocument = (docId) => {
+//     const updatedDocs = documents.filter((id) => id !== docId);
+//     setDocuments(updatedDocs);
+
+//     const updatedValues = { ...formik.values };
+//     delete updatedValues[docId];
+//     formik.setValues(updatedValues);
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const handleDocTypeChange = (e, docId) => {
+//     const docType = e.target.value;
+//     formik.setValues({
+//       ...formik.values,
+//       [docId]: { documentType: docType, ...documentFields[docType] },
+//     });
+//   };
+
+//   const handleNext = async () => {
+//     if (documents.length === 0) {
+//       alert("Please add at least one document!");
+//       return;
+//     }
+
+//     const documentsToSend = documents
+//       .map((docId) => formik.values[docId])
+//       .filter((doc) => doc?.documentType);
+
+//     if (documentsToSend.length === 0) {
+//       alert("Please select document type for at least one document!");
+//       return;
+//     }
+
+//     // ✅ Read token, sessionId, and userId safely from storage
+//     const token = getToken() || localStorage.getItem("token") || sessionStorage.getItem("token");
+//     const sessionId = sessionStorage.getItem("sessionId") || localStorage.getItem("sessionId");
+//     const userId = sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//     console.log("DEBUG: Token =", token);
+//     console.log("DEBUG: Session ID =", sessionId);
+//     console.log("DEBUG: User ID =", userId);
+
+//     if (!token || !sessionId || !userId) {
+//       alert("Authentication required. Please login.");
+//       return;
+//     }
+
+//     const payload = {
+//       session_id: sessionId,
+//       user_id: userId,
+//       documents: documentsToSend,
+//     };
+
+//     console.log("DEBUG: Sending payload:", payload);
+
+//     try {
+//       const response = await fetch("http://localhost:3000/api/linkdoc/create-linkdoc", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//         body: JSON.stringify(payload),
+//       });
+
+//       if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+//       const data = await response.json();
+//       console.log("API Response:", data);
+
+//       sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+
+//       if (onNext) onNext();
+//     } catch (err) {
+//       console.error("Error sending documents:", err);
+//       alert("Failed to save document. Please try again.");
+//     }
+//   };
+
+//   return (
+//     <div style={{ height: "100vh", overflowX: "scroll" }}>
+//       <h3 className="text-center mt-3">Link Documents</h3>
+
+//       <div style={{ height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px" }}>
+//         <Form>
+//           {documents.map((docId) => (
+//             <div key={docId} className="mb-4 p-3 border rounded">
+//               <h5>{docId}</h5>
+
+//               <Form.Group controlId={`${docId}-documentType`}>
+//                 <Form.Label>Document Type:</Form.Label>
+//                 <Form.Select
+//                   name={`${docId}.documentType`}
+//                   value={formik.values[docId]?.documentType || ""}
+//                   onChange={(e) => handleDocTypeChange(e, docId)}
+//                 >
+//                   <option value="">Select</option>
+//                   {Object.keys(documentFields).map((type) => (
+//                     <option key={type} value={type}>
+//                       {type.replace(/([A-Z])/g, " $1").trim()}
+//                     </option>
+//                   ))}
+//                 </Form.Select>
+//               </Form.Group>
+
+//               {formik.values[docId]?.documentType &&
+//                 Object.keys(documentFields[formik.values[docId]?.documentType]).map((fieldKey) => (
+//                   <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4">
+//                     <Form.Label column sm="6">
+//                       {fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1).replace(/([A-Z])/g, " $1").trim()}:
+//                     </Form.Label>
+//                     <Col sm="6">
+//                       <Form.Control
+//                         type="text"
+//                         name={`${docId}.${fieldKey}`}
+//                         value={formik.values[docId]?.[fieldKey] || ""}
+//                         onChange={formik.handleChange}
+//                         placeholder={`Enter ${fieldKey}`}
+//                       />
+//                     </Col>
+//                   </Form.Group>
+//                 ))}
+
+//               <Button variant="danger" onClick={() => removeDocument(docId)} className="mt-2">
+//                 Remove Document
+//               </Button>
+//             </div>
+//           ))}
+
+//           <div className="text-center">
+//             <Button variant="primary" onClick={addDocument} className="me-3">
+//               Add Document
+//             </Button>
+//             <Button type="button" variant="success" onClick={handleNext}>
+//               Next
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LinkDocuments;
+
+
+ 
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { useFormik } from "formik";
+// import { Button, Form, Row, Col } from "react-bootstrap"; // ✅ Correct import
+// import { getToken } from "../auth"; // Make sure getToken reads from localStorage/sessionStorage
+
+// const LinkDocuments = ({ onNext }) => {
+//   const [documents, setDocuments] = useState(
+//     JSON.parse(sessionStorage.getItem("documents")) || []
+//   );
+
+//   // Initialize Formik
+//   const formik = useFormik({
+//     initialValues: JSON.parse(sessionStorage.getItem("linkDocumentsData")) || {},
+//     onSubmit: () => {},
+//   });
+
+//   // Auto-save form data
+//   useEffect(() => {
+//     sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   const documentFields = {
+//     GiftDeed: { donorName: "", doneeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     SaleDeed: { sellerName: "", buyerName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     RelinquishmentDeed: { relinquisherName: "", recipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     PartitionDeed: { partitionerName: "", precipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     MortgageDeed: { mortgagorName: "", mortgageeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     WillDeed: { testatorName: "", benificiaryName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     EncumbranceCertificate: { ecIssuingAuthority: "", ecstatementNumber: "", fromDate: "", toDate: "" },
+//     HouseTaxReceipt: { ReceiptIssuingAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountPaid: "", amountPaidInFavourOf: "" },
+//     HouseTaxDemandNotice: { NoticeIssueAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountDue: "", amountDueInFavourOf: "" },
+//   };
+
+//   const addDocument = () => {
+//     const newDocId = `doc-${documents.length + 1}`;
+//     const updatedDocs = [...documents, newDocId];
+//     setDocuments(updatedDocs);
+
+//     formik.setValues({
+//       ...formik.values,
+//       [newDocId]: { documentType: "" },
+//     });
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const removeDocument = (docId) => {
+//     const updatedDocs = documents.filter((id) => id !== docId);
+//     setDocuments(updatedDocs);
+
+//     const updatedValues = { ...formik.values };
+//     delete updatedValues[docId];
+//     formik.setValues(updatedValues);
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const handleDocTypeChange = (e, docId) => {
+//     const docType = e.target.value;
+//     formik.setValues({
+//       ...formik.values,
+//       [docId]: { documentType: docType, ...documentFields[docType] },
+//     });
+//   };
+
+//   const handleNext = async () => {
+//     if (documents.length === 0) {
+//       alert("Please add at least one document!");
+//       return;
+//     }
+
+//     const documentsToSend = documents
+//       .map((docId) => formik.values[docId])
+//       .filter((doc) => doc?.documentType);
+
+//     if (documentsToSend.length === 0) {
+//       alert("Please select document type for at least one document!");
+//       return;
+//     }
+
+//     // ✅ Read token, sessionId, and userId safely from storage
+//     const token = getToken() || localStorage.getItem("token") || sessionStorage.getItem("token");
+//     const sessionId = sessionStorage.getItem("sessionId") || localStorage.getItem("sessionId");
+//     const userId = sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//     console.log("DEBUG: Token =", token);
+//     console.log("DEBUG: Session ID =", sessionId);
+//     console.log("DEBUG: User ID =", userId);
+
+//     if (!token || !sessionId || !userId) {
+//       alert("Authentication required. Please login.");
+//       return;
+//     }
+
+//     const payload = {
+//       session_id: sessionId,
+//       user_id: userId,
+//       documents: documentsToSend,
+//     };
+
+//     console.log("DEBUG: Sending payload:", payload);
+
+//     try {
+//       const response = await fetch("http://localhost:3000/api/linkdoc/create-linkdoc", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//         body: JSON.stringify(payload),
+//       });
+
+//       if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+//       const data = await response.json();
+//       console.log("API Response:", data);
+
+//       sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+
+//       if (onNext) onNext();
+//     } catch (err) {
+//       console.error("Error sending documents:", err);
+//       alert("Failed to save document. Please try again.");
+//     }
+//   };
+
+//   return (
+//     <div style={{ height: "100vh", overflowX: "scroll" }}>
+//       <h3 className="text-center mt-3">Link Documents</h3>
+
+//       <div style={{ height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px" }}>
+//         <Form>
+//           {documents.map((docId) => (
+//             <div key={docId} className="mb-4 p-3 border rounded">
+//               <h5>{docId}</h5>
+
+//               <Form.Group controlId={`${docId}-documentType`}>
+//                 <Form.Label>Document Type:</Form.Label>
+//                 <Form.Select
+//                   name={`${docId}.documentType`}
+//                   value={formik.values[docId]?.documentType || ""}
+//                   onChange={(e) => handleDocTypeChange(e, docId)}
+//                 >
+//                   <option value="">Select</option>
+//                   {Object.keys(documentFields).map((type) => (
+//                     <option key={type} value={type}>
+//                       {type.replace(/([A-Z])/g, " $1").trim()}
+//                     </option>
+//                   ))}
+//                 </Form.Select>
+//               </Form.Group>
+
+//               {formik.values[docId]?.documentType &&
+//                 Object.keys(documentFields[formik.values[docId]?.documentType]).map((fieldKey) => (
+//                   <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4">
+//                     <Form.Label column sm="6">
+//                       {fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1).replace(/([A-Z])/g, " $1").trim()}:
+//                     </Form.Label>
+//                     <Col sm="6">
+//                       <Form.Control
+//                         type="text"
+//                         name={`${docId}.${fieldKey}`}
+//                         value={formik.values[docId]?.[fieldKey] || ""}
+//                         onChange={formik.handleChange}
+//                         placeholder={`Enter ${fieldKey}`}
+//                       />
+//                     </Col>
+//                   </Form.Group>
+//                 ))}
+
+//               <Button variant="danger" onClick={() => removeDocument(docId)} className="mt-2">
+//                 Remove Document
+//               </Button>
+//             </div>
+//           ))}
+
+//           <div className="text-center">
+//             <Button variant="primary" onClick={addDocument} className="me-3">
+//               Add Document
+//             </Button>
+//             <Button type="button" variant="success" onClick={handleNext}>
+//               Next
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LinkDocuments;
+
+
+
+
+//  import React, { useState, useEffect } from "react";
+// import { useFormik } from "formik";
+// import { Button, Form, Row, Col } from "react-bootstrap";
+// import { getToken } from "../auth"; // make sure this returns token from storage
+
+// const LinkDocuments = ({ onNext }) => {
+//   const [documents, setDocuments] = useState(
+//     JSON.parse(sessionStorage.getItem("documents")) || []
+//   );
+
+//   // Initialize Formik
+//   const formik = useFormik({
+//     initialValues: JSON.parse(sessionStorage.getItem("linkDocumentsData")) || {},
+//     onSubmit: () => {},
+//   });
+
+//   // Auto-save form data
+//   useEffect(() => {
+//     sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   const documentFields = {
+//     GiftDeed: { donorName: "", doneeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     SaleDeed: { sellerName: "", buyerName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     RelinquishmentDeed: { relinquisherName: "", recipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     PartitionDeed: { partitionerName: "", precipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     MortgageDeed: { mortgagorName: "", mortgageeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     WillDeed: { testatorName: "", benificiaryName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     EncumbranceCertificate: { ecIssuingAuthority: "", ecstatementNumber: "", fromDate: "", toDate: "" },
+//     HouseTaxReceipt: { ReceiptIssuingAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountPaid: "", amountPaidInFavourOf: "" },
+//     HouseTaxDemandNotice: { NoticeIssueAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountDue: "", amountDueInFavourOf: "" },
+//   };
+
+//   const addDocument = () => {
+//     const newDocId = `doc-${documents.length + 1}`;
+//     const updatedDocs = [...documents, newDocId];
+//     setDocuments(updatedDocs);
+
+//     formik.setValues({
+//       ...formik.values,
+//       [newDocId]: { documentType: "" },
+//     });
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const removeDocument = (docId) => {
+//     const updatedDocs = documents.filter((id) => id !== docId);
+//     setDocuments(updatedDocs);
+
+//     const updatedValues = { ...formik.values };
+//     delete updatedValues[docId];
+//     formik.setValues(updatedValues);
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const handleDocTypeChange = (e, docId) => {
+//     const docType = e.target.value;
+//     formik.setValues({
+//       ...formik.values,
+//       [docId]: { documentType: docType, ...documentFields[docType] },
+//     });
+//   };
+
+//   const handleNext = async () => {
+//     if (documents.length === 0) {
+//       alert("Please add at least one document!");
+//       return;
+//     }
+
+//     const documentsToSend = documents
+//       .map((docId) => formik.values[docId])
+//       .filter((doc) => doc?.documentType);
+
+//     if (documentsToSend.length === 0) {
+//       alert("Please select document type for at least one document!");
+//       return;
+//     }
+
+//     // ✅ Read token, sessionId, and userId safely from storage
+//     const token =
+//       getToken() || localStorage.getItem("token") || sessionStorage.getItem("token");
+//     const sessionId =
+//       sessionStorage.getItem("sessionId") || localStorage.getItem("sessionId");
+//     const userId =
+//       sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//     console.log("DEBUG: Token =", token);
+//     console.log("DEBUG: Session ID =", sessionId);
+//     console.log("DEBUG: User ID =", userId);
+
+//     if (!token || !sessionId || !userId) {
+//       alert("Authentication required. Please login.");
+//       return;
+//     }
+
+//     // 🔑 According to Swagger: send only selectDeedType, not whole array
+//     const payload = {
+//       selectDeedType: documentsToSend[0].documentType || "any"
+//     };
+
+//     console.log("DEBUG: Sending payload:", payload);
+
+//     try {
+//       const response = await fetch("http://localhost:3000/api/linkdoc/create-linkdoc", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//         body: JSON.stringify(payload),
+//       });
+
+//       if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+//       const data = await response.json();
+//       console.log("API Response:", data);
+
+//       sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+
+//       if (onNext) onNext();
+//     } catch (err) {
+//       console.error("Error sending documents:", err);
+//       alert("Failed to save document. Please try again.");
+//     }
+//   };
+
+//   return (
+//     <div style={{ height: "100vh", overflowX: "scroll" }}>
+//       <h3 className="text-center mt-3">Link Documents</h3>
+
+//       <div style={{ height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px" }}>
+//         <Form>
+//           {documents.map((docId) => (
+//             <div key={docId} className="mb-4 p-3 border rounded">
+//               <h5>{docId}</h5>
+
+//               <Form.Group controlId={`${docId}-documentType`}>
+//                 <Form.Label>Document Type:</Form.Label>
+//                 <Form.Select
+//                   name={`${docId}.documentType`}
+//                   value={formik.values[docId]?.documentType || ""}
+//                   onChange={(e) => handleDocTypeChange(e, docId)}
+//                 >
+//                   <option value="">Select</option>
+//                   {Object.keys(documentFields).map((type) => (
+//                     <option key={type} value={type}>
+//                       {type.replace(/([A-Z])/g, " $1").trim()}
+//                     </option>
+//                   ))}
+//                 </Form.Select>
+//               </Form.Group>
+
+//               {formik.values[docId]?.documentType &&
+//                 Object.keys(documentFields[formik.values[docId]?.documentType]).map(
+//                   (fieldKey) => (
+//                     <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4">
+//                       <Form.Label column sm="6">
+//                         {fieldKey
+//                           .charAt(0)
+//                           .toUpperCase() +
+//                           fieldKey.slice(1).replace(/([A-Z])/g, " $1").trim()}
+//                         :
+//                       </Form.Label>
+//                       <Col sm="6">
+//                         <Form.Control
+//                           type="text"
+//                           name={`${docId}.${fieldKey}`}
+//                           value={formik.values[docId]?.[fieldKey] || ""}
+//                           onChange={formik.handleChange}
+//                           placeholder={`Enter ${fieldKey}`}
+//                         />
+//                       </Col>
+//                     </Form.Group>
+//                   )
+//                 )}
+
+//               <Button
+//                 variant="danger"
+//                 onClick={() => removeDocument(docId)}
+//                 className="mt-2"
+//               >
+//                 Remove Document
+//               </Button>
+//             </div>
+//           ))}
+
+//           <div className="text-center">
+//             <Button variant="primary" onClick={addDocument} className="me-3">
+//               Add Document
+//             </Button>
+//             <Button type="button" variant="success" onClick={handleNext}>
+//               Next
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LinkDocuments;
+
+
+// import React, { useState, useEffect } from "react";
+// import { useFormik } from "formik";
+// import { Button, Form, Row, Col } from "react-bootstrap"; // ✅ Correct import
+// import { getToken } from "../auth"; // Make sure getToken reads from localStorage/sessionStorage
+
+// const LinkDocuments = ({ onNext }) => {
+//   const [documents, setDocuments] = useState(
+//     JSON.parse(sessionStorage.getItem("documents")) || []
+//   );
+
+//   // Initialize Formik
+//   const formik = useFormik({
+//     initialValues: JSON.parse(sessionStorage.getItem("linkDocumentsData")) || {},
+//     onSubmit: () => {},
+//   });
+
+//   // Auto-save form data
+//   useEffect(() => {
+//     sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   const documentFields = {
+//     GiftDeed: { donorName: "", doneeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     SaleDeed: { sellerName: "", buyerName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     RelinquishmentDeed: { relinquisherName: "", recipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     PartitionDeed: { partitionerName: "", precipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     MortgageDeed: { mortgagorName: "", mortgageeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     WillDeed: { testatorName: "", benificiaryName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     EncumbranceCertificate: { ecIssuingAuthority: "", ecstatementNumber: "", fromDate: "", toDate: "" },
+//     HouseTaxReceipt: { ReceiptIssuingAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountPaid: "", amountPaidInFavourOf: "" },
+//     HouseTaxDemandNotice: { NoticeIssueAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountDue: "", amountDueInFavourOf: "" },
+//   };
+
+//   const addDocument = () => {
+//     const newDocId = `doc-${documents.length + 1}`;
+//     const updatedDocs = [...documents, newDocId];
+//     setDocuments(updatedDocs);
+
+//     formik.setValues({
+//       ...formik.values,
+//       [newDocId]: { documentType: "" },
+//     });
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const removeDocument = (docId) => {
+//     const updatedDocs = documents.filter((id) => id !== docId);
+//     setDocuments(updatedDocs);
+
+//     const updatedValues = { ...formik.values };
+//     delete updatedValues[docId];
+//     formik.setValues(updatedValues);
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const handleDocTypeChange = (e, docId) => {
+//     const docType = e.target.value;
+//     formik.setValues({
+//       ...formik.values,
+//       [docId]: { documentType: docType, ...documentFields[docType] },
+//     });
+//   };
+
+//   const handleNext = async () => {
+//     if (documents.length === 0) {
+//       alert("Please add at least one document!");
+//       return;
+//     }
+
+//     const documentsToSend = documents
+//       .map((docId) => formik.values[docId])
+//       .filter((doc) => doc?.documentType);
+
+//     if (documentsToSend.length === 0) {
+//       alert("Please select document type for at least one document!");
+//       return;
+//     }
+
+//     // ✅ Read token, sessionId, and userId safely from storage
+//     const token = getToken() || localStorage.getItem("token") || sessionStorage.getItem("token");
+//     const sessionId = sessionStorage.getItem("sessionId") || localStorage.getItem("sessionId");
+//     const userId = sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//     console.log("DEBUG: Token =", token);
+//     console.log("DEBUG: Session ID =", sessionId);
+//     console.log("DEBUG: User ID =", userId);
+
+//     if (!token || !sessionId || !userId) {
+//       alert("Authentication required. Please login.");
+//       return;
+//     }
+
+//     // ✅ Correct payload including session_id and user_id
+//     const payload = {
+//       session_id: sessionId,
+//       user_id: userId,
+//       documents: documentsToSend,
+//     };
+
+//     console.log("DEBUG: Sending payload:", payload);
+
+//     try {
+//       const response = await fetch("http://localhost:3000/api/linkdoc/create-linkdoc", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//         body: JSON.stringify(payload),
+//       });
+
+//       if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+//       const data = await response.json();
+//       console.log("API Response:", data);
+
+//       sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+
+//       if (onNext) onNext();
+//     } catch (err) {
+//       console.error("Error sending documents:", err);
+//       alert("Failed to save document. Please try again.");
+//     }
+//   };
+
+//   return (
+//     <div style={{ height: "100vh", overflowX: "scroll" }}>
+//       <h3 className="text-center mt-3">Link Documents</h3>
+
+//       <div style={{ height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px" }}>
+//         <Form>
+//           {documents.map((docId) => (
+//             <div key={docId} className="mb-4 p-3 border rounded">
+//               <h5>{docId}</h5>
+
+//               <Form.Group controlId={`${docId}-documentType`}>
+//                 <Form.Label>Document Type:</Form.Label>
+//                 <Form.Select
+//                   name={`${docId}.documentType`}
+//                   value={formik.values[docId]?.documentType || ""}
+//                   onChange={(e) => handleDocTypeChange(e, docId)}
+//                 >
+//                   <option value="">Select</option>
+//                   {Object.keys(documentFields).map((type) => (
+//                     <option key={type} value={type}>
+//                       {type.replace(/([A-Z])/g, " $1").trim()}
+//                     </option>
+//                   ))}
+//                 </Form.Select>
+//               </Form.Group>
+
+//               {formik.values[docId]?.documentType &&
+//                 Object.keys(documentFields[formik.values[docId]?.documentType]).map((fieldKey) => (
+//                   <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4">
+//                     <Form.Label column sm="6">
+//                       {fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1).replace(/([A-Z])/g, " $1").trim()}:
+//                     </Form.Label>
+//                     <Col sm="6">
+//                       <Form.Control
+//                         type="text"
+//                         name={`${docId}.${fieldKey}`}
+//                         value={formik.values[docId]?.[fieldKey] || ""}
+//                         onChange={formik.handleChange}
+//                         placeholder={`Enter ${fieldKey}`}
+//                       />
+//                     </Col>
+//                   </Form.Group>
+//                 ))}
+
+//               <Button variant="danger" onClick={() => removeDocument(docId)} className="mt-2">
+//                 Remove Document
+//               </Button>
+//             </div>
+//           ))}
+
+//           <div className="text-center">
+//             <Button variant="primary" onClick={addDocument} className="me-3">
+//               Add Document
+//             </Button>
+//             <Button type="button" variant="success" onClick={handleNext}>
+//               Next
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LinkDocuments;
+
+
+// import React, { useState, useEffect } from "react";
+// import { useFormik } from "formik";
+// import { Button, Form, Row, Col } from "react-bootstrap"; // ✅ Correct import
+// import { getToken } from "../auth"; // Make sure getToken reads from localStorage/sessionStorage
+
+// const LinkDocuments = ({ onNext }) => {
+//   const [documents, setDocuments] = useState(
+//     JSON.parse(sessionStorage.getItem("documents")) || []
+//   );
+
+//   // Initialize Formik
+//   const formik = useFormik({
+//     initialValues: JSON.parse(sessionStorage.getItem("linkDocumentsData")) || {},
+//     onSubmit: () => {},
+//   });
+
+//   // Auto-save form data
+//   useEffect(() => {
+//     sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   const documentFields = {
+//     GiftDeed: { donorName: "", doneeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     SaleDeed: { sellerName: "", buyerName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     RelinquishmentDeed: { relinquisherName: "", recipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     PartitionDeed: { partitionerName: "", precipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     MortgageDeed: { mortgagorName: "", mortgageeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     WillDeed: { testatorName: "", benificiaryName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     EncumbranceCertificate: { ecIssuingAuthority: "", ecstatementNumber: "", fromDate: "", toDate: "" },
+//     HouseTaxReceipt: { ReceiptIssuingAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountPaid: "", amountPaidInFavourOf: "" },
+//     HouseTaxDemandNotice: { NoticeIssueAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountDue: "", amountDueInFavourOf: "" },
+//   };
+
+//   const addDocument = () => {
+//     const newDocId = `doc-${documents.length + 1}`;
+//     const updatedDocs = [...documents, newDocId];
+//     setDocuments(updatedDocs);
+
+//     formik.setValues({
+//       ...formik.values,
+//       [newDocId]: { documentType: "" },
+//     });
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const removeDocument = (docId) => {
+//     const updatedDocs = documents.filter((id) => id !== docId);
+//     setDocuments(updatedDocs);
+
+//     const updatedValues = { ...formik.values };
+//     delete updatedValues[docId];
+//     formik.setValues(updatedValues);
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   const handleDocTypeChange = (e, docId) => {
+//     const docType = e.target.value;
+//     formik.setValues({
+//       ...formik.values,
+//       [docId]: { documentType: docType, ...documentFields[docType] },
+//     });
+//   };
+
+//   const handleNext = async () => {
+//     if (documents.length === 0) {
+//       alert("Please add at least one document!");
+//       return;
+//     }
+
+//     const documentsToSend = documents
+//       .map((docId) => formik.values[docId])
+//       .filter((doc) => doc?.documentType);
+
+//     if (documentsToSend.length === 0) {
+//       alert("Please select document type for at least one document!");
+//       return;
+//     }
+
+//     // ✅ Read token, sessionId, and userId safely from storage
+//     const token = getToken() || localStorage.getItem("token") || sessionStorage.getItem("token");
+//     const sessionId = sessionStorage.getItem("sessionId") || localStorage.getItem("sessionId");
+//     const userId = sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//     console.log("DEBUG: Token =", token);
+//     console.log("DEBUG: Session ID =", sessionId);
+//     console.log("DEBUG: User ID =", userId);
+
+//     if (!token || !sessionId || !userId) {
+//       alert("Authentication required. Please login.");
+//       return;
+//     }
+
+//     // ✅ Correct payload including session_id and user_id
+//     const payload = {
+//       session_id: sessionId,
+//       user_id: userId,
+//       documents: documentsToSend,
+//     };
+
+//     console.log("DEBUG: Sending payload:", payload);
+
+//     try {
+//       const response = await fetch("http://localhost:3000/api/linkdoc/create-linkdoc", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//         body: JSON.stringify(payload),
+//       });
+
+//       if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+//       const data = await response.json();
+//       console.log("API Response:", data);
+
+//       sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+
+//       if (onNext) onNext();
+//     } catch (err) {
+//       console.error("Error sending documents:", err);
+//       alert("Failed to save document. Please try again.");
+//     }
+//   };
+
+//   return (
+//     <div style={{ height: "100vh", overflowX: "scroll" }}>
+//       <h3 className="text-center mt-3">Link Documents</h3>
+
+//       <div style={{ height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px" }}>
+//         <Form>
+//           {documents.map((docId) => (
+//             <div key={docId} className="mb-4 p-3 border rounded">
+//               <h5>{docId}</h5>
+
+//               <Form.Group controlId={`${docId}-documentType`}>
+//                 <Form.Label>Document Type:</Form.Label>
+//                 <Form.Select
+//                   name={`${docId}.documentType`}
+//                   value={formik.values[docId]?.documentType || ""}
+//                   onChange={(e) => handleDocTypeChange(e, docId)}
+//                 >
+//                   <option value="">Select</option>
+//                   {Object.keys(documentFields).map((type) => (
+//                     <option key={type} value={type}>
+//                       {type.replace(/([A-Z])/g, " $1").trim()}
+//                     </option>
+//                   ))}
+//                 </Form.Select>
+//               </Form.Group>
+
+//               {formik.values[docId]?.documentType &&
+//                 Object.keys(documentFields[formik.values[docId]?.documentType]).map((fieldKey) => (
+//                   <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4">
+//                     <Form.Label column sm="6">
+//                       {fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1).replace(/([A-Z])/g, " $1").trim()}:
+//                     </Form.Label>
+//                     <Col sm="6">
+//                       <Form.Control
+//                         type="text"
+//                         name={`${docId}.${fieldKey}`}
+//                         value={formik.values[docId]?.[fieldKey] || ""}
+//                         onChange={formik.handleChange}
+//                         placeholder={`Enter ${fieldKey}`}
+//                       />
+//                     </Col>
+//                   </Form.Group>
+//                 ))}
+
+//               <Button variant="danger" onClick={() => removeDocument(docId)} className="mt-2">
+//                 Remove Document
+//               </Button>
+//             </div>
+//           ))}
+
+//           <div className="text-center">
+//             <Button variant="primary" onClick={addDocument} className="me-3">
+//               Add Document
+//             </Button>
+//             <Button type="button" variant="success" onClick={handleNext}>
+//               Next
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LinkDocuments;
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { useFormik } from "formik";
+// import { Button, Form, Row, Col } from "react-bootstrap";
+// import { getToken } from "../auth"; // Make sure this reads from localStorage/sessionStorage
+
+// const LinkDocuments = ({ onNext }) => {
+//   const [documents, setDocuments] = useState(
+//     JSON.parse(sessionStorage.getItem("documents")) || []
+//   );
+
+//   // Formik initialization
+//   const formik = useFormik({
+//     initialValues: JSON.parse(sessionStorage.getItem("linkDocumentsData")) || {},
+//     onSubmit: () => {},
+//   });
+
+//   // Auto-save form data to sessionStorage
+//   useEffect(() => {
+//     sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   // Fields for each document type
+//   const documentFields = {
+//     GiftDeed: { donorName: "", doneeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     SaleDeed: { sellerName: "", buyerName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     RelinquishmentDeed: { relinquisherName: "", recipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     PartitionDeed: { partitionerName: "", precipientName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     MortgageDeed: { mortgagorName: "", mortgageeName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     WillDeed: { testatorName: "", benificiaryName: "", registrationDate: "", documentNumber: "", issuingAuthority: "" },
+//     EncumbranceCertificate: { ecIssuingAuthority: "", ecstatementNumber: "", fromDate: "", toDate: "" },
+//     HouseTaxReceipt: { ReceiptIssuingAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountPaid: "", amountPaidInFavourOf: "" },
+//     HouseTaxDemandNotice: { NoticeIssueAuthority: "", DoorNumberOnReceipt: "", assessmentNumberOnRecept:"", amountDue: "", amountDueInFavourOf: "" },
+//   };
+
+//   // Add new document
+//   const addDocument = () => {
+//     const newDocId = `doc-${documents.length + 1}`;
+//     const updatedDocs = [...documents, newDocId];
+//     setDocuments(updatedDocs);
+
+//     formik.setValues({
+//       ...formik.values,
+//       [newDocId]: { documentType: "" },
+//     });
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   // Remove document
+//   const removeDocument = (docId) => {
+//     const updatedDocs = documents.filter((id) => id !== docId);
+//     setDocuments(updatedDocs);
+
+//     const updatedValues = { ...formik.values };
+//     delete updatedValues[docId];
+//     formik.setValues(updatedValues);
+
+//     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
+//   };
+
+//   // Handle document type selection
+//   const handleDocTypeChange = (e, docId) => {
+//     const docType = e.target.value;
+//     formik.setValues({
+//       ...formik.values,
+//       [docId]: { documentType: docType, ...documentFields[docType] },
+//     });
+//   };
+
+//   // Send documents to backend
+//   const handleNext = async () => {
+//     if (documents.length === 0) {
+//       alert("Please add at least one document!");
+//       return;
+//     }
+
+//     // Build array of document objects
+//     const documentsToSend = documents
+//       .map((docId) => formik.values[docId])
+//       .filter((doc) => doc?.documentType);
+
+//     if (documentsToSend.length === 0) {
+//       alert("Please select document type for at least one document!");
+//       return;
+//     }
+
+//     // Get token, sessionId, and userId
+//     const token = getToken() || localStorage.getItem("token") || sessionStorage.getItem("token");
+//     const sessionId = sessionStorage.getItem("sessionId") || localStorage.getItem("sessionId");
+//     const userId = sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//     console.log("DEBUG: Token =", token);
+//     console.log("DEBUG: Session ID =", sessionId);
+//     console.log("DEBUG: User ID =", userId);
+
+//     if (!token || !sessionId || !userId) {
+//       alert("Authentication required. Please login.");
+//       return;
+//     }
+
+//     // ✅ Correct payload format
+//     const payload = {
+//       session_id: sessionId,
+//       user_id: userId,
+//       documents: documentsToSend,
+//     };
+
+//     console.log("DEBUG: Sending payload:", payload);
+
+//     try {
+//       const response = await fetch("http://localhost:3000/api/linkdoc/create-linkdoc", {
+//         method: "POST",
+//         headers: {
+//           "Content-Type": "application/json",
+//           Authorization: `Bearer ${token}`,
+//         },
+//         body: JSON.stringify(payload),
+//       });
+
+//       if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+//       const data = await response.json();
+//       console.log("API Response:", data);
+
+//       sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+
+//       if (onNext) onNext();
+//     } catch (err) {
+//       console.error("Error sending documents:", err);
+//       alert("Failed to save document. Please try again.");
+//     }
+//   };
+
+//   return (
+//     <div style={{ height: "100vh", overflowX: "scroll" }}>
+//       <h3 className="text-center mt-3">Link Documents</h3>
+
+//       <div style={{ height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px" }}>
+//         <Form>
+//           {documents.map((docId) => (
+//             <div key={docId} className="mb-4 p-3 border rounded">
+//               <h5>{docId}</h5>
+
+//               <Form.Group controlId={`${docId}-documentType`}>
+//                 <Form.Label>Document Type:</Form.Label>
+//                 <Form.Select
+//                   name={`${docId}.documentType`}
+//                   value={formik.values[docId]?.documentType || ""}
+//                   onChange={(e) => handleDocTypeChange(e, docId)}
+//                 >
+//                   <option value="">Select</option>
+//                   {Object.keys(documentFields).map((type) => (
+//                     <option key={type} value={type}>
+//                       {type.replace(/([A-Z])/g, " $1").trim()}
+//                     </option>
+//                   ))}
+//                 </Form.Select>
+//               </Form.Group>
+
+//               {formik.values[docId]?.documentType &&
+//                 Object.keys(documentFields[formik.values[docId]?.documentType]).map((fieldKey) => (
+//                   <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4">
+//                     <Form.Label column sm="6">
+//                       {fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1).replace(/([A-Z])/g, " $1").trim()}:
+//                     </Form.Label>
+//                     <Col sm="6">
+//                       <Form.Control
+//                         type="text"
+//                         name={`${docId}.${fieldKey}`}
+//                         value={formik.values[docId]?.[fieldKey] || ""}
+//                         onChange={formik.handleChange}
+//                         placeholder={`Enter ${fieldKey}`}
+//                       />
+//                     </Col>
+//                   </Form.Group>
+//                 ))}
+
+//               <Button variant="danger" onClick={() => removeDocument(docId)} className="mt-2">
+//                 Remove Document
+//               </Button>
+//             </div>
+//           ))}
+
+//           <div className="text-center">
+//             <Button variant="primary" onClick={addDocument} className="me-3">
+//               Add Document
+//             </Button>
+//             <Button type="button" variant="success" onClick={handleNext}>
+//               Next
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default LinkDocuments;
+
+
 import React, { useState, useEffect } from "react";
+import { useFormik } from "formik";
 import { Button, Form, Row, Col } from "react-bootstrap";
+import { getToken } from "../auth";
 
 const LinkDocuments = ({ onNext }) => {
   const [documents, setDocuments] = useState(
     JSON.parse(sessionStorage.getItem("documents")) || []
   );
 
-  // **🔹 Initialize Formik**
   const formik = useFormik({
     initialValues: JSON.parse(sessionStorage.getItem("linkDocumentsData")) || {},
-
-    onSubmit: (values) => {
-      console.log("Form Submitted:", values);
-      sessionStorage.setItem("linkDocumentsData", JSON.stringify(values));
-      onNext(); // Proceed to next step
-    },
+    onSubmit: () => {},
   });
 
-  // **🔹 Save form data to sessionStorage on change**
   useEffect(() => {
     sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
   }, [formik.values]);
 
-  // **🔹 Define Fields for Each Document Type**
   const documentFields = {
-    GiftDeed: {
-      donorName: "",
-      doneeName: "",
-      registrationDate: "",
-      documentNumber: "",
-      issuingAuthority: "",
-    },
-    SaleDeed: {
-      sellerName: "",
-      buyerName: "",
-      registrationDate: "",
-      documentNumber: "",
-      issuingAuthority: "",
-    },
-    RelinquishmentDeed: {
-      relinquisherName: "",
-      recipientName: "",
-      registrationDate: "",
-      documentNumber: "",
-      issuingAuthority: "",
-    },
-    PartitionDeed: {
-      partitionerName: "",
-      precipientName: "",
-      registrationDate: "",
-      documentNumber: "",
-      issuingAuthority: "",
-    },
-    MortgageDeed: {
-      mortgagorName: "",
-      mortgageeName: "",
-      registrationDate: "",
-      documentNumber: "",
-      issuingAuthority: "",
-    },
-    WillDeed: {
-      testatorName: "",
-      benificiaryName: "",
-      registrationDate: "",
-      documentNumber: "",
-      issuingAuthority: "",
-    },
-    EncumbranceCertificate: {
-      ecIssuingAuthority: "",
-      ecstatementNumber: "",
-      fromDate: "",
-      toDate: "",
-       
-    },
-    HouseTaxReceipt: {
-      ReceiptIssuingAuthority: "",
-      DoorNumberOnReceipt: "",
-      assessmentNumberOnRecept:"",
-       amountPaid: "",
-       amountPaidInFavourOf: "",
-    },
-    HouseTaxDemandNotice: {
-      NoticeIssueAuthority: "",
-      DoorNumberOnReceipt: "",
-      assessmentNumberOnRecept:"",
-      amountDue: "",
-      amountDueInFavourOf: "",
-       
-    },
+    GiftDeed: { donor_name: "", donee_name: "", registration_date: "", document_number: "", issuing_authority: "" },
+    SaleDeed: { seller_name: "", buyer_name: "", registration_date: "", document_number: "", issuing_authority: "" },
+    RelinquishmentDeed: { relinquisher_name: "", recipient_name: "", registration_date: "", document_number: "", issuing_authority: "" },
+    PartitionDeed: { partitioner_name: "", precipient_name: "", registration_date: "", document_number: "", issuing_authority: "" },
+    MortgageDeed: { mortgagor_name: "", mortgagee_name: "", registration_date: "", document_number: "", issuing_authority: "" },
+    WillDeed: { testator_name: "", beneficiary_name: "", registration_date: "", document_number: "", issuing_authority: "" },
+    EncumbranceCertificate: { ec_issuing_authority: "", ec_statement_number: "", from_date: "", to_date: "" },
+    HouseTaxReceipt: { receipt_issuing_authority: "", door_number_on_receipt: "", assessment_number_on_receipt: "", amount_paid: "", amount_paid_in_favour_of: "" },
+    HouseTaxDemandNotice: { notice_issue_authority: "", door_number_on_receipt: "", assessment_number_on_receipt: "", amount_due: "", amount_due_in_favour_of: "" },
   };
 
-  // **🔹 Add a New Document**
   const addDocument = () => {
     const newDocId = `doc-${documents.length + 1}`;
-    setDocuments([...documents, newDocId]);
+    const updatedDocs = [...documents, newDocId];
+    setDocuments(updatedDocs);
 
     formik.setValues({
       ...formik.values,
-      [newDocId]: { documentType: "" }, // Start with only documentType
+      [newDocId]: { document_type: "" },
     });
 
-    sessionStorage.setItem("documents", JSON.stringify([...documents, newDocId]));
+    sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
   };
 
-  // **🔹 Remove a Document**
   const removeDocument = (docId) => {
     const updatedDocs = documents.filter((id) => id !== docId);
     setDocuments(updatedDocs);
@@ -1433,31 +4041,102 @@ const LinkDocuments = ({ onNext }) => {
     sessionStorage.setItem("documents", JSON.stringify(updatedDocs));
   };
 
-  // **🔹 Handle Document Type Change**
   const handleDocTypeChange = (e, docId) => {
     const docType = e.target.value;
     formik.setValues({
       ...formik.values,
-      [docId]: { documentType: docType, ...documentFields[docType] },
+      [docId]: { document_type: docType, ...documentFields[docType] },
     });
   };
 
-  return (
-    <div style={{   height: "100vh", overflowx: "scroll"  }}>
-      <h3 className="text-center mt-3">Link Documents</h3>
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "";
+    const parts = dateStr.split("-");
+    if (parts.length === 3) return `20${parts[2]}-${parts[1]}-${parts[0]}`;
+    return dateStr;
+  };
 
-      <div style={{height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px"    }}>
-        <Form onSubmit={formik.handleSubmit}>
+  const handleNext = async () => {
+    if (documents.length === 0) {
+      alert("Please add at least one document!");
+      return;
+    }
+
+    const documentsToSend = documents
+      .map((docId) => {
+        const doc = formik.values[docId];
+        if (!doc?.document_type) return null;
+
+        // Format date fields
+        const formattedDoc = { ...doc };
+        Object.keys(formattedDoc).forEach((key) => {
+          if (key.includes("date")) formattedDoc[key] = formatDate(formattedDoc[key]);
+        });
+
+        return formattedDoc;
+      })
+      .filter(Boolean);
+
+    if (documentsToSend.length === 0) {
+      alert("Please select document type for at least one document!");
+      return;
+    }
+
+    const token = getToken() || localStorage.getItem("token") || sessionStorage.getItem("token");
+    const sessionId = sessionStorage.getItem("sessionId") || localStorage.getItem("sessionId");
+    const userId = sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+    if (!token || !sessionId || !userId) {
+      alert("Authentication required. Please login.");
+      return;
+    }
+
+    const payload = {
+      session_id: sessionId,
+      user_id: userId,
+      documents: documentsToSend,
+    };
+
+    console.log("DEBUG: Sending payload:", payload);
+
+    try {
+      const response = await fetch("http://localhost:3000/api/linkdoc/create-linkdoc", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+      const data = await response.json();
+      console.log("API Response:", data);
+
+      sessionStorage.setItem("linkDocumentsData", JSON.stringify(formik.values));
+      alert("Documents saved successfully!");
+
+      if (onNext) onNext();
+    } catch (err) {
+      console.error("Error sending documents:", err);
+      alert("Failed to save document. Please check all fields and try again.");
+    }
+  };
+
+  return (
+    <div style={{ height: "100vh", overflowX: "scroll" }}>
+      <h3 className="text-center mt-3">Link Documents</h3>
+      <div style={{ height: "100vh", overflowY: "auto", overflowX: "auto", padding: "20px" }}>
+        <Form>
           {documents.map((docId) => (
             <div key={docId} className="mb-4 p-3 border rounded">
               <h5>{docId}</h5>
-
-              {/* **🔹 Document Type Selection** */}
               <Form.Group controlId={`${docId}-documentType`}>
                 <Form.Label>Document Type:</Form.Label>
                 <Form.Select
-                  name={`${docId}.documentType`}
-                  value={formik.values[docId]?.documentType || ""}
+                  name={`${docId}.document_type`}
+                  value={formik.values[docId]?.document_type || ""}
                   onChange={(e) => handleDocTypeChange(e, docId)}
                 >
                   <option value="">Select</option>
@@ -1469,36 +4148,35 @@ const LinkDocuments = ({ onNext }) => {
                 </Form.Select>
               </Form.Group>
 
-              {/* **🔹 Render Relevant Fields** */}
-              {formik.values[docId]?.documentType &&
-                Object.keys(documentFields[formik.values[docId]?.documentType]).map((fieldKey) => (
-                  <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4 ">
-                    <Form.Label column sm="6">{fieldKey.charAt(0).toUpperCase() + fieldKey.slice(1).replace(/([A-Z])/g, " $1").trim()}:</Form.Label>
+              {formik.values[docId]?.document_type &&
+                Object.keys(documentFields[formik.values[docId]?.document_type]).map((fieldKey) => (
+                  <Form.Group as={Row} key={fieldKey} className="mb-3 mt-3 fs-4">
+                    <Form.Label column sm="6">
+                      {fieldKey.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}:
+                    </Form.Label>
                     <Col sm="6">
                       <Form.Control
                         type="text"
                         name={`${docId}.${fieldKey}`}
                         value={formik.values[docId]?.[fieldKey] || ""}
                         onChange={formik.handleChange}
-                        placeholder={`Enter ${fieldKey}`}
+                        placeholder={`Enter ${fieldKey.replace(/_/g, " ")}`}
                       />
                     </Col>
                   </Form.Group>
                 ))}
 
-              {/* **🔹 Remove Document Button** */}
               <Button variant="danger" onClick={() => removeDocument(docId)} className="mt-2">
                 Remove Document
               </Button>
             </div>
           ))}
 
-          {/* **🔹 Add Document Button** */}
           <div className="text-center">
             <Button variant="primary" onClick={addDocument} className="me-3">
               Add Document
             </Button>
-            <Button type="submit" variant="success">
+            <Button type="button" variant="success" onClick={handleNext}>
               Next
             </Button>
           </div>
