@@ -11,9 +11,9 @@ const PropertyDetails = ({ onNext }) => {
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(false);
 
-  // Get sessionId and user_id
+  // Get sessionId and user_id (match MostRecentDocuments.js logic)
   const session_id = searchParams.get("session_id") || sessionStorage.getItem("sessionId");
-  const user_id = localStorage.getItem("user_id");
+  const user_id = sessionStorage.getItem("user_id");
 
   const formik = useFormik({
     initialValues:
