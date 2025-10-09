@@ -3,14 +3,19 @@ import { useFormik } from 'formik';
 import Button from 'react-bootstrap/esm/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from "react-router-dom";  
-import { Propertyboundaries_api } from "../apiUrls";
+import { PropertyBoundaries_api } from "../apiUrls";
 
 const PropertyBoundaries = ({ onNext }) => {
     // State to handle loading state for API call
     const [loading, setLoading] = useState(false);
      const navigate = useNavigate();  // Initialize navigate
+    // Get sessionId and user_id (match other pages)
+    const session_id = sessionStorage.getItem("sessionId");
+    const user_id = sessionStorage.getItem("user_id");
+    const { getToken } = require("../auth");
+
     const formik = useFormik({
-        initialValues:  JSON.parse(sessionStorage.getItem("PropertyBoundariesData")) ||{
+        initialValues:  JSON.parse(sessionStorage.getItem("PropertyBoundaries")) || {
             eastBoundaryType: "",
             eastBoundaryExtent: "",
             eastBoundaryOwner: "",
@@ -25,41 +30,42 @@ const PropertyBoundaries = ({ onNext }) => {
             southBoundaryOwner: "",
         },
         onSubmit: async (values) => {
-            console.log('Form Submitted:', values);
+            setLoading(true);
+            const token = getToken() || sessionStorage.getItem("token");
 
-            // Set loading state to true
-            //setLoading(true);
+            if (!token || !user_id || !session_id) {
+                alert("Authentication required. Please login or start a session.");
+                navigate("/login");
+                setLoading(false);
+                return;
+            }
 
-            // Replace with your actual API endpoint
-            // const apiUrl = Propertyboundaries_api;
+            const dataToSend = { session_id, user_id, ...values };
+            try {
+                const response = await fetch(PropertyBoundaries_api, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: JSON.stringify(dataToSend),
+                });
 
-            // try {
-            //     const response = await fetch(apiUrl, {
-            //         method: 'POST',
-            //         headers: {
-            //             'Content-Type': 'application/json',
-            //         },
-            //         body: JSON.stringify(values),
-            //     });
+                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                const data = await response.json();
+                console.log("API response:", data);
 
-            //     if (response.ok) {
-            //         const data = await response.json();
-            //         console.log("API response:", data);
+                // Save form data to sessionStorage
+                sessionStorage.setItem("PropertyBoundaries", JSON.stringify(values));
 
-            //         // After a successful API call, call onNext
-                    onNext();
-            //     } else {
-            //         // Handle API error
-            //         console.error("API Error:", response.statusText);
-            //         // Optionally show an error message to the user
-            //     }
-            // } catch (error) {
-            //     console.error("Error during API call:", error);
-            //     // Optionally show an error message to the user
-            // } finally {
-            //     // Set loading state to false
-            //     setLoading(false);
-            // }
+                // Navigate to next page
+                if (onNext) onNext();
+            } catch (error) {
+                console.error("Error during API call:", error);
+                alert("Failed to save data. Please try again.");
+            } finally {
+                setLoading(false);
+            }
         },
 
         validate: (values) => {
@@ -118,7 +124,6 @@ const PropertyBoundaries = ({ onNext }) => {
                  formik.setValues(savedData);
              }
          }, []);
-
 
     return (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "100vh", paddingBottom: "50px" }}>
