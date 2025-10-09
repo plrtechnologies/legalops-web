@@ -1,7 +1,4 @@
 import React from "react";
-
- 
-
 const SessionDocument =()  =>{
      return(
         <div style={{ height: "100vh" }}>

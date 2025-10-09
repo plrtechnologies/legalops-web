@@ -49,6 +49,7 @@ import Footer from "./designcomponents/Footer";
 import About from "./pagecomponents/About";
 import Login from "./pagecomponents/Login";
 import Signup from "./pagecomponents/Signup";
+import FinishedDocuments from "./pagecomponents/FinishedDocuments";
 function App() {
   return (
     <Router>
@@ -59,6 +60,7 @@ function App() {
         <Route path="/Login" element={<Login />} />
         <Route path="/Signup" element={<Signup />} />
         <Route path="/CreateDocument/*" element={<CreateDocument />} />
+        <Route path="/FinishedDocuments/*" element={<FinishedDocuments />} />
       </Routes>
        <Footer/>
     </Router>

@@ -29,6 +29,7 @@ import React, { useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+// import FinishedDocuments from "./FinishedDocuments";
  
 
  
@@ -118,6 +119,8 @@ const Home = () => {
             color: "white",
             fontWeight: "bold",
           }}
+            onClick={() => navigate("/FinishedDocuments")}
+
         >
           Finished Document
         </Button>
