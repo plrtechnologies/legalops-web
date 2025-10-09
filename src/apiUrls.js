@@ -12,6 +12,7 @@ export const PropertyDetails_api = `${BASE}${process.env.REACT_APP_API_SESSION}`
 
 export const LoanProposerAndTitleHolders_api = `${BASE}${process.env.REACT_APP_API_SESSION}`;
 
+export const CREATE_LINK_DOCUMENT_API = "http://localhost:3000/api/linkdoc/create-linkdoc";
 
 
 // const BASE = process.env.REACT_APP_API_BASE;
