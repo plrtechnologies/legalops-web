@@ -11,6 +11,7 @@ import PropertyDetails from "../pagecomponents/PropertyDetails";
 import LinkDocuments from "../pagecomponents/LinkDocuments"
 import ReviewDocument from "../pagecomponents/ReviewDocument";
 
+
 const CreateDocument = () => {
   const navigate = useNavigate();
   const location = useLocation();

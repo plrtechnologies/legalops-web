@@ -51,6 +51,7 @@ import Login from "./pagecomponents/Login";
 import Signup from "./pagecomponents/Signup";
 import PrivateRoute from "./PrivateRoute";
 import SessionDocument from "./pagecomponents/SessionDocument";
+import FinishedDocuments from "./pagecomponents/FinishedDocuments";
 //import LoanProposerDetails from "./pagecomponents/LoanProposerDetails";
 
 function App() {
@@ -90,6 +91,11 @@ function App() {
                 <SessionDocument />
               </PrivateRoute>
             } />
+             <Route path="/FinishedDocuments/*" element={
+              <PrivateRoute>
+                <FinishedDocuments/>
+              </PrivateRoute>
+             } />
           </Routes>
         </div>
         <Footer/>
