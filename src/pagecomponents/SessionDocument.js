@@ -1,3 +1,159 @@
+// import React, { useEffect, useState } from "react";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         // const response = await fetch("https://687129ef7ca4d06b34b991a7.mockapi.io/sessions");
+//         const response = await fetch("https://687129ef7ca4d06b34b991a7.mockapi.io/sessions");
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+//         const data = await response.json();
+//         console.log("Fetched sessions:", data);
+//         setSessions(data);
+//       } catch (err) {
+//         console.error("Error:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName?.toLowerCase().includes(search);
+//     //const emailMatch = session.userid?.toLowerCase().includes(search);
+//     const emailMatch = session.sessionId?.toLowerCase().includes(search);
+//     const sessionDate = new Date(session.createdAt);
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || sessionDate >= start) &&
+//       (!end || sessionDate <= end);
+
+//     return (nameMatch || emailMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>Session Document</h2>
+
+//       {/* Search Filters */}
+//       <div style={{ display: "flex", justifyContent: "center", gap: "15px", flexWrap: "wrap", marginBottom: "20px"  }}>
+//         <input
+//           type="text"
+//           placeholder="Search by name or user ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{ padding: "10px", width: "300px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//         <label style={{ paddingTop: "10px", marginLeft:"20px"}} htmlFor="end-date">Start Date</label>
+//         <input
+//           type="date"
+//           placeholder=" user ID"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//         <label style={{ paddingTop: "10px"}} htmlFor="end-date">End Date</label>
+//         <input
+//           placeholder="select date"
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//       </div>
+
+//       {/* Loading / Error / Results */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No sessions found matching your filters.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             {/* Table Header with S.No */}
+//             <li style={{ fontWeight: "bold", listStyle: "none", marginBottom: "10px" }}>
+//               <div style={{
+//                 display: "grid",
+//                 gridTemplateColumns: "60px 200px 300px 200px 200px",
+//                 gap: "10px",
+//                 alignItems: "center"
+//               }}>
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>User ID</span>
+//                 <span>Date</span>
+//               </div>
+//             </li>
+
+//             {/* Data Rows with S.No */}
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px 200px",
+//                   gap: "10px",
+//                   alignItems: "center"
+//                 }}>
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <a
+//                       href={`/${session.lastPage}?sessionid=${session.sessionid}`}
+//                       style={{ color: "#007bff", fontWeight: "bold", textDecoration: "none" }}
+//                     >
+//                       {session.loanProposerName}
+//                     </a>
+//                   </span>
+                  
+//                   <span>{session.sessionId}</span>
+//                   <span>{session.sessionid}</span>
+//                   <span>{new Date(session.createdAt).toLocaleString()}</span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+//above code is working with mock api ''''''''''''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // import React from "react";
 
 
@@ -16,66 +172,7 @@
 //export default SessionDocument;
 //---------------------------------------------------------
 
-// import React, { useEffect, useState } from "react";
-
-// const SessionDocument = () => {
-//   const [sessions, setSessions] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState("");
-
-//   useEffect(() => {
-//     const fetchSessions = async () => {
-//       try {
-//         // const response = await fetch("https://run.mocky.io/v3/779d95b9-da44-4f96-a213-38576e536643"); // Replace with your actual API endpoint
-//  const response = await fetch("https://run.mocky.io/v3/7c156b11-0f22-492c-9244-c5690f9b81e4"); // Replace with your actual API endpoint
-
-//         if (!response.ok) {
-//           throw new Error("Failed to fetch sessions");
-//         }
-
-//         const data = await response.json();
-//         setSessions(data.sessions || []);
-//       } catch (err) {
-//         console.error("Error:", err);
-//         setError("Could not load session documents.");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchSessions();
-//   }, []);
-
-//   return (
-//     <div style={{ height: "100vh", padding: "20px" }}>
-//       <h2 className="text-center mb-4">Session Document</h2>
-
-//       {loading ? (
-//         <p className="text-center">Loading sessions...</p>
-//       ) : error ? (
-//         <p className="text-center text-danger">{error}</p>
-//       ) : sessions.length === 0 ? (
-//         <p className="text-center">No incomplete sessions found.</p>
-//       ) : (
-//         <div className="container">
-//           {sessions.map((session, index) => (
-//             <div key={index} className="border rounded p-3 mb-3 shadow-sm">
-//               <p><strong>Name:</strong> {session.name}</p>
-//               <p><strong>Session ID:</strong> {session.sessionId}</p>
-//               <p><strong>Created At:</strong> {new Date(session.createdAt).toLocaleString()}</p>
-//               <p>
-//                 <strong>Resume Link:</strong>{" "}
-//                  <a href={`/resume/${session.sessionId}`}>Open</a> 
-//               </p>
-//             </div>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-// export default SessionDocument;
-
+//
  
 // import React, { useEffect, useState } from "react";
 
@@ -155,9 +252,15 @@
 
 // export default SessionDocument;
 
+
+
+
+
 //----------------
 //---------------------
 //-----------------------------
+
+
 // import React, { useEffect, useState } from "react";
 
 // const SessionDocument = () => {
@@ -341,6 +444,14 @@
 
 // export default SessionDocument;
 
+
+
+
+
+
+
+
+
 // import React, { useEffect, useState } from "react";
 
 // const SessionDocument = () => {
@@ -484,6 +595,11 @@
  
 
 
+
+
+
+
+
 // import React, { useEffect, useState } from "react";
 
 // const SessionDocument = () => {
@@ -616,16 +732,32 @@
 //   );
 // };
 
-// export default SessionDocument;          111111111
+// export default SessionDocument;          //111111111
 
 //----------use this -----------------
+
+
+ 
+
+
+
+
+
+
+
+
+// testing purpose only usinggg------
+
+
 // import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";  
+
+//    //import LoanProposerDetails from "./LoanProposerDetails";
 
 // const SessionDocument = () => {
 //   const [sessions, setSessions] = useState([]);
 //   const [loading, setLoading] = useState(true);
 //   const [error, setError] = useState("");
-
 //   const [searchTerm, setSearchTerm] = useState("");
 //   const [startDate, setStartDate] = useState("");
 //   const [endDate, setEndDate] = useState("");
@@ -633,8 +765,8 @@
 //   useEffect(() => {
 //     const fetchSessions = async () => {
 //       try {
-//         // const response = await fetch("https://687129ef7ca4d06b34b991a7.mockapi.io/sessions");
-//         const response = await fetch("https://687129ef7ca4d06b34b991a7.mockapi.io/sessions");
+//          const response = await fetch("https://687129ef7ca4d06b34b991a7.mockapi.io/sessions");
+//         //const response = await fetch("");
 //         if (!response.ok) throw new Error("Failed to fetch sessions");
 //         const data = await response.json();
 //         console.log("Fetched sessions:", data);
@@ -653,7 +785,6 @@
 //   const filteredSessions = sessions.filter((session) => {
 //     const search = searchTerm.toLowerCase();
 //     const nameMatch = session.loanProposerName?.toLowerCase().includes(search);
-//     //const emailMatch = session.userid?.toLowerCase().includes(search);
 //     const emailMatch = session.sessionId?.toLowerCase().includes(search);
 //     const sessionDate = new Date(session.createdAt);
 //     const start = startDate ? new Date(startDate) : null;
@@ -671,25 +802,23 @@
 //       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>Session Document</h2>
 
 //       {/* Search Filters */}
-//       <div style={{ display: "flex", justifyContent: "center", gap: "15px", flexWrap: "wrap", marginBottom: "20px"  }}>
+//       <div style={{ display: "flex", justifyContent: "center", gap: "15px", flexWrap: "wrap", marginBottom: "20px" }}>
 //         <input
 //           type="text"
-//           placeholder="Search by name or user ID"
+//           placeholder="Search by name or session ID"
 //           value={searchTerm}
 //           onChange={(e) => setSearchTerm(e.target.value)}
 //           style={{ padding: "10px", width: "300px", borderRadius: "5px", border: "1px solid #ccc" }}
 //         />
-//         <label style={{ paddingTop: "10px", marginLeft:"20px"}} htmlFor="end-date">Start Date</label>
+//         <label style={{ paddingTop: "10px", marginLeft: "20px" }}>Start Date</label>
 //         <input
 //           type="date"
-//           placeholder=" user ID"
 //           value={startDate}
 //           onChange={(e) => setStartDate(e.target.value)}
 //           style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
 //         />
-//         <label style={{ paddingTop: "10px"}} htmlFor="end-date">End Date</label>
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
 //         <input
-//           placeholder="select date"
 //           type="date"
 //           value={endDate}
 //           onChange={(e) => setEndDate(e.target.value)}
@@ -707,7 +836,6 @@
 //       ) : (
 //         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
 //           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
-//             {/* Table Header with S.No */}
 //             <li style={{ fontWeight: "bold", listStyle: "none", marginBottom: "10px" }}>
 //               <div style={{
 //                 display: "grid",
@@ -717,12 +845,11 @@
 //               }}>
 //                 <span>S.No</span>
 //                 <span>Name</span>
-//                 <span>User ID</span>
-//                 <span>Date</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
 //               </div>
 //             </li>
 
-//             {/* Data Rows with S.No */}
 //             {filteredSessions.map((session, index) => (
 //               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
 //                 <div style={{
@@ -733,16 +860,26 @@
 //                 }}>
 //                   <span>{index + 1}</span>
 //                   <span>
-//                     <a
-//                       href={`/${session.lastPage}?sessionid=${session.sessionid}`}
+//                     {/* <Link
+//                       href={`/${session.lastPage || 'LoanProposerDetails'}?sessionid=${session.sessionId}`}
 //                       style={{ color: "#007bff", fontWeight: "bold", textDecoration: "none" }}
 //                     >
-//                       {session.loanProposerName}
-//                     </a>
+//                       {session.loanProposerName || "Unnamed"}
+//                     </Link> */}
+//                     {/* <Link
+//                     to={`/${session.lastPage || 'LoanProposerDetails'}?sessionid=${session.sessionId}`}
+//                     style={{ color: "#007bff", fontWeight: "bold", textDecoration: "none" }}>
+//                    {session.loanProposerName || "Unnamed"}
+//                      </Link> */}
+
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage || 'LoanProposerDetails'}?sessionid=${session.sessionId}`}
+//                       style={{ color: "#007bff", fontWeight: "bold", textDecoration: "none" }}
+//                         >
+//                        {session.loanProposerName || "Unnamed"}
+//                       </Link>
 //                   </span>
-                  
 //                   <span>{session.sessionId}</span>
-//                   <span>{session.sessionid}</span>
 //                   <span>{new Date(session.createdAt).toLocaleString()}</span>
 //                 </div>
 //               </li>
@@ -757,13 +894,2165 @@
 // export default SessionDocument;
 
 
-// testing purpose only usinggg------
 
 
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth"; // if you already use token helper
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken(); // if auth is required
+//         const user_id = sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) {
+//           throw new Error("User ID not found in storage");
+//         }
+
+//         // ✅ Replace mock URL with your actual API endpoint
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: `Bearer ${token}`, // only if your API needs auth
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+//         console.log("Fetched sessions:", data);
+
+//         // ✅ Normalize and handle missing/invalid date values
+//         const formattedSessions = data
+//           .map((item) => ({
+//             loanProposerName: item.loanProposerName || "Unnamed",
+//             sessionId: item.sessionId || "N/A",
+//             createdAt: item.createdAt ? new Date(item.createdAt) : null,
+//             lastPage: item.lastPage || "",
+//           }))
+//           .filter((item) => item.sessionId && item.createdAt); // skip invalid data
+
+//         setSessions(formattedSessions);
+//       } catch (err) {
+//         console.error("Error:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // ✅ Filtering logic
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName?.toLowerCase().includes(search);
+//     const idMatch = session.sessionId?.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt ? new Date(session.createdAt) : null;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* 🔍 Search + Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px", marginLeft: "20px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {/* 📋 Session List */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>
+//           No sessions found matching your filters.
+//         </p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${
+//                         session.lastPage || "LoanProposerDetails"
+//                       }?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt
+//                       ? new Date(session.createdAt).toLocaleString("en-IN", {
+//                           dateStyle: "medium",
+//                           timeStyle: "short",
+//                         })
+//                       : "N/A"}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+////
+////////
+//////////////// below code is working good 
+
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth"; // Helper to get auth token if needed
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken(); // optional if backend requires token
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) {
+//           throw new Error("User ID not found in storage");
+//         }
+
+//         // ✅ Correct API URL — using user_id in endpoint
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) {
+//           throw new Error("Failed to fetch sessions");
+//         }
+
+//         const data = await response.json();
+//         console.log("Fetched sessions:", data);
+
+//         // ✅ Safely normalize session data
+//         const formattedSessions = Array.isArray(data)
+//           ? data
+//               .map((item) => ({
+//                 loanProposerName: item.loanProposerName || "Unnamed",
+//                 sessionId: item.sessionId || "N/A",
+//                 createdAt: item.createdAt ? new Date(item.createdAt) : null,
+//                 lastPage: item.lastPage || "",
+//               }))
+//               .filter((item) => item.sessionId)
+//           : [];
+
+//         setSessions(formattedSessions);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // ✅ Search + Date filtering
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName?.toLowerCase().includes(search);
+//     const idMatch = session.sessionId?.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt ? new Date(session.createdAt) : null;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* 🔍 Search & Filter Controls */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px", marginLeft: "20px" }}>
+//           Start Date
+//         </label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {/* 📋 Session List Display */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>
+//           No sessions found matching your filters.
+//         </p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li
+//                 key={index}
+//                 style={{ listStyle: "none", marginBottom: "10px" }}
+//               >
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${
+//                         session.lastPage || "LoanProposerDetails"
+//                       }?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt
+//                       ? session.createdAt.toLocaleString("en-IN", {
+//                           dateStyle: "medium",
+//                           timeStyle: "short",
+//                         })
+//                       : "N/A"}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//
+//
+// with mockapi is working  below code .............
+
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth"; // if your API needs auth
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken(); // if API needs authorization
+
+//         // Replace with your actual endpoint returning all sessions
+//        // const response = await fetch("https://687129ef7ca4d06b34b991a7.mockapi.io/sessions");
+       
+//       // const response = await fetch("http://localhost:3000/api/session/all",
+//          const response = await fetch("https://687129ef7ca4d06b34b991a7.mockapi.io/sessions",
+//          {
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`, // remove if not required
+//           },
+//         });
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const result = await response.json();
+
+//         const formattedSessions = (result.sessions || []).map((session) => ({
+//           loanProposerName: session.loanProposerName || "Unnamed",
+//           sessionId: session.session_id || "N/A",
+//           lastPage: session.current_page || "LoanProposerDetails",
+//           createdAt: session.link_documents?.[0]?.fromDate
+//             ? new Date(session.link_documents[0].fromDate)
+//             : null,
+//         }));
+
+//         setSessions(formattedSessions);
+//       } catch (err) {
+//         console.error("Error:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // Filter sessions by search term and dates
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName?.toLowerCase().includes(search);
+//     const idMatch = session.sessionId?.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>Session Document</h2>
+
+//       {/* Search + Date Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{ padding: "10px", width: "300px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//         <label style={{ paddingTop: "10px", marginLeft: "20px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//       </div>
+
+//       {/* Session List */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No sessions found matching your filters.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li style={{ fontWeight: "bold", listStyle: "none", marginBottom: "10px" }}>
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{ color: "#007bff", fontWeight: "bold", textDecoration: "none" }}
+//                     >
+//                       {session.loanProposerName}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt
+//                       ? session.createdAt.toLocaleString("en-IN", {
+//                           dateStyle: "medium",
+//                           timeStyle: "short",
+//                         })
+//                       : "N/A"}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+//   import React, { useState, useEffect } from "react";
+// import { Table, Button, Spinner, Alert } from "react-bootstrap";
+// import { useNavigate } from "react-router-dom";
+// import { getToken } from "../auth"; // only token helper is available
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const navigate = useNavigate();
+
+//   const fetchSessions = async () => {
+//     try {
+//       setLoading(true);
+//       setError("");
+
+//       const token = getToken();
+//       const user_id = localStorage.getItem("user_id"); // ✅ direct fetch from localStorage
+
+//       if (!token || !user_id) {
+//         setError("User not authenticated. Please log in again.");
+//         setLoading(false);
+//         return;
+//       }
+
+//       const response = await fetch(
+//         `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//             "Content-Type": "application/json",
+//           },
+//         }
+//       );
+
+//       if (!response.ok) {
+//         if (response.status === 401) {
+//           setError("Unauthorized. Please log in again.");
+//         } else {
+//           setError(`Error ${response.status}: Failed to fetch sessions`);
+//         }
+//         throw new Error(`HTTP error! Status: ${response.status}`);
+//       }
+
+//       const data = await response.json();
+
+//       if (Array.isArray(data)) {
+//         setSessions(data);
+//       } else {
+//         console.error("Invalid session data format:", data);
+//         setError("Unexpected response format from server.");
+//       }
+//     } catch (err) {
+//       console.error("Error fetching sessions:", err);
+//       setError("Failed to fetch sessions");
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchSessions();
+//   }, []);
+
+//   const handleResume = (session) => {
+//     if (session.lastPage) {
+//       navigate(`/${session.lastPage}?sessionId=${session.sessionId}`);
+//     } else {
+//       alert("No last page info found for this session.");
+//     }
+//   };
+
+//   if (loading)
+//     return (
+//       <div className="text-center mt-5">
+//         <Spinner animation="border" /> Loading sessions...
+//       </div>
+//     );
+
+//   if (error)
+//     return (
+//       <Alert variant="danger" className="mt-4 text-center">
+//         {error}
+//       </Alert>
+//     );
+
+//   return (
+//     <div className="container mt-5">
+//       <h4 className="mb-4 text-center">Resume Your Previous Sessions</h4>
+
+//       {sessions.length === 0 ? (
+//         <Alert variant="info" className="text-center">
+//           No sessions found.
+//         </Alert>
+//       ) : (
+//         <Table striped bordered hover responsive>
+//           <thead>
+//             <tr>
+//               <th>#</th>
+//               <th>Session ID</th>
+//               <th>Document Name</th>
+//               <th>Last Page</th>
+//               <th>Action</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             {sessions.map((session, index) => (
+//               <tr key={index}>
+//                 <td>{index + 1}</td>
+//                 <td>{session.sessionId}</td>
+//                 <td>{session.documentName || "N/A"}</td>
+//                 <td>{session.lastPage || "N/A"}</td>
+//                 <td>
+//                   <Button
+//                     variant="primary"
+//                     onClick={() => handleResume(session)}
+//                   >
+//                     Resume
+//                   </Button>
+//                 </td>
+//               </tr>
+//             ))}
+//           </tbody>
+//         </Table>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth"; // Helper to get auth token if needed
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) {
+//           throw new Error("User ID not found in storage");
+//         }
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const result = await response.json();
+//         console.log("Fetched sessions:", result);
+
+//         // Map API data to our UI structure
+//         const formattedSessions = Array.isArray(result.sessions)
+//           ? result.sessions.map((item) => ({
+//               loanProposerName: item.loanProposerName || "Srikanth", // fallback for testing
+//               sessionId: item.session_id || "N/A",
+//               lastPage: item.current_page || "LoanProposerDetails",
+//               createdAt: item.dateOfRegistration
+//                 ? new Date(item.dateOfRegistration)
+//                 : new Date(),
+//             }))
+//           : [];
+
+//         setSessions(formattedSessions);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // Filter sessions by search term and date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName.toLowerCase().includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt ? new Date(session.createdAt) : null;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* Search & Filter Controls */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px", marginLeft: "20px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {/* Loading / Error / Session List */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>
+//           No sessions found matching your filters.
+//         </p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             {/* Table Header */}
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {/* Session Rows */}
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+
+
+
+
+
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth"; // Helper to get auth token if needed
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id = sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) {
+//           throw new Error("User ID not found in storage");
+//         }
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) {
+//           throw new Error("Failed to fetch sessions");
+//         }
+
+//         const data = await response.json();
+//         console.log("Fetched sessions:", data);
+
+//         // Normalize sessions: ensure loanProposerName is always from session, never fallback to lawyer
+//         const formattedSessions = Array.isArray(data.sessions)
+//           ? data.sessions.map((item) => ({
+//               loanProposerName: item.loanProposerName || "Unnamed", // will be updated from first page input
+//               sessionId: item.session_id,
+//               lastPage: item.current_page || "LoanProposerDetails",
+//               createdAt: item.dateOfRegistration ? new Date(item.dateOfRegistration) : new Date(),
+//             }))
+//           : [];
+
+//         setSessions(formattedSessions);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // Filter sessions by name, session ID, and date range
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName?.toLowerCase().includes(search);
+//     const idMatch = session.sessionId?.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt ? new Date(session.createdAt) : null;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>Session Document</h2>
+
+//       {/* Search & Filter Controls */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{ padding: "10px", width: "300px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//         <label style={{ paddingTop: "10px", marginLeft: "20px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//       </div>
+
+//       {/* Session List */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No sessions found matching your filters.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             {/* Header */}
+//             <li style={{ fontWeight: "bold", listStyle: "none", marginBottom: "10px" }}>
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {/* Data Rows */}
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+
+//  import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth"; // Helper to get auth token
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id = sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) throw new Error("User ID not found in storage");
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+//         console.log("Fetched sessions:", data);
+
+//         const formattedSessions = Array.isArray(data.sessions)
+//           ? data.sessions.map((item) => {
+//               // Always take loanProposerName from first page
+//               const name =
+//                 item.loanProposerName && item.loanProposerName.trim() !== ""
+//                   ? item.loanProposerName
+//                   : "(No Name)";
+
+//               const createdAt = item.dateOfRegistration
+//                 ? new Date(item.dateOfRegistration)
+//                 : item.createdAt
+//                 ? new Date(item.createdAt)
+//                 : new Date();
+
+//               const lastPage = item.current_page || "LoanProposerDetails";
+
+//               return {
+//                 sessionId: item.session_id,
+//                 loanProposerName: name,
+//                 lastPage,
+//                 createdAt,
+//               };
+//             })
+//           : [];
+
+//         setSessions(formattedSessions);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // Filter sessions by search term and date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName.toLowerCase().includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt ? new Date(session.createdAt) : null;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>Session Document</h2>
+
+//       {/* Search & Filter Controls */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{ padding: "10px", width: "300px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//         <label style={{ paddingTop: "10px", marginLeft: "20px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//       </div>
+
+//       {/* Session List */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No sessions found matching your filters.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             {/* Table Header */}
+//             <li style={{ fontWeight: "bold", listStyle: "none", marginBottom: "10px" }}>
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {/* Session Rows */}
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+// woeking good but need to mofdify 
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth"; // Helper to get auth token
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id = sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) throw new Error("User ID not found in storage");
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+//         console.log("Fetched sessions:", data);
+
+//         // Map API data to UI structure
+//         const formattedSessions = Array.isArray(data.sessions)
+//           ? data.sessions.map((item) => {
+//               // Use loanProposerName, fallback to first link_document if missing
+//               const loanProposerName =
+//                 item.loanProposerName ||
+//                 (item.link_documents && item.link_documents[0]?.loanProposerName) ||
+//                 "(No Name)";
+
+//               // Use dateOfRegistration or fallback to first document date
+//               const createdAt = item.dateOfRegistration
+//                 ? new Date(item.dateOfRegistration)
+//                 : item.link_documents && item.link_documents[0]?.fromDate
+//                 ? new Date(item.link_documents[0].fromDate)
+//                 : new Date();
+
+//               return {
+//                 loanProposerName,
+//                 sessionId: item.session_id,
+//                 lastPage: item.current_page || "LoanProposerDetails",
+//                 createdAt,
+//               };
+//             })
+//           : [];
+
+//         setSessions(formattedSessions);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // Filter sessions by search term and date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName.toLowerCase().includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt ? new Date(session.createdAt) : null;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>Session Document</h2>
+
+//       {/* Search & Filter Controls */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{ padding: "10px", width: "300px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//         <label style={{ paddingTop: "10px", marginLeft: "20px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//       </div>
+
+//       {/* Session List */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No sessions found matching your filters.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             {/* Header */}
+//             <li style={{ fontWeight: "bold", listStyle: "none", marginBottom: "10px" }}>
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {/* Data Rows */}
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+
+
+//  import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth"; // your auth helper
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id = sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) throw new Error("User ID not found");
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+//         console.log("Fetched sessions:", data);
+
+//         // Map sessions: show only incomplete documents and preserve loanProposerName & createdAt
+//         const formatted = Array.isArray(data.sessions)
+//           ? data.sessions
+//               .filter((s) => !s.isCompleted) // show incomplete sessions only
+//               .map((item) => ({
+//                 loanProposerName: item.loanProposerName || "No Name",
+//                 sessionId: item.session_id,
+//                 lastPage: item.current_page || "LoanProposerDetails",
+//                 createdAt: item.dateOfRegistration ? new Date(item.dateOfRegistration) : new Date(),
+//               }))
+//           : [];
+
+//         setSessions(formatted);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // Filter by search term and date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName.toLowerCase().includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>Session Document</h2>
+
+//       {/* Search and Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{ padding: "10px", width: "300px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//       </div>
+
+//       {/* Session List */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No sessions found matching your filters.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             {/* Header */}
+//             <li style={{ fontWeight: "bold", listStyle: "none", marginBottom: "10px" }}>
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {/* Rows */}
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{ color: "#007bff", fontWeight: "bold", textDecoration: "none" }}
+//                     >
+//                       {session.loanProposerName}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) throw new Error("User ID not found");
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page !== "complete") // incomplete only
+//                 .map((item) => ({
+//                   loanProposerName: item.loanProposerName || "No Name",
+//                   sessionId: item.session_id,
+//                   lastPage: item.current_page || "LoanProposerDetails",
+//                   createdAt: item.dateOfRegistration
+//                     ? new Date(item.dateOfRegistration)
+//                     : new Date(),
+//                 }))
+//             : [];
+
+//         setSessions(formatted);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName.toLowerCase().includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {/* Session List */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>
+//           No sessions found matching your filters.
+//         </p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             {/* Header */}
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {/* Rows */}
+//             {filteredSessions.map((session, index) => (
+//               <li
+//                 key={index}
+//                 style={{ listStyle: "none", marginBottom: "10px" }}
+//               >
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+//         if (!user_id) throw new Error("User ID not found");
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         // Show incomplete sessions only and ensure name exists
+//         const formatted = Array.isArray(data.sessions)
+//           ? data.sessions
+//               .filter((s) => s.current_page !== "complete")
+//               .map((item) => ({
+//                 loanProposerName: item.loanProposerName || "No Name",
+//                 sessionId: item.session_id,
+//                 lastPage: item.current_page || "LoanProposerDetails",
+//                 createdAt: item.dateOfRegistration
+//                   ? new Date(item.dateOfRegistration)
+//                   : new Date(),
+//               }))
+//           : [];
+
+//         setSessions(formatted);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // Filter sessions by search and date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName.toLowerCase().includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>Session Document</h2>
+
+//       {/* Search & Filters */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{ padding: "10px", width: "300px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+//         />
+//       </div>
+
+//       {/* Session List */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No sessions found matching your filters.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             {/* Header */}
+//             <li style={{ fontWeight: "bold", listStyle: "none", marginBottom: "10px" }}>
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {/* Rows */}
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}&name=${encodeURIComponent(session.loanProposerName)}`}
+//                       style={{ color: "#007bff", fontWeight: "bold", textDecoration: "none" }}
+//                     >
+//                       {session.loanProposerName}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+// SessionDocument.jsx
+ 
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";  
-
-   //import LoanProposerDetails from "./LoanProposerDetails";
+import { Link } from "react-router-dom";
+import { getToken } from "../auth";
 
 const SessionDocument = () => {
   const [sessions, setSessions] = useState([]);
@@ -774,15 +3063,63 @@ const SessionDocument = () => {
   const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
+    // Load from cache first (in case user returns)
+    const cached = sessionStorage.getItem("cachedSessions");
+    if (cached) {
+      setSessions(JSON.parse(cached));
+      setLoading(false);
+    }
+
     const fetchSessions = async () => {
       try {
-        const response = await fetch("https://687129ef7ca4d06b34b991a7.mockapi.io/sessions");
+        const token = getToken();
+        const user_id =
+          sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+        if (!user_id) throw new Error("User ID not found");
+
+        const response = await fetch(
+          `http://localhost:3000/api/combined/resumesession/${user_id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token ? `Bearer ${token}` : "",
+            },
+          }
+        );
+
         if (!response.ok) throw new Error("Failed to fetch sessions");
+
         const data = await response.json();
-        console.log("Fetched sessions:", data);
-        setSessions(data);
+
+        const formatted =
+          Array.isArray(data.sessions) && data.sessions.length > 0
+            ? data.sessions
+                .filter((s) => s.current_page !== "complete") // only incomplete ones
+                .map((item) => {
+                  // handle name properly with multiple fallbacks
+                  const proposerName =
+                    item.loanProposerName ||
+                    item.proposerName ||
+                    item.formData?.loanProposerDetails?.name ||
+                    item.formData?.LoanProposerDetails?.loanProposerName ||
+                    "No Name";
+
+                  return {
+                    loanProposerName: proposerName,
+                    sessionId: item.session_id,
+                    lastPage: item.current_page || "LoanProposerDetails",
+                    createdAt: item.dateOfRegistration
+                      ? new Date(item.dateOfRegistration)
+                      : new Date(),
+                  };
+                })
+            : [];
+
+        setSessions(formatted);
+        sessionStorage.setItem("cachedSessions", JSON.stringify(formatted));
       } catch (err) {
-        console.error("Error:", err);
+        console.error("Error fetching sessions:", err);
         setError("Could not load session documents.");
       } finally {
         setLoading(false);
@@ -792,67 +3129,102 @@ const SessionDocument = () => {
     fetchSessions();
   }, []);
 
+  // filtering logic for search + date
   const filteredSessions = sessions.filter((session) => {
     const search = searchTerm.toLowerCase();
-    const nameMatch = session.loanProposerName?.toLowerCase().includes(search);
-    const emailMatch = session.sessionId?.toLowerCase().includes(search);
-    const sessionDate = new Date(session.createdAt);
+    const nameMatch = session.loanProposerName.toLowerCase().includes(search);
+    const idMatch = session.sessionId.toLowerCase().includes(search);
+    const sessionDate = session.createdAt;
     const start = startDate ? new Date(startDate) : null;
     const end = endDate ? new Date(endDate) : null;
-
     const dateMatch =
-      (!start || sessionDate >= start) &&
-      (!end || sessionDate <= end);
-
-    return (nameMatch || emailMatch) && dateMatch;
+      (!start || (sessionDate && sessionDate >= start)) &&
+      (!end || (sessionDate && sessionDate <= end));
+    return (nameMatch || idMatch) && dateMatch;
   });
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
-      <h2 style={{ textAlign: "center", marginBottom: "30px" }}>Session Document</h2>
+      <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+        Session Document
+      </h2>
 
-      {/* Search Filters */}
-      <div style={{ display: "flex", justifyContent: "center", gap: "15px", flexWrap: "wrap", marginBottom: "20px" }}>
+      {/* Search & Filter */}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "15px",
+          flexWrap: "wrap",
+          marginBottom: "20px",
+        }}
+      >
         <input
           type="text"
           placeholder="Search by name or session ID"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          style={{ padding: "10px", width: "300px", borderRadius: "5px", border: "1px solid #ccc" }}
+          style={{
+            padding: "10px",
+            width: "300px",
+            borderRadius: "5px",
+            border: "1px solid #ccc",
+          }}
         />
-        <label style={{ paddingTop: "10px", marginLeft: "20px" }}>Start Date</label>
+        <label style={{ paddingTop: "10px" }}>Start Date</label>
         <input
           type="date"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
-          style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+          style={{
+            padding: "10px",
+            width: "180px",
+            borderRadius: "5px",
+            border: "1px solid #ccc",
+          }}
         />
         <label style={{ paddingTop: "10px" }}>End Date</label>
         <input
           type="date"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          style={{ padding: "10px", width: "180px", borderRadius: "5px", border: "1px solid #ccc" }}
+          style={{
+            padding: "10px",
+            width: "180px",
+            borderRadius: "5px",
+            border: "1px solid #ccc",
+          }}
         />
       </div>
 
-      {/* Loading / Error / Results */}
+      {/* Session List */}
       {loading ? (
         <p style={{ textAlign: "center" }}>Loading sessions...</p>
       ) : error ? (
         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
       ) : filteredSessions.length === 0 ? (
-        <p style={{ textAlign: "center" }}>No sessions found matching your filters.</p>
+        <p style={{ textAlign: "center" }}>
+          No sessions found matching your filters.
+        </p>
       ) : (
         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
-            <li style={{ fontWeight: "bold", listStyle: "none", marginBottom: "10px" }}>
-              <div style={{
-                display: "grid",
-                gridTemplateColumns: "60px 200px 300px 200px 200px",
-                gap: "10px",
-                alignItems: "center"
-              }}>
+            {/* Header */}
+            <li
+              style={{
+                fontWeight: "bold",
+                listStyle: "none",
+                marginBottom: "10px",
+              }}
+            >
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "60px 200px 300px 200px",
+                  gap: "10px",
+                  alignItems: "center",
+                }}
+              >
                 <span>S.No</span>
                 <span>Name</span>
                 <span>Session ID</span>
@@ -860,37 +3232,40 @@ const SessionDocument = () => {
               </div>
             </li>
 
+            {/* Rows */}
             {filteredSessions.map((session, index) => (
-              <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
-                <div style={{
-                  display: "grid",
-                  gridTemplateColumns: "60px 200px 300px 200px 200px",
-                  gap: "10px",
-                  alignItems: "center"
-                }}>
+              <li
+                key={index}
+                style={{ listStyle: "none", marginBottom: "10px" }}
+              >
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "60px 200px 300px 200px",
+                    gap: "10px",
+                    alignItems: "center",
+                  }}
+                >
                   <span>{index + 1}</span>
                   <span>
-                    {/* <Link
-                      href={`/${session.lastPage || 'LoanProposerDetails'}?sessionid=${session.sessionId}`}
-                      style={{ color: "#007bff", fontWeight: "bold", textDecoration: "none" }}
-                    >
-                      {session.loanProposerName || "Unnamed"}
-                    </Link> */}
-                    {/* <Link
-                    to={`/${session.lastPage || 'LoanProposerDetails'}?sessionid=${session.sessionId}`}
-                    style={{ color: "#007bff", fontWeight: "bold", textDecoration: "none" }}>
-                   {session.loanProposerName || "Unnamed"}
-                     </Link> */}
-
                     <Link
-                      to={`/CreateDocument/${session.lastPage || 'LoanProposerDetails'}?sessionid=${session.sessionId}`}
-                      style={{ color: "#007bff", fontWeight: "bold", textDecoration: "none" }}
-                        >
-                       {session.loanProposerName || "Unnamed"}
-                      </Link>
+                      to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+                      style={{
+                        color: "#007bff",
+                        fontWeight: "bold",
+                        textDecoration: "none",
+                      }}
+                    >
+                      {session.loanProposerName}
+                    </Link>
                   </span>
                   <span>{session.sessionId}</span>
-                  <span>{new Date(session.createdAt).toLocaleString()}</span>
+                  <span>
+                    {session.createdAt.toLocaleString("en-IN", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}
+                  </span>
                 </div>
               </li>
             ))}
@@ -902,7 +3277,5 @@ const SessionDocument = () => {
 };
 
 export default SessionDocument;
-
-
 
  
