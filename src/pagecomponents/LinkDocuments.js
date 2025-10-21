@@ -79,8 +79,6 @@ const LinkDocuments = ({ onNext }) => {
   const [loading, setLoading] = useState(false);
   const [searchParams] = useSearchParams();
 
-  // Load from localStorage on mount
-
   // Function to load documents from localStorage
   const loadDocumentsFromStorage = () => {
     const loadedDocs = [];
@@ -185,9 +183,27 @@ const LinkDocuments = ({ onNext }) => {
     }
   };
 
-  // Load on mount
+  // Load on mount: if user is logged in (session/token present) clear previous link documents,
+  // otherwise restore any saved draft documents from localStorage.
   React.useEffect(() => {
-    loadDocumentsFromStorage();
+    const sessionId = searchParams.get("session_id") || sessionStorage.getItem("sessionId");
+    const token = getToken() || sessionStorage.getItem("token");
+    if (sessionId && token) {
+      // User is logged in - clear any previously saved link documents
+      const keysToRemove = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('linkdoc_')) keysToRemove.push(key);
+      }
+      keysToRemove.forEach((k) => localStorage.removeItem(k));
+      setDocuments(["doc-1"]);
+      setActiveTab("doc-1");
+      setSavedDocIds([]);
+      // formik is not yet initialized here (declared later), so we don't call formik.setValues()
+    } else {
+      // Not logged in - restore any saved drafts
+      loadDocumentsFromStorage();
+    }
     // eslint-disable-next-line
   }, []);
 
@@ -209,6 +225,55 @@ const LinkDocuments = ({ onNext }) => {
     onSubmit: handleNext,
     enableReinitialize: true,
   });
+
+  // Utility to clear all linkdoc_* keys from localStorage and reset state
+  const clearLinkDocumentsFromStorage = () => {
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('linkdoc_')) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
+    setDocuments(["doc-1"]);
+    setActiveTab("doc-1");
+    setSavedDocIds([]);
+    formik.setValues({ "doc-1": { documentType: "" } });
+  };
+
+  // Check for session expiration and clear documents if expired
+  React.useEffect(() => {
+    const sessionId = searchParams.get("session_id") || sessionStorage.getItem("sessionId");
+    const token = getToken() || sessionStorage.getItem("token");
+    if (!sessionId || !token) {
+      clearLinkDocumentsFromStorage();
+    }
+  }, [searchParams, getToken]);
+
+  // Also clear saved link documents when a login happens (session/token become present).
+  // This covers login events in the same tab (immediate check) and other tabs (storage event).
+  React.useEffect(() => {
+    const checkAndClearOnLogin = () => {
+      const sessionId = searchParams.get("session_id") || sessionStorage.getItem("sessionId");
+      const token = getToken() || sessionStorage.getItem("token");
+      if (sessionId && token) {
+        clearLinkDocumentsFromStorage();
+      }
+    };
+
+    // run immediately (covers login before component mounts)
+    checkAndClearOnLogin();
+
+    // listen for storage events (other tabs)
+    const onStorage = (e) => {
+      if (e.key === 'token' || e.key === 'sessionId') {
+        checkAndClearOnLogin();
+      }
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, [searchParams]);
 
   function isDocValid(doc) {
     if (!doc.documentType) return false;
