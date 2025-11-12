@@ -1,208 +1,228 @@
 
-import React, { useState, useEffect } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
-import { useFormik } from "formik";
-import Button from "react-bootstrap/esm/Button";
-import Form from "react-bootstrap/Form";
-import { TitleHolderDetails_api } from "../apiUrls";
-import { getToken } from "../auth"; // Optional helper if you have it
+// import React, { useState, useEffect } from "react";
+// import { useSearchParams, useNavigate } from "react-router-dom";
+// import { useFormik } from "formik";
+// import Button from "react-bootstrap/esm/Button";
+// import Form from "react-bootstrap/Form";
+// import { TitleHolderDetails_api } from "../apiUrls";
+// import { getToken } from "../auth";
 
-const TitleHolderDetails = ({ onNext }) => {
-  const [loading, setLoading] = useState(false);
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+// const TitleHolderDetails = ({ onNext }) => {
+//   const [loading, setLoading] = useState(false);
+//   const [searchParams] = useSearchParams();
+//   const navigate = useNavigate();
 
-  // Get sessionId from URL
-  const sessionIdFromUrl = searchParams.get("sessionid");
+//   // Get sessionId from URL
+//   const sessionIdFromUrl = searchParams.get("sessionid");
 
-  // Save sessionId into sessionStorage
-  useEffect(() => {
-    if (sessionIdFromUrl) sessionStorage.setItem("sessionId", sessionIdFromUrl);
-  }, [sessionIdFromUrl]);
+//   // Save sessionId into sessionStorage
+//   useEffect(() => {
+//     if (sessionIdFromUrl) sessionStorage.setItem("sessionId", sessionIdFromUrl);
+//   }, [sessionIdFromUrl]);
 
-  const formik = useFormik({
-    initialValues:
-      JSON.parse(sessionStorage.getItem("TitleHolderDetails")) || {
-        titleHolderName: "",
-        titleHolderRelationType: "",
-        titleHolderRelativeName: "",
-        titleHolderResidenceType: "",
-        titleHolderDoorNumber: "",
-        titleHolderStreetName: "",
-        titleHolderCityName: "",
-        titleHolderMandalName: "",
-        titleHolderDistrictName: "",
-        titleHolderPincode: "",
-      },
+//   const formik = useFormik({
+//     initialValues:
+//       JSON.parse(sessionStorage.getItem("TitleHolderDetails")) || {
+//         titleHolderName: "",
+//         titleHolderRelationType: "",
+//         titleHolderRelativeName: "",
+//         titleHolderResidenceType: "",
+//         titleHolderDoorNumber: "",
+//         titleHolderStreetName: "",
+//         titleHolderCityName: "",
+//         titleHolderMandalName: "",
+//         titleHolderDistrictName: "",
+//         titleHolderPincode: "",
+//       },
 
-    validate: (values) => {
-      const errors = {};
-      const req = "*required*";
-      if (!values.titleHolderName) errors.titleHolderName = req;
-      if (!values.titleHolderRelationType) errors.titleHolderRelationType = req;
-      if (!values.titleHolderRelativeName) errors.titleHolderRelativeName = req;
-      if (!values.titleHolderResidenceType) errors.titleHolderResidenceType = req;
-      if (!values.titleHolderDoorNumber) errors.titleHolderDoorNumber = req;
-      if (!values.titleHolderStreetName) errors.titleHolderStreetName = req;
-      if (!values.titleHolderCityName) errors.titleHolderCityName = req;
-      if (!values.titleHolderMandalName) errors.titleHolderMandalName = req;
-      if (!values.titleHolderDistrictName) errors.titleHolderDistrictName = req;
-      if (!values.titleHolderPincode) errors.titleHolderPincode = req;
-      return errors;
-    },
+//     validate: (values) => {
+//       const errors = {};
+//       const req = "*required*";
+//       if (!values.titleHolderName) errors.titleHolderName = req;
+//       if (!values.titleHolderRelationType) errors.titleHolderRelationType = req;
+//       if (!values.titleHolderRelativeName) errors.titleHolderRelativeName = req;
+//       if (!values.titleHolderResidenceType) errors.titleHolderResidenceType = req;
+//       if (!values.titleHolderDoorNumber) errors.titleHolderDoorNumber = req;
+//       if (!values.titleHolderStreetName) errors.titleHolderStreetName = req;
+//       if (!values.titleHolderCityName) errors.titleHolderCityName = req;
+//       if (!values.titleHolderMandalName) errors.titleHolderMandalName = req;
+//       if (!values.titleHolderDistrictName) errors.titleHolderDistrictName = req;
 
-    onSubmit: async (values) => {
-      console.log("Form Submitted:", values);
-      setLoading(true);
+//       if (!values.titleHolderPincode) errors.titleHolderPincode = req;
+//       else if (!/^\d{6}$/.test(values.titleHolderPincode))
+//         errors.titleHolderPincode = "Pincode must be exactly 6 digits";
 
-      const token = getToken() || sessionStorage.getItem("token");
-      const user_id = sessionStorage.getItem("user_id");
-      const session_id = sessionStorage.getItem("sessionId");
+//       return errors;
+//     },
 
-      if (!token || !user_id) {
-        alert("Authentication required. Please log in.");
-        navigate("/login");
-        setLoading(false);
-        return;
-      }
+//     onSubmit: async (values) => {
+//       console.log("Form Submitted:", values);
+//       setLoading(true);
 
-      try {
-        const response = await fetch(TitleHolderDetails_api, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ session_id, user_id, ...values }),
-        });
+//       const token = getToken() || sessionStorage.getItem("token");
+//       const user_id = sessionStorage.getItem("user_id");
+//       const session_id = sessionStorage.getItem("sessionId");
 
-        console.log("Status:", response.status);
+//       if (!token || !user_id) {
+//         alert("Authentication required. Please log in.");
+//         navigate("/login");
+//         setLoading(false);
+//         return;
+//       }
 
-        if (!response.ok) throw new Error(`API Error: ${response.status}`);
+//       try {
+//         // Save form data to backend
+//         const response = await fetch(TitleHolderDetails_api, {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: JSON.stringify({ session_id, user_id, ...values }),
+//         });
 
-        const data = await response.json();
-        console.log("API response:", data);
+//         if (!response.ok) throw new Error(`API Error: ${response.status}`);
+//         const data = await response.json();
+//         console.log("API response:", data);
 
-        // Save form data to sessionStorage
-        sessionStorage.setItem("TitleHolderDetails", JSON.stringify(values));
+//         // Save current page to backend (for session resume)
+//         await fetch(`http://localhost:3000/api/session/update-page/${session_id}`, {
+//           method: "POST",
+//           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+//           body: JSON.stringify({ current_page: "TitleHolderDetails" }),
+//         });
 
-        // Navigate to next page
-        if (onNext) onNext();
-        else navigate(`/nextpage?sessionid=${session_id}`);
-      } catch (error) {
-        console.error("Error during API call:", error);
-        alert("Failed to save data. Please try again.");
-      } finally {
-        setLoading(false);
-      }
-    },
-  });
+//         // Save to sessionStorage including user_name
+//         const userName = data.user_name || values.titleHolderName;
+//         sessionStorage.setItem("TitleHolderDetails", JSON.stringify({ ...values, user_name: userName }));
 
-  // -------------------- Prefill from backend only if sessionStorage is empty --------------------
-  useEffect(() => {
-    const token = getToken() || sessionStorage.getItem("token");
-    const session_id = sessionStorage.getItem("sessionId");
-    const savedData = JSON.parse(sessionStorage.getItem("TitleHolderDetails"));
+//         // Go to next page
+//         if (onNext) onNext();
+//         else navigate(`/nextpage?sessionid=${session_id}`);
+//       } catch (error) {
+//         console.error("Error during API call:", error);
+//         alert("Failed to save data. Please try again.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     },
+//   });
 
-    if (!token || !session_id || savedData) return; // skip fetch if already saved
+//   // -------------------- Prefill from backend --------------------
+//   useEffect(() => {
+//     const token = getToken() || sessionStorage.getItem("token");
+//     const session_id = sessionStorage.getItem("sessionId");
 
-    (async () => {
-      try {
-        const res = await fetch(`${TitleHolderDetails_api}?session_id=${session_id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (!res.ok) throw new Error(`API error: ${res.status}`);
-        const data = await res.json();
-        if (data) formik.setValues({ ...formik.values, ...data });
-      } catch (err) {
-        console.error("Error fetching session data:", err);
-      }
-    })();
-  }, []);
+//     if (!token || !session_id) return;
 
-  // -------------------- Auto-save form data to sessionStorage --------------------
-  useEffect(() => {
-    sessionStorage.setItem("TitleHolderDetails", JSON.stringify(formik.values));
-  }, [formik.values]);
+//     (async () => {
+//       try {
+//         const res = await fetch(`${TitleHolderDetails_api}?session_id=${session_id}`, {
+//           headers: { Authorization: `Bearer ${token}` },
+//         });
+//         if (!res.ok) throw new Error(`API error: ${res.status}`);
+//         const data = await res.json();
+//         if (data) {
+//           const merged = { ...formik.values, ...data };
+//           formik.setValues(merged);
+//           sessionStorage.setItem("TitleHolderDetails", JSON.stringify(merged));
+//         }
+//       } catch (err) {
+//         console.error("Error fetching session data:", err);
+//       }
+//     })();
+//   }, []);
 
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        minHeight: "100vh",
-        paddingBottom: "50px",
-      }}
-    >
-      <div style={{ width: "100%", maxWidth: "800px", padding: "20px", overflowY: "auto" }}>
-        <h3 className="text-center">Title Holder Details</h3>
+//   // -------------------- Auto-save form data --------------------
+//   useEffect(() => {
+//     sessionStorage.setItem("TitleHolderDetails", JSON.stringify(formik.values));
+//   }, [formik.values]);
 
-        <Form onSubmit={formik.handleSubmit}>
-          <div className="d-flex flex-column pt-3 pb-3">
-            {[
-              { label: "Name", name: "titleHolderName" },
-              { label: "Relation Type", name: "titleHolderRelationType", type: "select", options: ["S/O","W/O","D/O","C/O","H/O"] },
-              { label: "Relative Name", name: "titleHolderRelativeName" },
-              { label: "Residence Type", name: "titleHolderResidenceType", type: "select", options: ["Flat","House"] },
-              { label: "Door Number", name: "titleHolderDoorNumber" },
-              { label: "Street Name", name: "titleHolderStreetName" },
-              { label: "City Name", name: "titleHolderCityName" },
-              { label: "Mandal Name", name: "titleHolderMandalName" },
-              { label: "District Name", name: "titleHolderDistrictName" },
-              { label: "Pincode", name: "titleHolderPincode" },
-            ].map((field) => (
-              <div className="row align-items-center mb-3" key={field.name}>
-                <div className="col-12 col-md-6">
-                  <Form.Label className="fs-3">{`Title Holder ${field.label}`}</Form.Label>
-                </div>
-                <div className="col-12 col-md-6">
-                  {field.type === "select" ? (
-                    <Form.Select
-                      name={field.name}
-                      value={formik.values[field.name]}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      style={{ height: "40px", fontSize: "20px" }}
-                    >
-                      <option value="">Select</option>
-                      {field.options.map((opt) => (
-                        <option key={opt} value={opt}>{opt}</option>
-                      ))}
-                    </Form.Select>
-                  ) : (
-                    <Form.Control
-                      type="text"
-                      name={field.name}
-                      value={formik.values[field.name]}
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      style={{ height: "40px", fontSize: "20px", borderColor: "#333" }}
-                    />
-                  )}
-                  {formik.touched[field.name] && formik.errors[field.name] && (
-                    <div className="text-danger fw-bold fs-5">{formik.errors[field.name]}</div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
+//   return (
+//     <div
+//       style={{
+//         display: "flex",
+//         justifyContent: "center",
+//         alignItems: "center",
+//         minHeight: "100vh",
+//         paddingBottom: "50px",
+//       }}
+//     >
+//       <div style={{ width: "100%", maxWidth: "800px", padding: "20px", overflowY: "auto" }}>
+//         <h3 className="text-center">Title Holder Details</h3>
 
-          <div className="text-center">
-            <Button variant="secondary" className="mt-3 me-3" onClick={() => navigate(-1)}>
-              Back
-            </Button>
-            <Button type="submit" variant="primary" className="mt-3" disabled={loading}>
-              {loading ? "Loading..." : "Next"}
-            </Button>
-          </div>
-        </Form>
-      </div>
-    </div>
-  );
-};
+//         <Form onSubmit={formik.handleSubmit}>
+//           <div className="d-flex flex-column pt-3 pb-3">
+//             {[
+//               { label: "Name", name: "titleHolderName" },
+//               { label: "Relation Type", name: "titleHolderRelationType", type: "select", options: ["S/O","W/O","D/O","C/O","H/O"] },
+//               { label: "Relative Name", name: "titleHolderRelativeName" },
+//               { label: "Residence Type", name: "titleHolderResidenceType", type: "select", options: ["Flat","House"] },
+//               { label: "Door Number", name: "titleHolderDoorNumber" },
+//               { label: "Street Name", name: "titleHolderStreetName" },
+//               { label: "City Name", name: "titleHolderCityName" },
+//               { label: "Mandal Name", name: "titleHolderMandalName" },
+//               { label: "District Name", name: "titleHolderDistrictName" },
+//               { label: "Pincode", name: "titleHolderPincode" },
+//             ].map((field) => (
+//               <div className="row align-items-center mb-3" key={field.name}>
+//                 <div className="col-12 col-md-6">
+//                   <Form.Label className="fs-3">{`Title Holder ${field.label}`}</Form.Label>
+//                 </div>
+//                 <div className="col-12 col-md-6">
+//                   {field.type === "select" ? (
+//                     <Form.Select
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{ height: "40px", fontSize: "20px" }}
+//                     >
+//                       <option value="">Select</option>
+//                       {field.options.map((opt) => (
+//                         <option key={opt} value={opt}>{opt}</option>
+//                       ))}
+//                     </Form.Select>
+//                   ) : (
+//                     <Form.Control
+//                       type="text"
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{ height: "40px", fontSize: "20px", borderColor: "#333" }}
+//                     />
+//                   )}
+//                   {formik.touched[field.name] && formik.errors[field.name] && (
+//                     <div className="text-danger fw-bold fs-5">{formik.errors[field.name]}</div>
+//                   )}
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
 
-export default TitleHolderDetails;
+//           <div className="text-center">
+//             <Button variant="secondary" className="mt-3 me-3" onClick={() => navigate(-1)}>
+//               Back
+//             </Button>
+//             <Button type="submit" variant="primary" className="mt-3" disabled={loading}>
+//               {loading ? "Loading..." : "Next"}
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TitleHolderDetails;
+
+
+// above code running.......
+
+// 
+
+
 
 
 
@@ -2132,3 +2152,1888 @@ export default TitleHolderDetails;
 // };
 
 // export default TitleHolderDetails;
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { useSearchParams, useNavigate } from "react-router-dom";
+// import { useFormik } from "formik";
+// import Button from "react-bootstrap/esm/Button";
+// import Form from "react-bootstrap/Form";
+// import { TitleHolderDetails_api } from "../apiUrls";
+// import { getToken } from "../auth";
+
+// const TitleHolderDetails = ({ onNext }) => {
+//   const [loading, setLoading] = useState(false);
+//   const [searchParams] = useSearchParams();
+//   const navigate = useNavigate();
+
+//   // ✅ Get sessionId from URL
+//   const sessionIdFromUrl = searchParams.get("sessionid");
+
+//   // ✅ Save sessionId into sessionStorage
+//   useEffect(() => {
+//     if (sessionIdFromUrl) {
+//       sessionStorage.setItem("sessionId", sessionIdFromUrl);
+//       console.log("Session ID saved:", sessionIdFromUrl);
+//     }
+//   }, [sessionIdFromUrl]);
+
+//   const formik = useFormik({
+//     initialValues:
+//       JSON.parse(sessionStorage.getItem("TitleHolderDetails")) || {
+//         titleHolderName: "",
+//         titleHolderRelationType: "",
+//         titleHolderRelativeName: "",
+//         titleHolderResidenceType: "",
+//         titleHolderDoorNumber: "",
+//         titleHolderStreetName: "",
+//         titleHolderCityName: "",
+//         titleHolderMandalName: "",
+//         titleHolderDistrictName: "",
+//         titleHolderPincode: "",
+//       },
+
+//     validate: (values) => {
+//       const errors = {};
+//       const req = "*required*";
+//       if (!values.titleHolderName) errors.titleHolderName = req;
+//       if (!values.titleHolderRelationType) errors.titleHolderRelationType = req;
+//       if (!values.titleHolderRelativeName) errors.titleHolderRelativeName = req;
+//       if (!values.titleHolderResidenceType) errors.titleHolderResidenceType = req;
+//       if (!values.titleHolderDoorNumber) errors.titleHolderDoorNumber = req;
+//       if (!values.titleHolderStreetName) errors.titleHolderStreetName = req;
+//       if (!values.titleHolderCityName) errors.titleHolderCityName = req;
+//       if (!values.titleHolderMandalName) errors.titleHolderMandalName = req;
+//       if (!values.titleHolderDistrictName) errors.titleHolderDistrictName = req;
+
+//       if (!values.titleHolderPincode) errors.titleHolderPincode = req;
+//       else if (!/^\d{6}$/.test(values.titleHolderPincode))
+//         errors.titleHolderPincode = "Pincode must be exactly 6 digits";
+//       return errors;
+//     },
+
+//     onSubmit: async (values) => {
+//       console.log("Form Submitted:", values);
+//       setLoading(true);
+
+//       const token = getToken() || sessionStorage.getItem("token");
+//       const user_id = sessionStorage.getItem("user_id");
+//       const session_id = sessionStorage.getItem("sessionId");
+
+//       if (!token || !user_id) {
+//         alert("Authentication required. Please log in.");
+//         navigate("/login");
+//         setLoading(false);
+//         return;
+//       }
+
+//       try {
+//         // ✅ Save form data to backend
+//         const response = await fetch(TitleHolderDetails_api, {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: JSON.stringify({ session_id, user_id, ...values }),
+//         });
+
+//         if (!response.ok) throw new Error(`API Error: ${response.status}`);
+//         const data = await response.json();
+//         console.log("API response:", data);
+
+//         // ✅ Save current page (for session resume)
+//         await fetch(`http://localhost:3000/api/session/update-page/${session_id}`, {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: JSON.stringify({ current_page: "TitleHolderDetails" }),
+//         });
+
+//         // ✅ Save to sessionStorage including user_name
+//         const userName = data.user_name || values.titleHolderName;
+//         sessionStorage.setItem(
+//           "TitleHolderDetails",
+//           JSON.stringify({ ...values, user_name: userName })
+//         );
+
+//         // ✅ Go to next page
+//         if (onNext) onNext();
+//         else navigate(`/nextpage?sessionid=${session_id}`);
+//       } catch (error) {
+//         console.error("Error during API call:", error);
+//         alert("Failed to save data. Please try again.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     },
+//   });
+
+//   // -------------------- Prefill from backend --------------------
+//   useEffect(() => {
+//     const token = getToken() || sessionStorage.getItem("token");
+//     const session_id = sessionStorage.getItem("sessionId");
+
+//     if (!token || !session_id) return;
+
+//     (async () => {
+//       try {
+//         const res = await fetch(`${TitleHolderDetails_api}?session_id=${session_id}`, {
+//           headers: { Authorization: `Bearer ${token}` },
+//         });
+//         if (!res.ok) throw new Error(`API error: ${res.status}`);
+//         const data = await res.json();
+//         if (data) {
+//           const merged = { ...formik.values, ...data };
+//           formik.setValues(merged);
+//           sessionStorage.setItem("TitleHolderDetails", JSON.stringify(merged));
+//         }
+//       } catch (err) {
+//         console.error("Error fetching session data:", err);
+//       }
+//     })();
+//   }, []);
+
+//   // -------------------- Auto-save form data --------------------
+//   useEffect(() => {
+//     sessionStorage.setItem("TitleHolderDetails", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   // -------------------- Auto-resume from this page --------------------
+//   useEffect(() => {
+//     const currentPage = sessionStorage.getItem("current_page");
+//     const sessionId = sessionStorage.getItem("sessionId");
+
+//     // ✅ If backend says last page was TitleHolderDetails, stay here
+//     if (currentPage === "TitleHolderDetails" && sessionId) {
+//       console.log("Resuming from TitleHolderDetails");
+//       // Do nothing (stay on this page)
+//     }
+//   }, []);
+
+//   return (
+//     <div
+//       style={{
+//         display: "flex",
+//         justifyContent: "center",
+//         alignItems: "center",
+//         minHeight: "100vh",
+//         paddingBottom: "50px",
+//       }}
+//     >
+//       <div style={{ width: "100%", maxWidth: "800px", padding: "20px", overflowY: "auto" }}>
+//         <h3 className="text-center">Title Holder Details</h3>
+
+//         <Form onSubmit={formik.handleSubmit}>
+//           <div className="d-flex flex-column pt-3 pb-3">
+//             {[
+//               { label: "Name", name: "titleHolderName" },
+//               {
+//                 label: "Relation Type",
+//                 name: "titleHolderRelationType",
+//                 type: "select",
+//                 options: ["S/O", "W/O", "D/O", "C/O", "H/O"],
+//               },
+//               { label: "Relative Name", name: "titleHolderRelativeName" },
+//               {
+//                 label: "Residence Type",
+//                 name: "titleHolderResidenceType",
+//                 type: "select",
+//                 options: ["Flat", "House"],
+//               },
+//               { label: "Door Number", name: "titleHolderDoorNumber" },
+//               { label: "Street Name", name: "titleHolderStreetName" },
+//               { label: "City Name", name: "titleHolderCityName" },
+//               { label: "Mandal Name", name: "titleHolderMandalName" },
+//               { label: "District Name", name: "titleHolderDistrictName" },
+//               { label: "Pincode", name: "titleHolderPincode" },
+//             ].map((field) => (
+//               <div className="row align-items-center mb-3" key={field.name}>
+//                 <div className="col-12 col-md-6">
+//                   <Form.Label className="fs-3">{`Title Holder ${field.label}`}</Form.Label>
+//                 </div>
+//                 <div className="col-12 col-md-6">
+//                   {field.type === "select" ? (
+//                     <Form.Select
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{ height: "40px", fontSize: "20px" }}
+//                     >
+//                       <option value="">Select</option>
+//                       {field.options.map((opt) => (
+//                         <option key={opt} value={opt}>
+//                           {opt}
+//                         </option>
+//                       ))}
+//                     </Form.Select>
+//                   ) : (
+//                     <Form.Control
+//                       type="text"
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{ height: "40px", fontSize: "20px", borderColor: "#333" }}
+//                     />
+//                   )}
+//                   {formik.touched[field.name] && formik.errors[field.name] && (
+//                     <div className="text-danger fw-bold fs-5">
+//                       {formik.errors[field.name]}
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+
+//           <div className="text-center">
+//             <Button variant="secondary" className="mt-3 me-3" onClick={() => navigate(-1)}>
+//               Back
+//             </Button>
+//             <Button type="submit" variant="primary" className="mt-3" disabled={loading}>
+//               {loading ? "Loading..." : "Next"}
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TitleHolderDetails;
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { useSearchParams, useNavigate } from "react-router-dom";
+// import { useFormik } from "formik";
+// import Button from "react-bootstrap/esm/Button";
+// import Form from "react-bootstrap/Form";
+// import { TitleHolderDetails_api } from "../apiUrls";
+// import { getToken } from "../auth";
+
+// const TitleHolderDetails = ({ onNext }) => {
+//   const [loading, setLoading] = useState(false);
+//   const [searchParams] = useSearchParams();
+//   const navigate = useNavigate();
+
+//   const sessionId = searchParams.get("sessionid");
+
+//   useEffect(() => {
+//     if (sessionId) sessionStorage.setItem("sessionId", sessionId);
+//   }, [sessionId]);
+
+//   const formik = useFormik({
+//     initialValues:
+//       JSON.parse(sessionStorage.getItem("TitleHolderDetails")) || {
+//         titleHolderName: "",
+//         titleHolderRelationType: "",
+//         titleHolderRelativeName: "",
+//         titleHolderResidenceType: "",
+//         titleHolderDoorNumber: "",
+//         titleHolderStreetName: "",
+//         titleHolderCityName: "",
+//         titleHolderMandalName: "",
+//         titleHolderDistrictName: "",
+//         titleHolderPincode: "",
+//       },
+
+//     validate: (values) => {
+//       const errors = {};
+//       const req = "*required*";
+//       if (!values.titleHolderName) errors.titleHolderName = req;
+//       if (!values.titleHolderRelationType) errors.titleHolderRelationType = req;
+//       if (!values.titleHolderRelativeName) errors.titleHolderRelativeName = req;
+//       if (!values.titleHolderResidenceType) errors.titleHolderResidenceType = req;
+//       if (!values.titleHolderDoorNumber) errors.titleHolderDoorNumber = req;
+//       if (!values.titleHolderStreetName) errors.titleHolderStreetName = req;
+//       if (!values.titleHolderCityName) errors.titleHolderCityName = req;
+//       if (!values.titleHolderMandalName) errors.titleHolderMandalName = req;
+//       if (!values.titleHolderDistrictName) errors.titleHolderDistrictName = req;
+
+//       if (!values.titleHolderPincode) errors.titleHolderPincode = req;
+//       else if (!/^\d{6}$/.test(values.titleHolderPincode))
+//         errors.titleHolderPincode = "Pincode must be exactly 6 digits";
+//       return errors;
+//     },
+
+//     onSubmit: async (values) => {
+//       setLoading(true);
+
+//       const token = getToken() || sessionStorage.getItem("token");
+//       const user_id = sessionStorage.getItem("user_id");
+//       const session_id = sessionStorage.getItem("sessionId");
+
+//       if (!token || !user_id) {
+//         alert("Authentication required. Please log in.");
+//         navigate("/login");
+//         setLoading(false);
+//         return;
+//       }
+
+//       try {
+//         const loanProposerName = sessionStorage.getItem(`loanProposerName_${session_id}`);
+
+//         const payload = {
+//           ...values,
+//           session_id,
+//           user_id,
+//           name: loanProposerName || "Unnamed", // ✅ reuse main name
+//         };
+
+//         const response = await fetch(TitleHolderDetails_api, {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: JSON.stringify(payload),
+//         });
+
+//         if (!response.ok) throw new Error(`API Error: ${response.status}`);
+//         const data = await response.json();
+//         console.log("API response:", data);
+
+//         await fetch(`http://localhost:3000/api/session/update-page/${session_id}`, {
+//           method: "POST",
+//           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+//           body: JSON.stringify({ current_page: "TitleHolderDetails" }),
+//         });
+
+//         sessionStorage.setItem("TitleHolderDetails", JSON.stringify(values));
+
+//         if (onNext) onNext();
+//         else navigate(`/nextpage?sessionid=${session_id}`);
+//       } catch (error) {
+//         console.error("Error during API call:", error);
+//         alert("Failed to save data. Please try again.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     },
+//   });
+
+//   useEffect(() => {
+//     sessionStorage.setItem("TitleHolderDetails", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   return (
+//     <div
+//       style={{
+//         display: "flex",
+//         justifyContent: "center",
+//         alignItems: "center",
+//         minHeight: "100vh",
+//         paddingBottom: "50px",
+//       }}
+//     >
+//       <div style={{ width: "100%", maxWidth: "800px", padding: "20px", overflowY: "auto" }}>
+//         <h3 className="text-center">Title Holder Details</h3>
+
+//         <Form onSubmit={formik.handleSubmit}>
+//           <div className="d-flex flex-column pt-3 pb-3">
+//             {[
+//               { label: "Name", name: "titleHolderName" },
+//               { label: "Relation Type", name: "titleHolderRelationType", type: "select", options: ["S/O", "W/O", "D/O", "C/O", "H/O"] },
+//               { label: "Relative Name", name: "titleHolderRelativeName" },
+//               { label: "Residence Type", name: "titleHolderResidenceType", type: "select", options: ["Flat", "House"] },
+//               { label: "Door Number", name: "titleHolderDoorNumber" },
+//               { label: "Street Name", name: "titleHolderStreetName" },
+//               { label: "City Name", name: "titleHolderCityName" },
+//               { label: "Mandal Name", name: "titleHolderMandalName" },
+//               { label: "District Name", name: "titleHolderDistrictName" },
+//               { label: "Pincode", name: "titleHolderPincode" },
+//             ].map((field) => (
+//               <div className="row align-items-center mb-3" key={field.name}>
+//                 <div className="col-12 col-md-6">
+//                   <Form.Label className="fs-3">{`Title Holder ${field.label}`}</Form.Label>
+//                 </div>
+//                 <div className="col-12 col-md-6">
+//                   {field.type === "select" ? (
+//                     <Form.Select
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{ height: "40px", fontSize: "20px" }}
+//                     >
+//                       <option value="">Select</option>
+//                       {field.options.map((opt) => (
+//                         <option key={opt} value={opt}>
+//                           {opt}
+//                         </option>
+//                       ))}
+//                     </Form.Select>
+//                   ) : (
+//                     <Form.Control
+//                       type="text"
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{ height: "40px", fontSize: "20px", borderColor: "#333" }}
+//                     />
+//                   )}
+//                   {formik.touched[field.name] && formik.errors[field.name] && (
+//                     <div className="text-danger fw-bold fs-5">{formik.errors[field.name]}</div>
+//                   )}
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+
+//           <div className="text-center">
+//             <Button variant="secondary" className="mt-3 me-3" onClick={() => navigate(-1)}>
+//               Back
+//             </Button>
+//             <Button type="submit" variant="primary" className="mt-3" disabled={loading}>
+//               {loading ? "Loading..." : "Next"}
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TitleHolderDetails;
+
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { useSearchParams, useNavigate } from "react-router-dom";
+// import { useFormik } from "formik";
+// import Button from "react-bootstrap/esm/Button";
+// import Form from "react-bootstrap/Form";
+// import { TitleHolderDetails_api } from "../apiUrls";
+// import { getToken } from "../auth";
+
+// const TitleHolderDetails = ({ onNext }) => {
+//   const [loading, setLoading] = useState(false);
+//   const [searchParams] = useSearchParams();
+//   const navigate = useNavigate();
+
+//   // Get sessionId from URL
+//   const sessionIdFromUrl = searchParams.get("sessionid");
+
+//   // Save sessionId to sessionStorage
+//   useEffect(() => {
+//     if (sessionIdFromUrl) sessionStorage.setItem("sessionId", sessionIdFromUrl);
+//   }, [sessionIdFromUrl]);
+
+//   // Load loanProposerName (common name)
+//   const loanProposerName =
+//     sessionStorage.getItem("loanProposerName") || "Unnamed";
+
+//   const formik = useFormik({
+//     initialValues:
+//       JSON.parse(sessionStorage.getItem("TitleHolderDetails")) || {
+//         titleHolderName: "",
+//         titleHolderRelationType: "",
+//         titleHolderRelativeName: "",
+//         titleHolderResidenceType: "",
+//         titleHolderDoorNumber: "",
+//         titleHolderStreetName: "",
+//         titleHolderCityName: "",
+//         titleHolderMandalName: "",
+//         titleHolderDistrictName: "",
+//         titleHolderPincode: "",
+//       },
+
+//     validate: (values) => {
+//       const errors = {};
+//       const req = "*required*";
+//       if (!values.titleHolderName) errors.titleHolderName = req;
+//       if (!values.titleHolderRelationType)
+//         errors.titleHolderRelationType = req;
+//       if (!values.titleHolderRelativeName)
+//         errors.titleHolderRelativeName = req;
+//       if (!values.titleHolderResidenceType)
+//         errors.titleHolderResidenceType = req;
+//       if (!values.titleHolderDoorNumber) errors.titleHolderDoorNumber = req;
+//       if (!values.titleHolderStreetName) errors.titleHolderStreetName = req;
+//       if (!values.titleHolderCityName) errors.titleHolderCityName = req;
+//       if (!values.titleHolderMandalName) errors.titleHolderMandalName = req;
+//       if (!values.titleHolderDistrictName) errors.titleHolderDistrictName = req;
+
+//       if (!values.titleHolderPincode) errors.titleHolderPincode = req;
+//       else if (!/^\d{6}$/.test(values.titleHolderPincode))
+//         errors.titleHolderPincode = "Pincode must be exactly 6 digits";
+
+//       return errors;
+//     },
+
+//     onSubmit: async (values) => {
+//       console.log("Form Submitted:", values);
+//       setLoading(true);
+
+//       const token = getToken() || sessionStorage.getItem("token");
+//       const user_id = sessionStorage.getItem("user_id");
+//       const session_id = sessionStorage.getItem("sessionId");
+
+//       if (!token || !user_id) {
+//         alert("Authentication required. Please log in.");
+//         navigate("/login");
+//         setLoading(false);
+//         return;
+//       }
+
+//       try {
+//         // Include loanProposerName as the main name identifier
+//         const payload = {
+//           ...values,
+//           session_id,
+//           user_id,
+//           name: loanProposerName, // ✅ This links to main customer name
+//         };
+
+//         // Save form data to backend
+//         const response = await fetch(TitleHolderDetails_api, {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: JSON.stringify(payload),
+//         });
+
+//         if (!response.ok) throw new Error(`API Error: ${response.status}`);
+//         const data = await response.json();
+//         console.log("API response:", data);
+
+//         // Save current page for session resume
+//         await fetch(
+//           `http://localhost:3000/api/session/update-page/${session_id}`,
+//           {
+//             method: "POST",
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: `Bearer ${token}`,
+//             },
+//             body: JSON.stringify({ current_page: "TitleHolderDetails" }),
+//           }
+//         );
+
+//         // Save to sessionStorage
+//         sessionStorage.setItem(
+//           "TitleHolderDetails",
+//           JSON.stringify({ ...values, name: loanProposerName })
+//         );
+
+//         // Next page
+//         if (onNext) onNext();
+//         else navigate(`/nextpage?sessionid=${session_id}`);
+//       } catch (error) {
+//         console.error("Error during API call:", error);
+//         alert("Failed to save data. Please try again.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     },
+//   });
+
+//   // Prefill data from backend if available
+//   useEffect(() => {
+//     const token = getToken() || sessionStorage.getItem("token");
+//     const session_id = sessionStorage.getItem("sessionId");
+
+//     if (!token || !session_id) return;
+
+//     (async () => {
+//       try {
+//         const res = await fetch(
+//           `${TitleHolderDetails_api}?session_id=${session_id}`,
+//           { headers: { Authorization: `Bearer ${token}` } }
+//         );
+//         if (!res.ok) throw new Error(`API error: ${res.status}`);
+//         const data = await res.json();
+//         if (data) {
+//           const merged = { ...formik.values, ...data };
+//           formik.setValues(merged);
+//           sessionStorage.setItem(
+//             "TitleHolderDetails",
+//             JSON.stringify(merged)
+//           );
+//         }
+//       } catch (err) {
+//         console.error("Error fetching session data:", err);
+//       }
+//     })();
+//   }, []);
+
+//   // Auto-save to sessionStorage
+//   useEffect(() => {
+//     sessionStorage.setItem("TitleHolderDetails", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   return (
+//     <div
+//       style={{
+//         display: "flex",
+//         justifyContent: "center",
+//         alignItems: "center",
+//         minHeight: "100vh",
+//         paddingBottom: "50px",
+//       }}
+//     >
+//       <div
+//         style={{
+//           width: "100%",
+//           maxWidth: "800px",
+//           padding: "20px",
+//           overflowY: "auto",
+//         }}
+//       >
+//         <h3 className="text-center">Title Holder Details</h3>
+
+//         <Form onSubmit={formik.handleSubmit}>
+//           <div className="d-flex flex-column pt-3 pb-3">
+//             {[
+//               { label: "Name", name: "titleHolderName" },
+//               {
+//                 label: "Relation Type",
+//                 name: "titleHolderRelationType",
+//                 type: "select",
+//                 options: ["S/O", "W/O", "D/O", "C/O", "H/O"],
+//               },
+//               { label: "Relative Name", name: "titleHolderRelativeName" },
+//               {
+//                 label: "Residence Type",
+//                 name: "titleHolderResidenceType",
+//                 type: "select",
+//                 options: ["Flat", "House"],
+//               },
+//               { label: "Door Number", name: "titleHolderDoorNumber" },
+//               { label: "Street Name", name: "titleHolderStreetName" },
+//               { label: "City Name", name: "titleHolderCityName" },
+//               { label: "Mandal Name", name: "titleHolderMandalName" },
+//               { label: "District Name", name: "titleHolderDistrictName" },
+//               { label: "Pincode", name: "titleHolderPincode" },
+//             ].map((field) => (
+//               <div className="row align-items-center mb-3" key={field.name}>
+//                 <div className="col-12 col-md-6">
+//                   <Form.Label className="fs-3">
+//                     {`Title Holder ${field.label}`}
+//                   </Form.Label>
+//                 </div>
+//                 <div className="col-12 col-md-6">
+//                   {field.type === "select" ? (
+//                     <Form.Select
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{ height: "40px", fontSize: "20px" }}
+//                     >
+//                       <option value="">Select</option>
+//                       {field.options.map((opt) => (
+//                         <option key={opt} value={opt}>
+//                           {opt}
+//                         </option>
+//                       ))}
+//                     </Form.Select>
+//                   ) : (
+//                     <Form.Control
+//                       type="text"
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{
+//                         height: "40px",
+//                         fontSize: "20px",
+//                         borderColor: "#333",
+//                       }}
+//                     />
+//                   )}
+//                   {formik.touched[field.name] && formik.errors[field.name] && (
+//                     <div className="text-danger fw-bold fs-5">
+//                       {formik.errors[field.name]}
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+
+//           <div className="text-center">
+//             <Button
+//               variant="secondary"
+//               className="mt-3 me-3"
+//               onClick={() => navigate(-1)}
+//             >
+//               Back
+//             </Button>
+//             <Button
+//               type="submit"
+//               variant="primary"
+//               className="mt-3"
+//               disabled={loading}
+//             >
+//               {loading ? "Loading..." : "Next"}
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TitleHolderDetails;
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { useSearchParams, useNavigate } from "react-router-dom";
+// import { useFormik } from "formik";
+// import Button from "react-bootstrap/esm/Button";
+// import Form from "react-bootstrap/Form";
+// import { TitleHolderDetails_api } from "../apiUrls";
+// import { getToken } from "../auth"; // Optional helper if you have it
+
+// const TitleHolderDetails = ({ onNext }) => {
+//   const [loading, setLoading] = useState(false);
+//   const [searchParams] = useSearchParams();
+//   const navigate = useNavigate();
+
+//   // Get sessionId from URL
+//   const sessionIdFromUrl = searchParams.get("sessionid");
+
+//   // Save sessionId into sessionStorage
+//   useEffect(() => {
+//     if (sessionIdFromUrl) sessionStorage.setItem("sessionId", sessionIdFromUrl);
+//   }, [sessionIdFromUrl]);
+
+//   const formik = useFormik({
+//     initialValues:
+//       JSON.parse(sessionStorage.getItem("TitleHolderDetails")) || {
+//         titleHolderName: "",
+//         titleHolderRelationType: "",
+//         titleHolderRelativeName: "",
+//         titleHolderResidenceType: "",
+//         titleHolderDoorNumber: "",
+//         titleHolderStreetName: "",
+//         titleHolderCityName: "",
+//         titleHolderMandalName: "",
+//         titleHolderDistrictName: "",
+//         titleHolderPincode: "",
+//       },
+
+//     validate: (values) => {
+//       const errors = {};
+//       const req = "*required*";
+//       if (!values.titleHolderName) errors.titleHolderName = req;
+//       if (!values.titleHolderRelationType) errors.titleHolderRelationType = req;
+//       if (!values.titleHolderRelativeName) errors.titleHolderRelativeName = req;
+//       if (!values.titleHolderResidenceType) errors.titleHolderResidenceType = req;
+//       if (!values.titleHolderDoorNumber) errors.titleHolderDoorNumber = req;
+//       if (!values.titleHolderStreetName) errors.titleHolderStreetName = req;
+//       if (!values.titleHolderCityName) errors.titleHolderCityName = req;
+//       if (!values.titleHolderMandalName) errors.titleHolderMandalName = req;
+//       if (!values.titleHolderDistrictName) errors.titleHolderDistrictName = req;
+//       if (!values.titleHolderPincode) errors.titleHolderPincode = req;
+//       return errors;
+//     },
+
+//     onSubmit: async (values) => {
+//       console.log("Form Submitted:", values);
+//       setLoading(true);
+
+//       const token = getToken() || sessionStorage.getItem("token");
+//       const user_id = sessionStorage.getItem("user_id");
+//       const session_id = sessionStorage.getItem("sessionId");
+
+//       if (!token || !user_id) {
+//         alert("Authentication required. Please log in.");
+//         navigate("/login");
+//         setLoading(false);
+//         return;
+//       }
+
+//       try {
+//         // ✅ Get Loan Proposer Name from sessionStorage to maintain same name across pages
+//         const loanProposerData = JSON.parse(sessionStorage.getItem("LoanProposerDetails"));
+//         const loanProposerName = loanProposerData?.loanProposerName || "";
+
+//         const response = await fetch(TitleHolderDetails_api, {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: JSON.stringify({
+//             session_id,
+//             user_id,
+//             loanProposerName, // ✅ Include proposer name in payload
+//             ...values,
+//           }),
+//         });
+
+//         console.log("Status:", response.status);
+
+//         if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+//         const data = await response.json();
+//         console.log("API response:", data);
+
+//         // Save form data to sessionStorage
+//         sessionStorage.setItem("TitleHolderDetails", JSON.stringify(values));
+
+//         // Navigate to next page
+//         if (onNext) onNext();
+//         else navigate(`/nextpage?sessionid=${session_id}`);
+//       } catch (error) {
+//         console.error("Error during API call:", error);
+//         alert("Failed to save data. Please try again.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     },
+//   });
+
+//   // -------------------- Prefill from backend only if sessionStorage is empty --------------------
+//   useEffect(() => {
+//     const token = getToken() || sessionStorage.getItem("token");
+//     const session_id = sessionStorage.getItem("sessionId");
+//     const savedData = JSON.parse(sessionStorage.getItem("TitleHolderDetails"));
+
+//     if (!token || !session_id || savedData) return; // skip fetch if already saved
+
+//     (async () => {
+//       try {
+//         const res = await fetch(`${TitleHolderDetails_api}?session_id=${session_id}`, {
+//           headers: { Authorization: `Bearer ${token}` },
+//         });
+//         if (!res.ok) throw new Error(`API error: ${res.status}`);
+//         const data = await res.json();
+//         if (data) formik.setValues({ ...formik.values, ...data });
+//       } catch (err) {
+//         console.error("Error fetching session data:", err);
+//       }
+//     })();
+//   }, []);
+
+//   // -------------------- Auto-save form data to sessionStorage --------------------
+//   useEffect(() => {
+//     sessionStorage.setItem("TitleHolderDetails", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   return (
+//     <div
+//       style={{
+//         display: "flex",
+//         justifyContent: "center",
+//         alignItems: "center",
+//         minHeight: "100vh",
+//         paddingBottom: "50px",
+//       }}
+//     >
+//       <div style={{ width: "100%", maxWidth: "800px", padding: "20px", overflowY: "auto" }}>
+//         <h3 className="text-center">Title Holder Details</h3>
+
+//         <Form onSubmit={formik.handleSubmit}>
+//           <div className="d-flex flex-column pt-3 pb-3">
+//             {[
+//               { label: "Name", name: "titleHolderName" },
+//               { label: "Relation Type", name: "titleHolderRelationType", type: "select", options: ["S/O", "W/O", "D/O", "C/O", "H/O"] },
+//               { label: "Relative Name", name: "titleHolderRelativeName" },
+//               { label: "Residence Type", name: "titleHolderResidenceType", type: "select", options: ["Flat", "House"] },
+//               { label: "Door Number", name: "titleHolderDoorNumber" },
+//               { label: "Street Name", name: "titleHolderStreetName" },
+//               { label: "City Name", name: "titleHolderCityName" },
+//               { label: "Mandal Name", name: "titleHolderMandalName" },
+//               { label: "District Name", name: "titleHolderDistrictName" },
+//               { label: "Pincode", name: "titleHolderPincode" },
+//             ].map((field) => (
+//               <div className="row align-items-center mb-3" key={field.name}>
+//                 <div className="col-12 col-md-6">
+//                   <Form.Label className="fs-3">{`Title Holder ${field.label}`}</Form.Label>
+//                 </div>
+//                 <div className="col-12 col-md-6">
+//                   {field.type === "select" ? (
+//                     <Form.Select
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{ height: "40px", fontSize: "20px" }}
+//                     >
+//                       <option value="">Select</option>
+//                       {field.options.map((opt) => (
+//                         <option key={opt} value={opt}>
+//                           {opt}
+//                         </option>
+//                       ))}
+//                     </Form.Select>
+//                   ) : (
+//                     <Form.Control
+//                       type="text"
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{ height: "40px", fontSize: "20px", borderColor: "#333" }}
+//                     />
+//                   )}
+//                   {formik.touched[field.name] && formik.errors[field.name] && (
+//                     <div className="text-danger fw-bold fs-5">{formik.errors[field.name]}</div>
+//                   )}
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+
+//           <div className="text-center">
+//             <Button variant="secondary" className="mt-3 me-3" onClick={() => navigate(-1)}>
+//               Back
+//             </Button>
+//             <Button type="submit" variant="primary" className="mt-3" disabled={loading}>
+//               {loading ? "Loading..." : "Next"}
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TitleHolderDetails;
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { useSearchParams, useNavigate } from "react-router-dom";
+// import { useFormik } from "formik";
+// import Button from "react-bootstrap/esm/Button";
+// import Form from "react-bootstrap/Form";
+// import { TitleHolderDetails_api } from "../apiUrls";
+// import { getToken } from "../auth";
+
+// const TitleHolderDetails = ({ onNext }) => {
+//   const [loading, setLoading] = useState(false);
+//   const [searchParams] = useSearchParams();
+//   const navigate = useNavigate();
+
+//   // ✅ Read both "sessionId" and "sessionid" (case-safe)
+//   const sessionIdFromUrl = searchParams.get("sessionId") || searchParams.get("sessionid");
+
+//   // Save sessionId into sessionStorage
+//   useEffect(() => {
+//     if (sessionIdFromUrl) sessionStorage.setItem("sessionId", sessionIdFromUrl);
+//   }, [sessionIdFromUrl]);
+
+//   const formik = useFormik({
+//     initialValues:
+//       JSON.parse(sessionStorage.getItem("TitleHolderDetails")) || {
+//         titleHolderName: "",
+//         titleHolderRelationType: "",
+//         titleHolderRelativeName: "",
+//         titleHolderResidenceType: "",
+//         titleHolderDoorNumber: "",
+//         titleHolderStreetName: "",
+//         titleHolderCityName: "",
+//         titleHolderMandalName: "",
+//         titleHolderDistrictName: "",
+//         titleHolderPincode: "",
+//       },
+
+//     validate: (values) => {
+//       const errors = {};
+//       const req = "*required*";
+//       if (!values.titleHolderName) errors.titleHolderName = req;
+//       if (!values.titleHolderRelationType) errors.titleHolderRelationType = req;
+//       if (!values.titleHolderRelativeName) errors.titleHolderRelativeName = req;
+//       if (!values.titleHolderResidenceType) errors.titleHolderResidenceType = req;
+//       if (!values.titleHolderDoorNumber) errors.titleHolderDoorNumber = req;
+//       if (!values.titleHolderStreetName) errors.titleHolderStreetName = req;
+//       if (!values.titleHolderCityName) errors.titleHolderCityName = req;
+//       if (!values.titleHolderMandalName) errors.titleHolderMandalName = req;
+//       if (!values.titleHolderDistrictName) errors.titleHolderDistrictName = req;
+//       if (!values.titleHolderPincode) errors.titleHolderPincode = req;
+//       return errors;
+//     },
+
+//     onSubmit: async (values) => {
+//       console.log("Form Submitted:", values);
+//       setLoading(true);
+
+//       const token = getToken() || sessionStorage.getItem("token");
+//       const user_id = sessionStorage.getItem("user_id");
+//       const session_id = sessionStorage.getItem("sessionId");
+
+//       if (!token || !user_id) {
+//         alert("Authentication required. Please log in.");
+//         navigate("/login");
+//         setLoading(false);
+//         return;
+//       }
+
+//       try {
+//         // ✅ Get Loan Proposer Name to keep same across all pages
+//         const loanProposerData = JSON.parse(sessionStorage.getItem("LoanProposerDetails"));
+//         const loanProposerName = loanProposerData?.loanProposerName || "";
+
+//         const response = await fetch(TitleHolderDetails_api, {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: JSON.stringify({
+//             session_id,
+//             user_id,
+//             loanProposerName,
+//             current_page: "TitleHolderDetails", // ✅ added for resume tracking
+//             ...values,
+//           }),
+//         });
+
+//         console.log("Status:", response.status);
+
+//         if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+//         const data = await response.json();
+//         console.log("API response:", data);
+
+//         // Save form data locally
+//         sessionStorage.setItem("TitleHolderDetails", JSON.stringify(values));
+
+//         // ✅ Navigate to next page
+//         if (onNext) onNext();
+//         else navigate(`/nextpage?sessionId=${session_id}`);
+//       } catch (error) {
+//         console.error("Error during API call:", error);
+//         alert("Failed to save data. Please try again.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     },
+//   });
+
+//   // Prefill from backend only if no local data
+//   useEffect(() => {
+//     const token = getToken() || sessionStorage.getItem("token");
+//     const session_id = sessionStorage.getItem("sessionId");
+//     const savedData = JSON.parse(sessionStorage.getItem("TitleHolderDetails"));
+
+//     if (!token || !session_id || savedData) return;
+
+//     (async () => {
+//       try {
+//         const res = await fetch(`${TitleHolderDetails_api}?session_id=${session_id}`, {
+//           headers: { Authorization: `Bearer ${token}` },
+//         });
+//         if (!res.ok) throw new Error(`API error: ${res.status}`);
+//         const data = await res.json();
+//         if (data) formik.setValues({ ...formik.values, ...data });
+//       } catch (err) {
+//         console.error("Error fetching session data:", err);
+//       }
+//     })();
+//   }, []);
+
+//   // Auto-save form data
+//   useEffect(() => {
+//     sessionStorage.setItem("TitleHolderDetails", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   return (
+//     <div
+//       style={{
+//         display: "flex",
+//         justifyContent: "center",
+//         alignItems: "center",
+//         minHeight: "100vh",
+//         paddingBottom: "50px",
+//       }}
+//     >
+//       <div style={{ width: "100%", maxWidth: "800px", padding: "20px", overflowY: "auto" }}>
+//         <h3 className="text-center">Title Holder Details</h3>
+
+//         <Form onSubmit={formik.handleSubmit}>
+//           <div className="d-flex flex-column pt-3 pb-3">
+//             {[
+//               { label: "Name", name: "titleHolderName" },
+//               { label: "Relation Type", name: "titleHolderRelationType", type: "select", options: ["S/O", "W/O", "D/O", "C/O", "H/O"] },
+//               { label: "Relative Name", name: "titleHolderRelativeName" },
+//               { label: "Residence Type", name: "titleHolderResidenceType", type: "select", options: ["Flat", "House"] },
+//               { label: "Door Number", name: "titleHolderDoorNumber" },
+//               { label: "Street Name", name: "titleHolderStreetName" },
+//               { label: "City Name", name: "titleHolderCityName" },
+//               { label: "Mandal Name", name: "titleHolderMandalName" },
+//               { label: "District Name", name: "titleHolderDistrictName" },
+//               { label: "Pincode", name: "titleHolderPincode" },
+//             ].map((field) => (
+//               <div className="row align-items-center mb-3" key={field.name}>
+//                 <div className="col-12 col-md-6">
+//                   <Form.Label className="fs-3">{`Title Holder ${field.label}`}</Form.Label>
+//                 </div>
+//                 <div className="col-12 col-md-6">
+//                   {field.type === "select" ? (
+//                     <Form.Select
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{ height: "40px", fontSize: "20px" }}
+//                     >
+//                       <option value="">Select</option>
+//                       {field.options.map((opt) => (
+//                         <option key={opt} value={opt}>
+//                           {opt}
+//                         </option>
+//                       ))}
+//                     </Form.Select>
+//                   ) : (
+//                     <Form.Control
+//                       type="text"
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{ height: "40px", fontSize: "20px", borderColor: "#333" }}
+//                     />
+//                   )}
+//                   {formik.touched[field.name] && formik.errors[field.name] && (
+//                     <div className="text-danger fw-bold fs-5">{formik.errors[field.name]}</div>
+//                   )}
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+
+//           <div className="text-center">
+//             <Button variant="secondary" className="mt-3 me-3" onClick={() => navigate(-1)}>
+//               Back
+//             </Button>
+//             <Button type="submit" variant="primary" className="mt-3" disabled={loading}>
+//               {loading ? "Loading..." : "Next"}
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TitleHolderDetails;
+
+
+// import React, { useState, useEffect } from "react";
+// import { useSearchParams, useNavigate } from "react-router-dom";
+// import { useFormik } from "formik";
+// import Button from "react-bootstrap/esm/Button";
+// import Form from "react-bootstrap/Form";
+// import { TitleHolderDetails_api } from "../apiUrls";
+// import { getToken } from "../auth";
+
+// const TitleHolderDetails = ({ onNext }) => {
+//   const [loading, setLoading] = useState(false);
+//   const [searchParams] = useSearchParams();
+//   const navigate = useNavigate();
+
+//   // ✅ Read session ID safely
+//   const sessionIdFromUrl = searchParams.get("sessionId") || searchParams.get("sessionid");
+
+//   // ✅ Store sessionId to sessionStorage (for resume)
+//   useEffect(() => {
+//     if (sessionIdFromUrl) sessionStorage.setItem("sessionId", sessionIdFromUrl);
+//   }, [sessionIdFromUrl]);
+
+//   // ✅ Get user and token
+//   const token = getToken() || sessionStorage.getItem("token");
+//   const user_id = sessionStorage.getItem("user_id");
+
+//   // ✅ Get loan proposer name from sessionStorage (from first page)
+//   const getLoanProposerName = () => {
+//     const proposerData =
+//       JSON.parse(sessionStorage.getItem("LoanProposerDetails")) ||
+//       JSON.parse(sessionStorage.getItem("loanProposerData"));
+//     return proposerData?.loanProposerName || sessionStorage.getItem("loanProposerName") || "Unnamed";
+//   };
+
+//   const formik = useFormik({
+//     initialValues:
+//       JSON.parse(sessionStorage.getItem("TitleHolderDetails")) || {
+//         titleHolderName: "",
+//         titleHolderRelationType: "",
+//         titleHolderRelativeName: "",
+//         titleHolderResidenceType: "",
+//         titleHolderDoorNumber: "",
+//         titleHolderStreetName: "",
+//         titleHolderCityName: "",
+//         titleHolderMandalName: "",
+//         titleHolderDistrictName: "",
+//         titleHolderPincode: "",
+//       },
+
+//     validate: (values) => {
+//       const errors = {};
+//       const req = "*required*";
+//       if (!values.titleHolderName) errors.titleHolderName = req;
+//       if (!values.titleHolderRelationType) errors.titleHolderRelationType = req;
+//       if (!values.titleHolderRelativeName) errors.titleHolderRelativeName = req;
+//       if (!values.titleHolderResidenceType) errors.titleHolderResidenceType = req;
+//       if (!values.titleHolderDoorNumber) errors.titleHolderDoorNumber = req;
+//       if (!values.titleHolderStreetName) errors.titleHolderStreetName = req;
+//       if (!values.titleHolderCityName) errors.titleHolderCityName = req;
+//       if (!values.titleHolderMandalName) errors.titleHolderMandalName = req;
+//       if (!values.titleHolderDistrictName) errors.titleHolderDistrictName = req;
+//       if (!values.titleHolderPincode) errors.titleHolderPincode = req;
+//       return errors;
+//     },
+
+//     onSubmit: async (values) => {
+//       console.log("Form Submitted:", values);
+//       setLoading(true);
+
+//       const session_id = sessionStorage.getItem("sessionId");
+//       const loanProposerName = getLoanProposerName(); // ✅ consistent name across all pages
+
+//       if (!token || !user_id) {
+//         alert("Authentication required. Please log in.");
+//         navigate("/login");
+//         setLoading(false);
+//         return;
+//       }
+
+//       try {
+//         const response = await fetch(TitleHolderDetails_api, {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: JSON.stringify({
+//             session_id,
+//             user_id,
+//             loanProposerName, // ✅ Send name in every page
+//             current_page: "TitleHolderDetails",
+//             ...values,
+//           }),
+//         });
+
+//         console.log("Status:", response.status);
+//         if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+//         const data = await response.json();
+//         console.log("API response:", data);
+
+//         // Save locally
+//         sessionStorage.setItem("TitleHolderDetails", JSON.stringify(values));
+//         sessionStorage.setItem("loanProposerName", loanProposerName); // ✅ Save name safely
+
+//         // ✅ Go to next page
+//         if (onNext) onNext();
+//         else navigate(`/nextpage?sessionId=${session_id}`);
+//       } catch (error) {
+//         console.error("Error during API call:", error);
+//         alert("Failed to save data. Please try again.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     },
+//   });
+
+//   // ✅ Prefill backend data if needed
+//   useEffect(() => {
+//     const savedData = JSON.parse(sessionStorage.getItem("TitleHolderDetails"));
+//     const session_id = sessionStorage.getItem("sessionId");
+//     if (savedData || !token || !session_id) return;
+
+//     (async () => {
+//       try {
+//         const res = await fetch(`${TitleHolderDetails_api}?session_id=${session_id}`, {
+//           headers: { Authorization: `Bearer ${token}` },
+//         });
+//         if (!res.ok) throw new Error(`API error: ${res.status}`);
+//         const data = await res.json();
+//         if (data) formik.setValues({ ...formik.values, ...data });
+//       } catch (err) {
+//         console.error("Error fetching session data:", err);
+//       }
+//     })();
+//   }, []);
+
+//   // ✅ Auto-save to sessionStorage
+//   useEffect(() => {
+//     sessionStorage.setItem("TitleHolderDetails", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   return (
+//     <div
+//       style={{
+//         display: "flex",
+//         justifyContent: "center",
+//         alignItems: "center",
+//         minHeight: "100vh",
+//         paddingBottom: "50px",
+//       }}
+//     >
+//       <div style={{ width: "100%", maxWidth: "800px", padding: "20px", overflowY: "auto" }}>
+//         <h3 className="text-center">Title Holder Details</h3>
+
+//         <Form onSubmit={formik.handleSubmit}>
+//           <div className="d-flex flex-column pt-3 pb-3">
+//             {[
+//               { label: "Name", name: "titleHolderName" },
+//               { label: "Relation Type", name: "titleHolderRelationType", type: "select", options: ["S/O", "W/O", "D/O", "C/O", "H/O"] },
+//               { label: "Relative Name", name: "titleHolderRelativeName" },
+//               { label: "Residence Type", name: "titleHolderResidenceType", type: "select", options: ["Flat", "House"] },
+//               { label: "Door Number", name: "titleHolderDoorNumber" },
+//               { label: "Street Name", name: "titleHolderStreetName" },
+//               { label: "City Name", name: "titleHolderCityName" },
+//               { label: "Mandal Name", name: "titleHolderMandalName" },
+//               { label: "District Name", name: "titleHolderDistrictName" },
+//               { label: "Pincode", name: "titleHolderPincode" },
+//             ].map((field) => (
+//               <div className="row align-items-center mb-3" key={field.name}>
+//                 <div className="col-12 col-md-6">
+//                   <Form.Label className="fs-3">{`Title Holder ${field.label}`}</Form.Label>
+//                 </div>
+//                 <div className="col-12 col-md-6">
+//                   {field.type === "select" ? (
+//                     <Form.Select
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{ height: "40px", fontSize: "20px" }}
+//                     >
+//                       <option value="">Select</option>
+//                       {field.options.map((opt) => (
+//                         <option key={opt} value={opt}>
+//                           {opt}
+//                         </option>
+//                       ))}
+//                     </Form.Select>
+//                   ) : (
+//                     <Form.Control
+//                       type="text"
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{ height: "40px", fontSize: "20px", borderColor: "#333" }}
+//                     />
+//                   )}
+//                   {formik.touched[field.name] && formik.errors[field.name] && (
+//                     <div className="text-danger fw-bold fs-5">{formik.errors[field.name]}</div>
+//                   )}
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+
+//           <div className="text-center">
+//             <Button variant="secondary" className="mt-3 me-3" onClick={() => navigate(-1)}>
+//               Back
+//             </Button>
+//             <Button type="submit" variant="primary" className="mt-3" disabled={loading}>
+//               {loading ? "Loading..." : "Next"}
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TitleHolderDetails;
+
+
+// import React, { useState, useEffect } from "react";
+// import { useSearchParams, useNavigate } from "react-router-dom";
+// import { useFormik } from "formik";
+// import Button from "react-bootstrap/esm/Button";
+// import Form from "react-bootstrap/Form";
+// import { TitleHolderDetails_api } from "../apiUrls";
+// import { getToken } from "../auth";
+
+// const TitleHolderDetails = ({ onNext }) => {
+//   const [loading, setLoading] = useState(false);
+//   const [searchParams] = useSearchParams();
+//   const navigate = useNavigate();
+
+//   // ✅ Read session ID safely
+//   const sessionIdFromUrl =
+//     searchParams.get("sessionId") || searchParams.get("sessionid");
+
+//   // ✅ Store sessionId in sessionStorage (for resume)
+//   useEffect(() => {
+//     if (sessionIdFromUrl) sessionStorage.setItem("sessionId", sessionIdFromUrl);
+//   }, [sessionIdFromUrl]);
+
+//   // ✅ Token & User
+//   const token = getToken() || sessionStorage.getItem("token");
+//   const user_id = sessionStorage.getItem("user_id");
+
+//   // ✅ Fetch consistent loan proposer name
+//   const getLoanProposerName = () => {
+//     const proposerData =
+//       JSON.parse(sessionStorage.getItem("LoanProposerDetails")) ||
+//       JSON.parse(sessionStorage.getItem("loanProposerData"));
+//     return (
+//       proposerData?.loanProposerName ||
+//       sessionStorage.getItem("loanProposerName") ||
+//       "Unnamed"
+//     );
+//   };
+
+//   const formik = useFormik({
+//     initialValues:
+//       JSON.parse(sessionStorage.getItem("TitleHolderDetails")) || {
+//         titleHolderName: "",
+//         titleHolderRelationType: "",
+//         titleHolderRelativeName: "",
+//         titleHolderResidenceType: "",
+//         titleHolderDoorNumber: "",
+//         titleHolderStreetName: "",
+//         titleHolderCityName: "",
+//         titleHolderMandalName: "",
+//         titleHolderDistrictName: "",
+//         titleHolderPincode: "",
+//       },
+
+//     validate: (values) => {
+//       const errors = {};
+//       const req = "*required*";
+//       Object.entries(values).forEach(([key, val]) => {
+//         if (!val) errors[key] = req;
+//       });
+//       return errors;
+//     },
+
+//     onSubmit: async (values) => {
+//       setLoading(true);
+//       const session_id = sessionStorage.getItem("sessionId");
+//       const loanProposerName = getLoanProposerName();
+
+//       if (!token || !user_id) {
+//         alert("Authentication required. Please log in.");
+//         navigate("/login");
+//         setLoading(false);
+//         return;
+//       }
+
+//       try {
+//         const payload = {
+//           session_id,
+//           user_id,
+//           loanProposerName, // consistent name
+//           current_page: "TitleHolderDetails",
+//           titleHolderDetails: { ...values }, // ✅ send inside an object for backend clarity
+//         };
+
+//         console.log("📤 Sending payload:", payload);
+
+//         const response = await fetch(TitleHolderDetails_api, {
+//           method: "POST",
+//           headers: {
+//             "Content-Type": "application/json",
+//             Authorization: `Bearer ${token}`,
+//           },
+//           body: JSON.stringify(payload),
+//         });
+
+//         console.log("Status:", response.status);
+//         if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+//         const data = await response.json();
+//         console.log("✅ API response:", data);
+
+//         // Save locally
+//         sessionStorage.setItem("TitleHolderDetails", JSON.stringify(values));
+//         sessionStorage.setItem("loanProposerName", loanProposerName);
+
+//         // ✅ Redirect to next page
+//         if (onNext) onNext();
+//         else navigate(`/CreateDocument/MostRecentDocuments?sessionId=${session_id}`);
+//       } catch (error) {
+//         console.error("❌ Error during API call:", error);
+//         alert("Failed to save data. Please try again.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     },
+//   });
+
+//   // ✅ Prefill data (only if not present locally)
+//   useEffect(() => {
+//     const saved = JSON.parse(sessionStorage.getItem("TitleHolderDetails"));
+//     const session_id = sessionStorage.getItem("sessionId");
+//     if (saved || !token || !session_id) return;
+
+//     (async () => {
+//       try {
+//         const res = await fetch(`${TitleHolderDetails_api}?session_id=${session_id}`, {
+//           headers: { Authorization: `Bearer ${token}` },
+//         });
+//         if (!res.ok) throw new Error(`API error: ${res.status}`);
+//         const data = await res.json();
+//         if (data) formik.setValues({ ...formik.values, ...data });
+//       } catch (err) {
+//         console.error("Error fetching session data:", err);
+//       }
+//     })();
+//   }, []);
+
+//   // ✅ Auto-save to sessionStorage
+//   useEffect(() => {
+//     sessionStorage.setItem("TitleHolderDetails", JSON.stringify(formik.values));
+//   }, [formik.values]);
+
+//   return (
+//     <div
+//       style={{
+//         display: "flex",
+//         justifyContent: "center",
+//         alignItems: "center",
+//         minHeight: "100vh",
+//         paddingBottom: "50px",
+//       }}
+//     >
+//       <div style={{ width: "100%", maxWidth: "800px", padding: "20px", overflowY: "auto" }}>
+//         <h3 className="text-center">Title Holder Details</h3>
+
+//         <Form onSubmit={formik.handleSubmit}>
+//           <div className="d-flex flex-column pt-3 pb-3">
+//             {[
+//               { label: "Name", name: "titleHolderName" },
+//               {
+//                 label: "Relation Type",
+//                 name: "titleHolderRelationType",
+//                 type: "select",
+//                 options: ["S/O", "W/O", "D/O", "C/O", "H/O"],
+//               },
+//               { label: "Relative Name", name: "titleHolderRelativeName" },
+//               {
+//                 label: "Residence Type",
+//                 name: "titleHolderResidenceType",
+//                 type: "select",
+//                 options: ["Flat", "House"],
+//               },
+//               { label: "Door Number", name: "titleHolderDoorNumber" },
+//               { label: "Street Name", name: "titleHolderStreetName" },
+//               { label: "City Name", name: "titleHolderCityName" },
+//               { label: "Mandal Name", name: "titleHolderMandalName" },
+//               { label: "District Name", name: "titleHolderDistrictName" },
+//               { label: "Pincode", name: "titleHolderPincode" },
+//             ].map((field) => (
+//               <div className="row align-items-center mb-3" key={field.name}>
+//                 <div className="col-12 col-md-6">
+//                   <Form.Label className="fs-3">{`Title Holder ${field.label}`}</Form.Label>
+//                 </div>
+//                 <div className="col-12 col-md-6">
+//                   {field.type === "select" ? (
+//                     <Form.Select
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{ height: "40px", fontSize: "20px" }}
+//                     >
+//                       <option value="">Select</option>
+//                       {field.options.map((opt) => (
+//                         <option key={opt} value={opt}>
+//                           {opt}
+//                         </option>
+//                       ))}
+//                     </Form.Select>
+//                   ) : (
+//                     <Form.Control
+//                       type="text"
+//                       name={field.name}
+//                       value={formik.values[field.name]}
+//                       onChange={formik.handleChange}
+//                       onBlur={formik.handleBlur}
+//                       style={{ height: "40px", fontSize: "20px", borderColor: "#333" }}
+//                     />
+//                   )}
+//                   {formik.touched[field.name] && formik.errors[field.name] && (
+//                     <div className="text-danger fw-bold fs-5">
+//                       {formik.errors[field.name]}
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+
+//           <div className="text-center">
+//             <Button
+//               variant="secondary"
+//               className="mt-3 me-3"
+//               onClick={() => navigate(-1)}
+//             >
+//               Back
+//             </Button>
+//             <Button
+//               type="submit"
+//               variant="primary"
+//               className="mt-3"
+//               disabled={loading}
+//             >
+//               {loading ? "Loading..." : "Next"}
+//             </Button>
+//           </div>
+//         </Form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default TitleHolderDetails;
+
+
+import React, { useState, useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { useFormik } from "formik";
+import Button from "react-bootstrap/esm/Button";
+import Form from "react-bootstrap/Form";
+import { TitleHolderDetails_api } from "../apiUrls";
+import { getToken } from "../auth";
+
+const TitleHolderDetails = ({ onNext }) => {
+  const [loading, setLoading] = useState(false);
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const sessionIdFromUrl =
+    searchParams.get("sessionId") || searchParams.get("sessionid");
+
+  useEffect(() => {
+    if (sessionIdFromUrl) sessionStorage.setItem("sessionId", sessionIdFromUrl);
+  }, [sessionIdFromUrl]);
+
+  const token = getToken() || sessionStorage.getItem("token");
+  const user_id = sessionStorage.getItem("user_id");
+
+  const getLoanProposerName = () => {
+    const proposerData =
+      JSON.parse(sessionStorage.getItem("LoanProposerDetails")) ||
+      JSON.parse(sessionStorage.getItem("loanProposerData"));
+    return (
+      proposerData?.loanProposerName ||
+      sessionStorage.getItem("loanProposerName") ||
+      "Unnamed"
+    );
+  };
+
+  const formik = useFormik({
+    initialValues:
+      JSON.parse(sessionStorage.getItem("TitleHolderDetails")) || {
+        titleHolderName: "",
+        titleHolderRelationType: "",
+        titleHolderRelativeName: "",
+        titleHolderResidenceType: "",
+        titleHolderDoorNumber: "",
+        titleHolderStreetName: "",
+        titleHolderCityName: "",
+        titleHolderMandalName: "",
+        titleHolderDistrictName: "",
+        titleHolderPincode: "",
+      },
+
+    validate: (values) => {
+      const errors = {};
+      const req = "*required*";
+      Object.entries(values).forEach(([key, val]) => {
+        if (!val) errors[key] = req;
+      });
+      return errors;
+    },
+
+    onSubmit: async (values) => {
+      setLoading(true);
+
+      const session_id =
+        sessionStorage.getItem("sessionId") || sessionIdFromUrl;
+      const loanProposerName = getLoanProposerName();
+
+      if (!token || !user_id) {
+        alert("Authentication required. Please log in.");
+        navigate("/login");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const payload = {
+          session_id,
+          user_id,
+          loanProposerName,
+          current_page: "TitleHolderDetails",
+          titleHolderDetails: { ...values },
+        };
+
+        console.log("📤 Sending payload:", payload);
+
+        const response = await fetch(TitleHolderDetails_api, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(payload),
+        });
+
+        console.log("Status:", response.status);
+
+        if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+        const data = await response.json();
+        console.log("✅ API response:", data);
+
+        sessionStorage.setItem("TitleHolderDetails", JSON.stringify(values));
+        sessionStorage.setItem("loanProposerName", loanProposerName);
+
+        console.log("➡️ Redirecting to next page...");
+        const redirectUrl = `/CreateDocument/MostRecentDocuments?sessionId=${session_id}`;
+
+        if (onNext) {
+          onNext();
+        } else {
+          navigate(redirectUrl);
+        }
+      } catch (error) {
+        console.error("❌ Error during API call:", error);
+        alert("Failed to save data. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    },
+  });
+
+  useEffect(() => {
+    const saved = JSON.parse(sessionStorage.getItem("TitleHolderDetails"));
+    const session_id = sessionStorage.getItem("sessionId");
+    if (saved || !token || !session_id) return;
+
+    (async () => {
+      try {
+        const res = await fetch(`${TitleHolderDetails_api}?session_id=${session_id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error(`API error: ${res.status}`);
+        const data = await res.json();
+        if (data) formik.setValues({ ...formik.values, ...data });
+      } catch (err) {
+        console.error("Error fetching session data:", err);
+      }
+    })();
+  }, []);
+
+  useEffect(() => {
+    sessionStorage.setItem("TitleHolderDetails", JSON.stringify(formik.values));
+  }, [formik.values]);
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        paddingBottom: "50px",
+      }}
+    >
+      <div style={{ width: "100%", maxWidth: "800px", padding: "20px", overflowY: "auto" }}>
+        <h3 className="text-center">Title Holder Details</h3>
+
+        <Form onSubmit={formik.handleSubmit}>
+          <div className="d-flex flex-column pt-3 pb-3">
+            {[
+              { label: "Name", name: "titleHolderName" },
+              {
+                label: "Relation Type",
+                name: "titleHolderRelationType",
+                type: "select",
+                options: ["S/O", "W/O", "D/O", "C/O", "H/O"],
+              },
+              { label: "Relative Name", name: "titleHolderRelativeName" },
+              {
+                label: "Residence Type",
+                name: "titleHolderResidenceType",
+                type: "select",
+                options: ["Flat", "House"],
+              },
+              { label: "Door Number", name: "titleHolderDoorNumber" },
+              { label: "Street Name", name: "titleHolderStreetName" },
+              { label: "City Name", name: "titleHolderCityName" },
+              { label: "Mandal Name", name: "titleHolderMandalName" },
+              { label: "District Name", name: "titleHolderDistrictName" },
+              { label: "Pincode", name: "titleHolderPincode" },
+            ].map((field) => (
+              <div className="row align-items-center mb-3" key={field.name}>
+                <div className="col-12 col-md-6">
+                  <Form.Label className="fs-3">{`Title Holder ${field.label}`}</Form.Label>
+                </div>
+                <div className="col-12 col-md-6">
+                  {field.type === "select" ? (
+                    <Form.Select
+                      name={field.name}
+                      value={formik.values[field.name]}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      style={{ height: "40px", fontSize: "20px" }}
+                    >
+                      <option value="">Select</option>
+                      {field.options.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  ) : (
+                    <Form.Control
+                      type="text"
+                      name={field.name}
+                      value={formik.values[field.name]}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      style={{ height: "40px", fontSize: "20px", borderColor: "#333" }}
+                    />
+                  )}
+                  {formik.touched[field.name] && formik.errors[field.name] && (
+                    <div className="text-danger fw-bold fs-5">
+                      {formik.errors[field.name]}
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Button
+              variant="secondary"
+              className="mt-3 me-3"
+              onClick={() => navigate(-1)}
+            >
+              Back
+            </Button>
+            <Button
+              type="submit"
+              variant="primary"
+              className="mt-3"
+              disabled={loading}
+            >
+              {loading ? "Loading..." : "Next"}
+            </Button>
+          </div>
+        </Form>
+      </div>
+    </div>
+  );
+};
+
+export default TitleHolderDetails;

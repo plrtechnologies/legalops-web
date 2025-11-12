@@ -3050,6 +3050,4113 @@
 
 // SessionDocument.jsx
  
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     // Load from cache first (in case user returns)
+//     const cached = sessionStorage.getItem("cachedSessions");
+//     if (cached) {
+//       setSessions(JSON.parse(cached));
+//       setLoading(false);
+//     }
+
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) throw new Error("User ID not found");
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page !== "complete") // only incomplete ones
+//                 .map((item) => {
+//                   // handle name properly with multiple fallbacks
+//                   const proposerName =
+//                     item.loanProposerName ||
+//                     item.proposerName ||
+//                     item.formData?.loanProposerDetails?.name ||
+//                     item.formData?.LoanProposerDetails?.loanProposerName ||
+//                     "No Name";
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: item.current_page || "LoanProposerDetails",
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         setSessions(formatted);
+//         sessionStorage.setItem("cachedSessions", JSON.stringify(formatted));
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // filtering logic for search + date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName.toLowerCase().includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {/* Session List */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>
+//           No sessions found matching your filters.
+//         </p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             {/* Header */}
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {/* Rows */}
+//             {filteredSessions.map((session, index) => (
+//               <li
+//                 key={index}
+//                 style={{ listStyle: "none", marginBottom: "10px" }}
+//               >
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+ ////======================
+ ////================/
+
+
+//  import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) throw new Error("User ID not found");
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         // Filter only incomplete sessions (current_page !== "complete")
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page !== "complete") // show only incomplete
+//                 .map((item) => {
+//                   const proposerName =
+//                     item.user_name || item.loanProposerName || "Unnamed";
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: item.current_page || "LoanProposerDetails",
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         setSessions(formatted);
+//         sessionStorage.setItem("cachedSessions", JSON.stringify(formatted));
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // Filter for search and date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName.toLowerCase().includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {/* Session List */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>
+//           No incomplete sessions found.
+//         </p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             {/* Header */}
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {/* Rows */}
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+//  import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) throw new Error("User ID not found");
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         // --- Fixed logic: ensure unique, correct mapping per session_id ---
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page !== "complete")
+//                 .map((item) => {
+//                   const proposerName =
+//                     item.loanProposerName?.trim() ||
+//                     item.user_name?.trim() ||
+//                     "Unnamed";
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: item.current_page || "LoanProposerDetails",
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//                 // remove duplicates (if same session_id repeated)
+//                 .filter(
+//                   (v, i, a) =>
+//                     a.findIndex((t) => t.sessionId === v.sessionId) === i
+//                 )
+//             : [];
+
+//         setSessions(formatted);
+//         sessionStorage.setItem("cachedSessions", JSON.stringify(formatted));
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // 🔍 Filter by name, ID, and date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName.toLowerCase().includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* 🔍 Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {/* 🧾 Session List */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             {/* Header */}
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {/* Rows */}
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}&loanProposerName=${encodeURIComponent(
+//                         session.loanProposerName
+//                       )}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+//  import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) throw new Error("User ID not found");
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+//         const data = await response.json();
+
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page !== "complete") // only incomplete
+//                 .map((item) => {
+//                   const proposerName =
+//                     item.loanProposerName || item.user_name || "Unnamed";
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: item.current_page || "LoanProposerDetails",
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         setSessions(formatted);
+//         sessionStorage.setItem("cachedSessions", JSON.stringify(formatted));
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // Filter logic for search + date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName.toLowerCase().includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* Search + Date Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {/* Session List */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             {/* Header */}
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {/* Rows */}
+//             {filteredSessions.map((session, index) => (
+//               <li
+//                 key={index}
+//                 style={{ listStyle: "none", marginBottom: "10px" }}
+//               >
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}&loanProposerName=${encodeURIComponent(
+//                         session.loanProposerName
+//                       )}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) throw new Error("User ID not found");
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page !== "complete")
+//                 .map((item) => {
+//                   const proposerName =
+//                     item.user_name || item.loanProposerName || "Unnamed";
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: item.current_page || "LoanProposerDetails",
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         setSessions(formatted);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName.toLowerCase().includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}&loanProposerName=${encodeURIComponent(
+//                         session.loanProposerName
+//                       )}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+
+//-----------------------------------------
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) throw new Error("User ID not found");
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         // ✅ Normalize and clean sessions
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page && s.current_page !== "complete")
+//                 .map((item) => {
+//                   // Prefer loanProposerName if available
+//                   const proposerName =
+//                     item.loanProposerName ||
+//                     item.user_name ||
+//                     "Unnamed";
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: item.current_page || "LoanProposerDetails",
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         setSessions(formatted);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // ✅ Filter by search and date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName
+//       ?.toLowerCase()
+//       .includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* 🔍 Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName || "Unnamed"}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         // ✅ Safe check: if no user_id, show message instead of throwing error
+//         if (!user_id) {
+//           setError("User not logged in. Please log in to view sessions.");
+//           setLoading(false);
+//           return;
+//         }
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         // ✅ Normalize sessions
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page && s.current_page !== "complete")
+//                 .map((item) => {
+//                   // ✅ Always prefer loanProposerName; fallback to "Unnamed"
+//                   const proposerName =
+//                     item.loanProposerName ||
+//                     item.user_name ||
+//                     "Unnamed";
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: item.current_page || "LoanProposerDetails",
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         setSessions(formatted);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // ✅ Filter by search and date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName
+//       ?.toLowerCase()
+//       .includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* 🔍 Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName || "Unnamed"}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) {
+//           setError("User not logged in. Please log in to view sessions.");
+//           setLoading(false);
+//           return;
+//         }
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         // ✅ Normalize and clean sessions
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page && s.current_page !== "complete")
+//                 .map((item) => {
+//                   const proposerName =
+//                     item.loanProposerName ||
+//                     item.loan_proposer_name ||
+//                     item.user_name ||
+//                     "Unnamed";
+
+//                   // ✅ Ensure current_page is correctly mapped
+//                   let pageName = item.current_page?.trim() || "LoanProposerDetails";
+
+//                   // ✅ Handle potential path or mismatched naming issues
+//                   // Example: if backend sends lowercase or just name, normalize it
+//                   if (!pageName.startsWith("/")) {
+//                     pageName = pageName.charAt(0).toUpperCase() + pageName.slice(1);
+//                   }
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: pageName,
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         setSessions(formatted);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // ✅ Filter by search & date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName
+//       ?.toLowerCase()
+//       .includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* 🔍 Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     {/* ✅ Dynamic redirect fixed here */}
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName || "Unnamed"}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) {
+//           setError("User not logged in. Please log in to view sessions.");
+//           setLoading(false);
+//           return;
+//         }
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         // ✅ Normalize and clean sessions
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page && s.current_page !== "complete")
+//                 .map((item) => {
+//                   const proposerName =
+//                     item.loanProposerName ||
+//                     item.loan_proposer_name ||
+//                     item.user_name ||
+//                     "Unnamed";
+
+//                   // ✅ Ensure current_page is correctly mapped
+//                   let pageName = item.current_page?.trim() || "LoanProposerDetails";
+
+//                   // ✅ Handle potential lowercase or mismatched naming issues
+//                   if (!pageName.startsWith("/")) {
+//                     pageName =
+//                       pageName.charAt(0).toUpperCase() + pageName.slice(1);
+//                   }
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: pageName,
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         setSessions(formatted);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // ✅ Filter by search & date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName
+//       ?.toLowerCase()
+//       .includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* 🔍 Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     {/* ✅ Fixed dynamic redirect logic here */}
+//                     <Link
+//                       to={`/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName || "Unnamed"}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+ 
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) {
+//           setError("User not logged in. Please log in to view sessions.");
+//           setLoading(false);
+//           return;
+//         }
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         // ✅ Normalize and clean sessions
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page && s.current_page !== "complete")
+//                 .map((item) => {
+//                   const proposerName =
+//                     item.loanProposerName ||
+//                     item.loan_proposer_name ||
+//                     item.user_name ||
+//                     "Unnamed";
+
+//                   // ✅ Clean and normalize the page path
+//                   let pageName = item.current_page?.trim() || "LoanProposerDetails";
+
+//                   // Remove unwanted prefixes or slashes (e.g., "/CreateDocument/", "CreateDocument/")
+//                   pageName = pageName.replace(/^\/+|CreateDocument\//gi, "");
+
+//                   // Ensure first letter capitalized (to match actual component path)
+//                   pageName =
+//                     pageName.charAt(0).toUpperCase() + pageName.slice(1);
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: pageName,
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         setSessions(formatted);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // ✅ Filter by search & date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName
+//       ?.toLowerCase()
+//       .includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* 🔍 Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     {/* ✅ Dynamic redirect fixed here */}
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName || "Unnamed"}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) {
+//           setError("User not logged in. Please log in to view sessions.");
+//           setLoading(false);
+//           return;
+//         }
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         // ✅ Normalize and clean sessions
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page && s.current_page !== "complete")
+//                 .map((item) => {
+//                   const proposerName =
+//                     item.loanProposerName ||
+//                     item.loan_proposer_name ||
+//                     item.user_name ||
+//                     "Unnamed";
+
+//                   let pageName = item.current_page?.trim() || "LoanProposerDetails";
+
+//                   // ✅ Clean path and make sure it stays inside /CreateDocument/
+//                   pageName = pageName.replace(/^\/+|CreateDocument\//gi, "");
+//                   pageName =
+//                     pageName.charAt(0).toUpperCase() + pageName.slice(1);
+
+//                   // ✅ Ensure valid known pages only
+//                   const validPages = [
+//                     "LoanProposerDetails",
+//                     "LoanProposerAndTitleHolder",
+//                     "TitleHolderDetails",
+//                     "MostRecentDocuments",
+//                     "PropertyDetails",
+//                     "PropertyBoundaries",
+//                     "LinkDocuments",
+//                     "ReviewDocument",
+//                   ];
+//                   if (!validPages.includes(pageName)) {
+//                     pageName = "LoanProposerDetails";
+//                   }
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: pageName,
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         setSessions(formatted);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // ✅ Filter by search & date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName
+//       ?.toLowerCase()
+//       .includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* 🔍 Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName || "Unnamed"}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) {
+//           setError("User not logged in. Please log in to view sessions.");
+//           setLoading(false);
+//           return;
+//         }
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         // ✅ Normalize and clean sessions
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page && s.current_page !== "complete")
+//                 .map((item) => {
+//                   const proposerName =
+//                     item.loanProposerName ||
+//                     item.loan_proposer_name ||
+//                     item.user_name ||
+//                     "Unnamed";
+
+//                   let pageName = item.current_page?.trim() || "LoanProposerDetails";
+
+//                   // ✅ Remove unwanted prefixes like '/CreateDocument/'
+//                   pageName = pageName.replace(/^\/+|CreateDocument\//gi, "");
+
+//                   // ✅ Map backend page names safely to actual frontend route names
+//                   const pageMap = {
+//                     loanProposerdetails: "LoanProposerDetails",
+//                     loanproposerdetails: "LoanProposerDetails",
+//                     loanproposerandtitleholder: "LoanProposerAndTitleHolder",
+//                     titleholderdetails: "TitleHolderDetails",
+//                     mostrecentdocuments: "MostRecentDocuments",
+//                     propertydetails: "PropertyDetails",
+//                     propertyboundaries: "PropertyBoundaries",
+//                     linkdocuments: "LinkDocuments",
+//                     reviewdocument: "ReviewDocument",
+//                   };
+
+//                   const lower = pageName.toLowerCase();
+//                   pageName = pageMap[lower] || "LoanProposerDetails";
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: pageName,
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         setSessions(formatted);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // ✅ Filter by search & date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName?.toLowerCase().includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* 🔍 Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName || "Unnamed"}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) {
+//           setError("User not logged in. Please log in to view sessions.");
+//           setLoading(false);
+//           return;
+//         }
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         // 🪵 Debug backend data
+//         console.log("✅ API Response:", data);
+//         if (data.sessions) {
+//           console.log(
+//             "✅ Raw session pages:",
+//             data.sessions.map((s) => s.current_page)
+//           );
+//         }
+
+//         // ✅ Normalize and clean sessions
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page && s.current_page !== "complete")
+//                 .map((item) => {
+//                   const proposerName =
+//                     item.loanProposerName ||
+//                     item.loan_proposer_name ||
+//                     item.user_name ||
+//                     "Unnamed";
+
+//                   // 🧩 Normalize backend current_page (handle lowercase, prefixes, etc.)
+//                   let pageName = (item.current_page || "").trim();
+
+//                   // If backend includes path like 'CreateDocument/PropertyDetails', clean it
+//                   pageName = pageName.replace(/^\/+|CreateDocument\//gi, "");
+
+//                   // Normalize to PascalCase for route match
+//                   pageName =
+//                     pageName.charAt(0).toUpperCase() + pageName.slice(1);
+
+//                   // ✅ Known valid pages
+//                   const validPages = [
+//                     "LoanProposerDetails",
+//                     "LoanProposerAndTitleHolder",
+//                     "TitleHolderDetails",
+//                     "MostRecentDocuments",
+//                     "PropertyDetails",
+//                     "PropertyBoundaries",
+//                     "LinkDocuments",
+//                     "ReviewDocument",
+//                   ];
+
+//                   // ✅ Intelligent match (case-insensitive)
+//                   const matchedPage =
+//                     validPages.find(
+//                       (p) => p.toLowerCase() === pageName.toLowerCase()
+//                     ) || "LoanProposerDetails";
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: matchedPage,
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         setSessions(formatted);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // ✅ Filter by search & date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName
+//       ?.toLowerCase()
+//       .includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* 🔍 Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName || "Unnamed"}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+// below code woeking f9
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) {
+//           setError("User not logged in. Please log in to view sessions.");
+//           setLoading(false);
+//           return;
+//         }
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         console.log("✅ API Response:", data);
+//         if (data.sessions) {
+//           console.log(
+//             "✅ Raw session pages:",
+//             data.sessions.map((s) => s.current_page)
+//           );
+//         }
+
+//         // ✅ Normalize and clean sessions
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page && s.current_page !== "complete")
+//                 .map((item) => {
+//                   const proposerName =
+//                     item.loanProposerName ||
+//                     item.loan_proposer_name ||
+//                     item.borrower_name ||
+//                     item.customer_name ||
+//                     item.user_name ||
+//                     "Unnamed";
+
+//                   // 🧩 Normalize backend current_page (handle lowercase, prefixes, etc.)
+//                   let pageName = (item.current_page || "").trim();
+//                   pageName = pageName.replace(/^\/+|CreateDocument\//gi, "");
+//                   pageName =
+//                     pageName.charAt(0).toUpperCase() + pageName.slice(1);
+
+//                   const validPages = [
+//                     "LoanProposerDetails",
+//                     "LoanProposerAndTitleHolder",
+//                     "TitleHolderDetails",
+//                     "MostRecentDocuments",
+//                     "PropertyDetails",
+//                     "PropertyBoundaries",
+//                     "LinkDocuments",
+//                     "ReviewDocument",
+//                   ];
+
+//                   const matchedPage =
+//                     validPages.find(
+//                       (p) => p.toLowerCase() === pageName.toLowerCase()
+//                     ) || "LoanProposerDetails";
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: matchedPage,
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         // ✅ Remove duplicate sessions (based on session_id before timestamp)
+//         const uniqueSessions = formatted.reduce((acc, curr) => {
+//           const baseId = curr.sessionId.split("_")[0]; // remove _timestamp if exists
+//           if (!acc.find((s) => s.sessionId.split("_")[0] === baseId)) {
+//             acc.push(curr);
+//           }
+//           return acc;
+//         }, []);
+
+//         setSessions(uniqueSessions);
+//       } catch (err) {
+//         console.error("Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // ✅ Filter by search & date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName
+//       ?.toLowerCase()
+//       .includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* 🔍 Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName || "Unnamed"}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) {
+//           setError("User not logged in. Please log in to view sessions.");
+//           setLoading(false);
+//           return;
+//         }
+
+//         console.log("🟡 Fetching sessions for user_id:", user_id);
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) throw new Error("Failed to fetch sessions");
+
+//         const data = await response.json();
+
+//         console.log("✅ API Response:", data);
+
+//         if (data.sessions) {
+//           console.log(
+//             "🧩 Current Pages from backend:",
+//             data.sessions.map((s) => ({
+//               id: s.session_id,
+//               page: s.current_page,
+//             }))
+//           );
+//         }
+
+//         // ✅ Normalize and clean sessions
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page && s.current_page !== "complete")
+//                 .map((item) => {
+//                   const proposerName =
+//                     item.loanProposerName ||
+//                     item.loan_proposer_name ||
+//                     item.borrower_name ||
+//                     item.customer_name ||
+//                     item.user_name ||
+//                     "Unnamed";
+
+//                   let pageName = (item.current_page || "").trim();
+//                   pageName = pageName.replace(/^\/+|CreateDocument\//gi, "");
+//                   pageName =
+//                     pageName.charAt(0).toUpperCase() + pageName.slice(1);
+
+//                   const validPages = [
+//                     "LoanProposerDetails",
+//                     "LoanProposerAndTitleHolder",
+//                     "TitleHolderDetails",
+//                     "MostRecentDocuments",
+//                     "PropertyDetails",
+//                     "PropertyBoundaries",
+//                     "LinkDocuments",
+//                     "ReviewDocument",
+//                   ];
+
+//                   const matchedPage =
+//                     validPages.find(
+//                       (p) => p.toLowerCase() === pageName.toLowerCase()
+//                     ) || "LoanProposerDetails";
+
+//                   console.log(
+//                     `🔹 Normalized session: ${proposerName} (${item.session_id}) -> ${matchedPage}`
+//                   );
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: matchedPage,
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         // ✅ Remove duplicates
+//         const uniqueSessions = formatted.reduce((acc, curr) => {
+//           const baseId = curr.sessionId.split("_")[0];
+//           if (!acc.find((s) => s.sessionId.split("_")[0] === baseId)) {
+//             acc.push(curr);
+//           }
+//           return acc;
+//         }, []);
+
+//         console.log("✅ Final sessions to render:", uniqueSessions);
+
+//         setSessions(uniqueSessions);
+//       } catch (err) {
+//         console.error("❌ Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // ✅ Filter by search & date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = searchTerm.toLowerCase();
+//     const nameMatch = session.loanProposerName
+//       ?.toLowerCase()
+//       .includes(search);
+//     const idMatch = session.sessionId.toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* 🔍 Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+//                       onClick={() => {
+//                         console.log(
+//                           `🟢 Redirecting → ${session.lastPage} (sessionId: ${session.sessionId})`
+//                         );
+//                       }}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName || "Unnamed"}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+// src/pagecomponents/SessionDocument.js
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) {
+//           setError("User not logged in. Please log in to view sessions.");
+//           setLoading(false);
+//           console.warn("SessionDocument: user_id not found in storage.");
+//           return;
+//         }
+
+//         console.log("🟡 Fetching sessions for user_id:", user_id);
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) {
+//           const text = await response.text().catch(() => null);
+//           throw new Error(`Failed to fetch sessions: ${response.status} ${response.statusText} ${text || ""}`);
+//         }
+
+//         const data = await response.json();
+
+//         console.log("✅ API Response:", data);
+
+//         if (Array.isArray(data.sessions)) {
+//           console.log(
+//             "🧩 Current Pages from backend:",
+//             data.sessions.map((s) => ({ id: s.session_id, page: s.current_page }))
+//           );
+//         }
+
+//         // Normalize and clean sessions
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page && s.current_page !== "complete")
+//                 .map((item) => {
+//                   const proposerName =
+//                     item.loanProposerName ||
+//                     item.loan_proposer_name ||
+//                     item.borrower_name ||
+//                     item.customer_name ||
+//                     item.user_name ||
+//                     item.name ||
+//                     "Unnamed";
+
+//                   // Normalize current_page / page name
+//                   let pageName = (item.current_page || "").trim();
+//                   pageName = pageName.replace(/^\/+|CreateDocument\//gi, "");
+
+//                   // If backend returned something like "ecDeed" or "ec", try normalize
+//                   // Simple PascalCase normalization for routing matching:
+//                   pageName = pageName.charAt(0).toUpperCase() + pageName.slice(1);
+
+//                   const validPages = [
+//                     "LoanProposerDetails",
+//                     "LoanProposerAndTitleHolder",
+//                     "TitleHolderDetails",
+//                     "MostRecentDocuments",
+//                     "PropertyDetails",
+//                     "PropertyBoundaries",
+//                     "LinkDocuments",
+//                     "ReviewDocument",
+//                   ];
+
+//                   const matchedPage =
+//                     validPages.find((p) => p.toLowerCase() === pageName.toLowerCase()) ||
+//                     // handle known alternate names
+//                     (pageName.toLowerCase().includes("loanproposer") ? "LoanProposerDetails" : null) ||
+//                     "LoanProposerDetails";
+
+//                   console.log(
+//                     `🔹 Normalized session: ${proposerName} (${item.session_id}) -> ${matchedPage}`
+//                   );
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: matchedPage,
+//                     createdAt: item.dateOfRegistration ? new Date(item.dateOfRegistration) : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         // Remove duplicate sessions (based on base session id before underscore timestamp)
+//         const uniqueSessions = formatted.reduce((acc, curr) => {
+//           const baseId = curr.sessionId ? curr.sessionId.split("_")[0] : curr.sessionId;
+//           if (!acc.find((s) => (s.sessionId ? s.sessionId.split("_")[0] : s.sessionId) === baseId)) {
+//             acc.push(curr);
+//           } else {
+//             // If duplicate found, log it (for debugging)
+//             console.info(`SessionDocument: duplicate session ignored for baseId=${baseId} (id=${curr.sessionId})`);
+//           }
+//           return acc;
+//         }, []);
+
+//         console.log("✅ Final sessions to render:", uniqueSessions);
+
+//         setSessions(uniqueSessions);
+//       } catch (err) {
+//         console.error("❌ Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // Filter by search & date
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = (searchTerm || "").toLowerCase();
+//     const nameMatch = (session.loanProposerName || "").toLowerCase().includes(search);
+//     const idMatch = (session.sessionId || "").toLowerCase().includes(search);
+
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* Search & Filter */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     {/* NOTE: Use camelCase `sessionId` query param to match other pages */}
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionId=${session.sessionId}`}
+//                       onClick={() => {
+//                         console.log(
+//                           `🟢 Redirecting → ${session.lastPage} (sessionId: ${session.sessionId})`
+//                         );
+//                       }}
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName || "Unnamed"}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+
+// import React, { useEffect, useState } from "react";
+// import { Link } from "react-router-dom";
+// import { getToken } from "../auth";
+
+// const SessionDocument = () => {
+//   const [sessions, setSessions] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState("");
+//   const [searchTerm, setSearchTerm] = useState("");
+//   const [startDate, setStartDate] = useState("");
+//   const [endDate, setEndDate] = useState("");
+
+//   useEffect(() => {
+//     const fetchSessions = async () => {
+//       try {
+//         const token = getToken();
+//         const user_id =
+//           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
+
+//         if (!user_id) {
+//           setError("User not logged in. Please log in to view sessions.");
+//           setLoading(false);
+//           console.warn("SessionDocument: user_id not found in storage.");
+//           return;
+//         }
+
+//         console.log("🟡 Fetching sessions for user_id:", user_id);
+
+//         const response = await fetch(
+//           `http://localhost:3000/api/combined/resumesession/${user_id}`,
+//           {
+//             headers: {
+//               "Content-Type": "application/json",
+//               Authorization: token ? `Bearer ${token}` : "",
+//             },
+//           }
+//         );
+
+//         if (!response.ok) {
+//           const text = await response.text().catch(() => null);
+//           throw new Error(
+//             `Failed to fetch sessions: ${response.status} ${response.statusText} ${
+//               text || ""
+//             }`
+//           );
+//         }
+
+//         const data = await response.json();
+//         console.log("✅ API Response:", data);
+
+//         // ✅ Process sessions
+//         const formatted =
+//           Array.isArray(data.sessions) && data.sessions.length > 0
+//             ? data.sessions
+//                 .filter((s) => s.current_page && s.current_page !== "complete")
+//                 .map((item) => {
+//                   // Pick name field safely
+//                   const proposerName =
+//                     item.loanProposerName ||
+//                     item.loan_proposer_name ||
+//                     item.borrower_name ||
+//                     item.customer_name ||
+//                     item.user_name ||
+//                     item.name ||
+//                     "Unnamed";
+
+//                   // Normalize page name
+//                   let pageName = (item.current_page || "").trim();
+
+//                   // Handle route naming patterns
+//                   pageName = pageName
+//                     .replace(/^\/+|CreateDocument\//gi, "")
+//                     .replace(".jsx", "")
+//                     .replace(/\s+/g, "")
+//                     .replace(/details$/i, "Details");
+
+//                   // Normalize capitalization
+//                   pageName =
+//                     pageName.charAt(0).toUpperCase() + pageName.slice(1);
+
+//                   // ✅ Map backend page names to actual React page routes
+//                   const pageMap = {
+//                     loanproposerdetails: "LoanProposerDetails",
+//                     titleholderdetails: "TitleHolderDetails",
+//                     propertydetails: "PropertyDetails",
+//                     propertyboundaries: "PropertyBoundaries",
+//                     mostrecentdocument: "MostRecentDocument",
+//                     mostrecentdocuments: "MostRecentDocument",
+//                     linkdocuments: "LinkDocuments",
+//                     reviewdocument: "ReviewDocument",
+//                     loanproposerandtitleholder: "LoanProposerAndTitleHolder",
+//                   };
+
+//                   const matchedPage =
+//                     pageMap[pageName.toLowerCase()] ||
+//                     "LoanProposerDetails"; // default fallback
+
+//                   console.log(
+//                     `🔹 Normalized session: ${proposerName} (${item.session_id}) → ${matchedPage}`
+//                   );
+
+//                   return {
+//                     loanProposerName: proposerName,
+//                     sessionId: item.session_id,
+//                     lastPage: matchedPage,
+//                     createdAt: item.dateOfRegistration
+//                       ? new Date(item.dateOfRegistration)
+//                       : new Date(),
+//                   };
+//                 })
+//             : [];
+
+//         // ✅ Remove duplicate base sessions
+//         const uniqueSessions = formatted.reduce((acc, curr) => {
+//           const baseId = curr.sessionId
+//             ? curr.sessionId.split("_")[0]
+//             : curr.sessionId;
+//           if (
+//             !acc.find(
+//               (s) =>
+//                 (s.sessionId ? s.sessionId.split("_")[0] : s.sessionId) ===
+//                 baseId
+//             )
+//           ) {
+//             acc.push(curr);
+//           }
+//           return acc;
+//         }, []);
+
+//         console.log("✅ Final sessions to render:", uniqueSessions);
+//         setSessions(uniqueSessions);
+//       } catch (err) {
+//         console.error("❌ Error fetching sessions:", err);
+//         setError("Could not load session documents.");
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchSessions();
+//   }, []);
+
+//   // ✅ Filter by search & date range
+//   const filteredSessions = sessions.filter((session) => {
+//     const search = (searchTerm || "").toLowerCase();
+//     const nameMatch = (session.loanProposerName || "")
+//       .toLowerCase()
+//       .includes(search);
+//     const idMatch = (session.sessionId || "")
+//       .toLowerCase()
+//       .includes(search);
+
+//     const sessionDate = session.createdAt;
+//     const start = startDate ? new Date(startDate) : null;
+//     const end = endDate ? new Date(endDate) : null;
+
+//     const dateMatch =
+//       (!start || (sessionDate && sessionDate >= start)) &&
+//       (!end || (sessionDate && sessionDate <= end));
+
+//     return (nameMatch || idMatch) && dateMatch;
+//   });
+
+//   return (
+//     <div style={{ padding: "20px", fontFamily: "Arial", minHeight: "83vh" }}>
+//       <h2 style={{ textAlign: "center", marginBottom: "30px" }}>
+//         Session Document
+//       </h2>
+
+//       {/* Search & Filter Section (No UI Change) */}
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "center",
+//           gap: "15px",
+//           flexWrap: "wrap",
+//           marginBottom: "20px",
+//         }}
+//       >
+//         <input
+//           type="text"
+//           placeholder="Search by name or session ID"
+//           value={searchTerm}
+//           onChange={(e) => setSearchTerm(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "300px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>Start Date</label>
+//         <input
+//           type="date"
+//           value={startDate}
+//           onChange={(e) => setStartDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//         <label style={{ paddingTop: "10px" }}>End Date</label>
+//         <input
+//           type="date"
+//           value={endDate}
+//           onChange={(e) => setEndDate(e.target.value)}
+//           style={{
+//             padding: "10px",
+//             width: "180px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//         />
+//       </div>
+
+//       {/* Table Section (UI Unchanged) */}
+//       {loading ? (
+//         <p style={{ textAlign: "center" }}>Loading sessions...</p>
+//       ) : error ? (
+//         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+//       ) : filteredSessions.length === 0 ? (
+//         <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
+//       ) : (
+//         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
+//           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
+//             <li
+//               style={{
+//                 fontWeight: "bold",
+//                 listStyle: "none",
+//                 marginBottom: "10px",
+//               }}
+//             >
+//               <div
+//                 style={{
+//                   display: "grid",
+//                   gridTemplateColumns: "60px 200px 300px 200px",
+//                   gap: "10px",
+//                   alignItems: "center",
+//                 }}
+//               >
+//                 <span>S.No</span>
+//                 <span>Name</span>
+//                 <span>Session ID</span>
+//                 <span>Created Date</span>
+//               </div>
+//             </li>
+
+//             {filteredSessions.map((session, index) => (
+//               <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
+//                 <div
+//                   style={{
+//                     display: "grid",
+//                     gridTemplateColumns: "60px 200px 300px 200px",
+//                     gap: "10px",
+//                     alignItems: "center",
+//                   }}
+//                 >
+//                   <span>{index + 1}</span>
+//                   <span>
+//                     <Link
+//                       to={`/CreateDocument/${session.lastPage}?sessionId=${session.sessionId}`}
+//                       onClick={() =>
+//                         console.log(
+//                           `🟢 Redirecting to → ${session.lastPage}?sessionId=${session.sessionId}`
+//                         )
+//                       }
+//                       style={{
+//                         color: "#007bff",
+//                         fontWeight: "bold",
+//                         textDecoration: "none",
+//                       }}
+//                     >
+//                       {session.loanProposerName || "Unnamed"}
+//                     </Link>
+//                   </span>
+//                   <span>{session.sessionId}</span>
+//                   <span>
+//                     {session.createdAt.toLocaleString("en-IN", {
+//                       dateStyle: "medium",
+//                       timeStyle: "short",
+//                     })}
+//                   </span>
+//                 </div>
+//               </li>
+//             ))}
+//           </ol>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default SessionDocument;
+
+
+
+
+
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getToken } from "../auth";
@@ -3063,20 +7170,18 @@ const SessionDocument = () => {
   const [endDate, setEndDate] = useState("");
 
   useEffect(() => {
-    // Load from cache first (in case user returns)
-    const cached = sessionStorage.getItem("cachedSessions");
-    if (cached) {
-      setSessions(JSON.parse(cached));
-      setLoading(false);
-    }
-
     const fetchSessions = async () => {
       try {
         const token = getToken();
         const user_id =
           sessionStorage.getItem("user_id") || localStorage.getItem("user_id");
 
-        if (!user_id) throw new Error("User ID not found");
+        if (!user_id) {
+          setError("User not logged in. Please log in to view sessions.");
+          setLoading(false);
+          console.warn("SessionDocument: user_id not found in storage.");
+          return;
+        }
 
         const response = await fetch(
           `http://localhost:3000/api/combined/resumesession/${user_id}`,
@@ -3088,27 +7193,61 @@ const SessionDocument = () => {
           }
         );
 
-        if (!response.ok) throw new Error("Failed to fetch sessions");
+        if (!response.ok) {
+          const text = await response.text().catch(() => null);
+          throw new Error(
+            `Failed to fetch sessions: ${response.status} ${response.statusText} ${
+              text || ""
+            }`
+          );
+        }
 
         const data = await response.json();
 
+        // Process sessions
         const formatted =
           Array.isArray(data.sessions) && data.sessions.length > 0
             ? data.sessions
-                .filter((s) => s.current_page !== "complete") // only incomplete ones
+                .filter((s) => s.current_page && s.current_page !== "complete")
                 .map((item) => {
-                  // handle name properly with multiple fallbacks
                   const proposerName =
                     item.loanProposerName ||
-                    item.proposerName ||
-                    item.formData?.loanProposerDetails?.name ||
-                    item.formData?.LoanProposerDetails?.loanProposerName ||
-                    "No Name";
+                    item.loan_proposer_name ||
+                    item.borrower_name ||
+                    item.customer_name ||
+                    item.user_name ||
+                    item.name ||
+                    "Unnamed";
+
+                  // Normalize page name
+                  let pageName = (item.current_page || "").trim();
+                  pageName = pageName
+                    .replace(/^\/+|CreateDocument\//gi, "")
+                    .replace(".jsx", "")
+                    .replace(/\s+/g, "")
+                    .replace(/details$/i, "Details");
+                  pageName =
+                    pageName.charAt(0).toUpperCase() + pageName.slice(1);
+
+                  const pageMap = {
+                    loanproposerdetails: "LoanProposerDetails",
+                    titleholderdetails: "TitleHolderDetails",
+                    propertydetails: "PropertyDetails",
+                    propertyboundaries: "PropertyBoundaries",
+                    mostrecentdocument: "MostRecentDocument",
+                    mostrecentdocuments: "MostRecentDocument",
+                    linkdocuments: "LinkDocuments",
+                    reviewdocument: "ReviewDocument",
+                    loanproposerandtitleholder: "LoanProposerAndTitleHolder",
+                  };
+
+                  const matchedPage =
+                    pageMap[pageName.toLowerCase()] || "LoanProposerDetails";
 
                   return {
                     loanProposerName: proposerName,
                     sessionId: item.session_id,
-                    lastPage: item.current_page || "LoanProposerDetails",
+                    lastPage: matchedPage,
                     createdAt: item.dateOfRegistration
                       ? new Date(item.dateOfRegistration)
                       : new Date(),
@@ -3116,8 +7255,24 @@ const SessionDocument = () => {
                 })
             : [];
 
-        setSessions(formatted);
-        sessionStorage.setItem("cachedSessions", JSON.stringify(formatted));
+        // Remove duplicate sessions
+        const uniqueSessions = formatted.reduce((acc, curr) => {
+          const baseId = curr.sessionId
+            ? curr.sessionId.split("_")[0]
+            : curr.sessionId;
+          if (
+            !acc.find(
+              (s) =>
+                (s.sessionId ? s.sessionId.split("_")[0] : s.sessionId) ===
+                baseId
+            )
+          ) {
+            acc.push(curr);
+          }
+          return acc;
+        }, []);
+
+        setSessions(uniqueSessions);
       } catch (err) {
         console.error("Error fetching sessions:", err);
         setError("Could not load session documents.");
@@ -3129,17 +7284,23 @@ const SessionDocument = () => {
     fetchSessions();
   }, []);
 
-  // filtering logic for search + date
+  // Filter sessions
   const filteredSessions = sessions.filter((session) => {
-    const search = searchTerm.toLowerCase();
-    const nameMatch = session.loanProposerName.toLowerCase().includes(search);
-    const idMatch = session.sessionId.toLowerCase().includes(search);
+    const search = (searchTerm || "").toLowerCase();
+    const nameMatch = (session.loanProposerName || "")
+      .toLowerCase()
+      .includes(search);
+    const idMatch = (session.sessionId || "")
+      .toLowerCase()
+      .includes(search);
+
     const sessionDate = session.createdAt;
     const start = startDate ? new Date(startDate) : null;
     const end = endDate ? new Date(endDate) : null;
     const dateMatch =
       (!start || (sessionDate && sessionDate >= start)) &&
       (!end || (sessionDate && sessionDate <= end));
+
     return (nameMatch || idMatch) && dateMatch;
   });
 
@@ -3197,19 +7358,16 @@ const SessionDocument = () => {
         />
       </div>
 
-      {/* Session List */}
+      {/* Table */}
       {loading ? (
         <p style={{ textAlign: "center" }}>Loading sessions...</p>
       ) : error ? (
         <p style={{ textAlign: "center", color: "red" }}>{error}</p>
       ) : filteredSessions.length === 0 ? (
-        <p style={{ textAlign: "center" }}>
-          No sessions found matching your filters.
-        </p>
+        <p style={{ textAlign: "center" }}>No incomplete sessions found.</p>
       ) : (
         <div style={{ maxHeight: "60vh", overflowY: "auto" }}>
           <ol style={{ paddingLeft: "20px", marginTop: 0 }}>
-            {/* Header */}
             <li
               style={{
                 fontWeight: "bold",
@@ -3232,12 +7390,8 @@ const SessionDocument = () => {
               </div>
             </li>
 
-            {/* Rows */}
             {filteredSessions.map((session, index) => (
-              <li
-                key={index}
-                style={{ listStyle: "none", marginBottom: "10px" }}
-              >
+              <li key={index} style={{ listStyle: "none", marginBottom: "10px" }}>
                 <div
                   style={{
                     display: "grid",
@@ -3249,14 +7403,14 @@ const SessionDocument = () => {
                   <span>{index + 1}</span>
                   <span>
                     <Link
-                      to={`/CreateDocument/${session.lastPage}?sessionid=${session.sessionId}`}
+                      to={`/CreateDocument/${session.lastPage}?sessionId=${session.sessionId}`}
                       style={{
                         color: "#007bff",
                         fontWeight: "bold",
                         textDecoration: "none",
                       }}
                     >
-                      {session.loanProposerName}
+                      {session.loanProposerName || "Unnamed"}
                     </Link>
                   </span>
                   <span>{session.sessionId}</span>
@@ -3277,5 +7431,3 @@ const SessionDocument = () => {
 };
 
 export default SessionDocument;
-
- 
